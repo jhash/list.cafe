@@ -155,6 +155,7 @@ enum ListType {
   TODO
   // Like reddit, voting by default?
   FORUM
+  TABLE
 }
 
 enum ListVisibility {
