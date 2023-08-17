@@ -19,7 +19,7 @@ Then start the development server:
 yarn redwood dev
 ```
 
-Your browser should automatically open to [http://localhost:8910](http://localhost:8910) where you'll see the Welcome Page, which links out to many great resources.
+Your browser should automatically open to [http://localhost:8912](http://localhost:8912) where you'll see the Welcome Page, which links out to many great resources.
 
 > **The Redwood CLI**
 >
@@ -64,7 +64,7 @@ Now let's generate everything we need to perform all the CRUD (Create, Retrieve,
 yarn redwood generate scaffold post
 ```
 
-Navigate to [http://localhost:8910/posts/new](http://localhost:8910/posts/new), fill in the title and body, and click "Save".
+Navigate to [http://localhost:8912/posts/new](http://localhost:8912/posts/new), fill in the title and body, and click "Save".
 
 Did we just create a post in the database? Yup! With `yarn rw generate scaffold <model>`, Redwood created all the pages, components, and services necessary to perform all CRUD actions on our posts table.
 
