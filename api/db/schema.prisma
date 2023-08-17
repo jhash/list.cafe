@@ -10,21 +10,276 @@ generator client {
 }
 
 model User {
-  id                  Int              @id @default(autoincrement())
-  email               String           @unique
-  hashedPassword      String
-  salt                String
-  resetToken          String?
-  resetTokenExpiresAt DateTime?
-  webAuthnChallenge   String?          @unique
-  credentials         UserCredential[]
+  id                       Int                       @id @default(autoincrement())
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @default(now())
+  email                    String                    @unique
+  uuid                     String                    @default(uuid())
+  slug                     String                    @unique
+  url                      String                    @unique
+  hashedPassword           String
+  salt                     String
+  resetToken               String?
+  resetTokenExpiresAt      DateTime?
+  webAuthnChallenge        String?                   @unique
+  credentials              UserCredential[]
+  userRoles                UserRole[]
+  groupMemberships         GroupMembership[]
+  listMemberships          ListMembership[]
+  person                   Person                    @relation(fields: [personId], references: [id])
+  personId                 Int                       @unique
+  partnershipStatusChanges PartnershipStatusChange[]
+  partnershipContactsAdded PartnershipContact[]
 }
 
 model UserCredential {
-  id         String  @id
+  id         String   @id
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
   userId     Int
-  user       User    @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
   publicKey  Bytes
   transports String?
   counter    BigInt
 }
+
+model UserRole {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  role      Role     @default(USER)
+}
+
+enum Role {
+  USER
+  SUPPORT
+  ADMIN
+}
+
+model GroupMembership {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  groupRole GroupRole @default(VIEW)
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   Int
+}
+
+enum GroupRole {
+  VIEW
+  EDIT
+  ADMIN
+  OWNER
+}
+
+model Group {
+  id                   Int                   @id @default(autoincrement())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @default(now())
+  name                 String
+  listGroupMemberships ListGroupMembership[]
+  groupMemberships     GroupMembership[]
+}
+
+model ListGroupMembership {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  listRole  ListRole @default(VIEW)
+  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    Int
+  group     Group    @relation(fields: [groupId], references: [id])
+  groupId   Int
+}
+
+enum ListRole {
+  VIEW
+  CONTRIBUTE
+  EDIT
+  ADMIN
+  OWNER
+}
+
+model ListMembership {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  listRole  ListRole @default(VIEW)
+  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model List {
+  id                   Int                   @id @default(autoincrement())
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @default(now())
+  name                 String
+  type                 ListType              @default(WISHLIST)
+  listGroupMemberships ListGroupMembership[]
+  listMemberships      ListMembership[]
+  listItems            ListItem[]
+  visibility           ListVisibility        @default(PRIVATE)
+  // TODO: list view, countable, view has nullable user and other details
+}
+
+enum ListType {
+  WISHLIST
+  TOP
+  BOOKMARKS
+  SOCIAL
+  FAVORITES
+  AWESOME
+}
+
+enum ListVisibility {
+  PRIVATE
+  GROUP
+  LINK
+  PUBLIC
+}
+
+model ListItem {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  title       String
+  description String
+  url         String
+  list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId      Int
+}
+
+model Partnership {
+  id                  Int                  @id @default(autoincrement())
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now())
+  name                String
+  notes               String
+  status              PartnershipStatus    @default(QUEUED)
+  url                 String
+  partnershipContacts PartnershipContact[]
+}
+
+enum PartnershipStatus {
+  QUEUED
+  CONTACTING
+  SELLING
+  NEGOTIATING
+  SIGNING
+  SUCCESSFUL
+  UNSUCCESSFUL
+}
+
+model PartnershipStatusChange {
+  id        Int               @id @default(autoincrement())
+  createdAt DateTime          @default(now())
+  from      PartnershipStatus
+  to        PartnershipStatus
+  user      User              @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model PartnershipContact {
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  person        Person      @relation(fields: [personId], references: [id])
+  personId      Int         @unique
+  partnership   Partnership @relation(fields: [partnershipId], references: [id])
+  partnershipId Int
+  addedByUser   User        @relation(fields: [addedByUserId], references: [id])
+  addedByUserId Int
+}
+
+model Person {
+  id                 Int                 @id @default(autoincrement())
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @default(now())
+  name               String
+  email              String              @unique
+  user               User?
+  addresses          Address[]           @relation
+  defaultAddressId   Int?
+  partnershipContact PartnershipContact?
+}
+
+// https://medium.com/android-news/international-addresses-7477db08edac
+model Address {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  // Administrative area or district
+  administrativeArea            String
+  // Alternative administrative area or district
+  alternativeAdministrativeArea String
+  // Alternative locality
+  alternativeLocality           String
+  // Traditional county (GBR only)
+  alternativeProvince           String
+  // Name of building
+  buildingName                  String
+  // Number of building
+  buildingNumber                String
+  // Name of company (GBR only)
+  companyName                   String
+  // Country name in local language
+  countryName                   String
+  // Name of department within company (GBR only)
+  departmentName                String
+  // Sub-locality within town or city
+  dependentLocality             String
+  // Name of the dependent street or thoroughfare
+  dependentStreetName           String
+  // Type of dependent street or thoroughfare (e.g street, road, lane, etc.) (GBR only)
+  dependentStreetSuffix         String
+  // District within sub-locality
+  doubleDependentLocality       String
+  // Level name or number
+  levelName                     String
+  // Formatted address line 1
+  line1                         String
+  // Formatted address line 2
+  line2                         String
+  // Formatted address line 3
+  line3                         String
+  // Formatted address line 4
+  line4                         String
+  // Formatted address line 5
+  line5                         String
+  // Town or city
+  locality                      String
+  // PO Box Number (GBR only)
+  postOfficeBoxNumber           String
+  // Royal Mail Unique Delivery Point Reference Number (GBR only)
+  postOfficeReference1          String
+  // Royal Mail Delivery Point Suffix (GBR only)
+  postOfficeReference2          String
+  // Formatted postal code or ZIP code
+  postalCode                    String
+  // Preferred name, abbreviation or acronym for state, province or county
+  province                      String
+  // Abbreviation or acronym for state, province or county
+  provinceCode                  String
+  // Full name of state, province or county
+  provinceName                  String
+  // Name of the street or thoroughfare
+  streetName                    String
+  // Type of street or thoroughfare (e.g street, road, lane, etc.) (GBR only)
+  streetSuffix                  String
+  // Sub-name of building
+  subBuildingName               String
+  // Unit name or number
+  unitName                      String
+
+  person   Person? @relation(fields: [personId], references: [id])
+  personId Int?
+}
+
+// TODO: gift preferences

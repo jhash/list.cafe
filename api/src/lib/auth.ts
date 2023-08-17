@@ -20,15 +20,36 @@ import { db } from './db'
  * fields to the `select` object below once you've decided they are safe to be
  * seen if someone were to open the Web Inspector in their browser.
  */
-export const getCurrentUser = async (session: Decoded) => {
-  if (!session || typeof session.id !== 'number') {
-    throw new Error('Invalid session')
+
+export const getCurrentUser = async (decoded: Decoded) => {
+  if (!decoded || typeof decoded.id !== 'number') {
+    throw new Error('Invalid decoded')
   }
 
-  return await db.user.findUnique({
-    where: { id: session.id },
-    select: { id: true },
+  if (context.currentUser) {
+    return context.currentUser
+  }
+
+  const user = await db.user.findUnique({
+    where: { id: decoded.id },
+    select: {
+      id: true,
+      email: true,
+      userRoles: {
+        include: { role: true },
+      },
+    },
   })
+
+  const { id, email, userRoles } = user
+
+  const fullUser = {
+    id,
+    email,
+    roles: userRoles.map((userRole) => userRole.role.name),
+  }
+
+  return fullUser
 }
 
 /**

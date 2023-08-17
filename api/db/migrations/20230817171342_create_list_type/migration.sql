@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "ListType" AS ENUM ('WISHLIST', 'TOP', 'BOOKMARKS', 'SOCIAL', 'FAVORITES', 'AWESOME');
+
+-- AlterTable
+ALTER TABLE "List" ADD COLUMN     "type" "ListType" NOT NULL DEFAULT 'WISHLIST';
