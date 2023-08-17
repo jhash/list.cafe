@@ -1,5 +1,5 @@
-// import type { Prisma } from '@prisma/client'
-// import { db } from 'api/src/lib/db'
+import { Prisma, PartnershipStatus } from '@prisma/client'
+import { db } from 'api/src/lib/db'
 
 export default async () => {
   try {
@@ -31,6 +31,23 @@ export default async () => {
     //       }
     //     })
     //   }
+    if (process.env.AMAZON_ASSOCIATE_ID) {
+      const partnerships: Prisma.PartnershipCreateArgs['data'][] = [
+        {
+          name: 'Amazon',
+          url: 'amazon.com',
+          affiliateId: process.env.AMAZON_ASSOCIATE_ID,
+          affiliateIdParam: 'tag',
+          status: PartnershipStatus['SIGNING'],
+          notes: 'From seed - need 3 purchases to access API',
+        },
+      ]
+      // Seed Partnerships
+      await db.partnership.createMany({
+        data: partnerships,
+        skipDuplicates: true,
+      })
+    }
   } catch (error) {
     console.warn('Please define your seed data.')
     console.error(error)

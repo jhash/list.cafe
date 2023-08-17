@@ -22,14 +22,20 @@ model User {
   resetToken               String?
   resetTokenExpiresAt      DateTime?
   webAuthnChallenge        String?                   @unique
+  person                   Person?                   @relation(fields: [personId], references: [id])
+  personId                 Int?                      @unique
   credentials              UserCredential[]
   userRoles                UserRole[]
   groupMemberships         GroupMembership[]
   listMemberships          ListMembership[]
-  person                   Person                    @relation(fields: [personId], references: [id])
-  personId                 Int                       @unique
   partnershipStatusChanges PartnershipStatusChange[]
   partnershipContactsAdded PartnershipContact[]
+  listViews                ListView[]
+  reservations             Reservation[]
+  giftPreferences          GiftPreferences[]
+  purchases                Purchase[]
+  listItemTags             ListItemTag[]
+  ListTag                  ListTag[]
 }
 
 model UserCredential {
@@ -37,7 +43,7 @@ model UserCredential {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
   userId     Int
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   publicKey  Bytes
   transports String?
   counter    BigInt
@@ -47,7 +53,7 @@ model UserRole {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   role      Role     @default(USER)
 }
@@ -63,9 +69,9 @@ model GroupMembership {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now())
   userId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   groupRole GroupRole @default(VIEW)
-  group     Group     @relation(fields: [groupId], references: [id])
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   Int
 }
 
@@ -92,7 +98,7 @@ model ListGroupMembership {
   listRole  ListRole @default(VIEW)
   list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    Int
-  group     Group    @relation(fields: [groupId], references: [id])
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   Int
 }
 
@@ -111,7 +117,7 @@ model ListMembership {
   listRole  ListRole @default(VIEW)
   list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
 }
 
@@ -125,7 +131,17 @@ model List {
   listMemberships      ListMembership[]
   listItems            ListItem[]
   visibility           ListVisibility        @default(PRIVATE)
-  // TODO: list view, countable, view has nullable user and other details
+  listViews            ListView[]
+}
+
+model ListView {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  list      List?    @relation(fields: [listId], references: [id])
+  listId    Int?
+  metadata  Json?
 }
 
 enum ListType {
@@ -135,6 +151,10 @@ enum ListType {
   SOCIAL
   FAVORITES
   AWESOME
+  INVENTORY
+  TODO
+  // Like reddit, voting by default?
+  FORUM
 }
 
 enum ListVisibility {
@@ -145,14 +165,37 @@ enum ListVisibility {
 }
 
 model ListItem {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  title       String
-  description String
-  url         String
-  list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
-  listId      Int
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  title        String
+  description  String
+  url          String
+  list         List          @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId       Int
+  quantity     Int           @default(1)
+  voting       Boolean       @default(false)
+  reservations Reservation[]
+  purchases    Purchase[]
+}
+
+model Reservation {
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now())
+  listItem   ListItem   @relation(fields: [listItemId], references: [id], onDelete: Cascade)
+  listItemId Int
+  quantity   Int        @default(1)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  comment    String?
+  purchases  Purchase[]
+}
+
+enum ReservationStatus {
+  RESERVED
+  RELEASED
+  FULFILLED
 }
 
 model Partnership {
@@ -160,10 +203,15 @@ model Partnership {
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @default(now())
   name                String
-  notes               String
+  notes               String?
   status              PartnershipStatus    @default(QUEUED)
   url                 String
   partnershipContacts PartnershipContact[]
+  partnershipLinks    PartnershipLink[]
+  // Example AMAZON_ASSOCIATE_ID
+  affiliateId         String?
+  // Example: associateId (tag? on Amazon) - need to create link with API after 3 purchases
+  affiliateIdParam    String?
 }
 
 enum PartnershipStatus {
@@ -181,20 +229,20 @@ model PartnershipStatusChange {
   createdAt DateTime          @default(now())
   from      PartnershipStatus
   to        PartnershipStatus
-  user      User              @relation(fields: [userId], references: [id])
-  userId    Int
+  user      User?             @relation(fields: [userId], references: [id])
+  userId    Int?
 }
 
 model PartnershipContact {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @default(now())
-  person        Person      @relation(fields: [personId], references: [id])
-  personId      Int         @unique
-  partnership   Partnership @relation(fields: [partnershipId], references: [id])
-  partnershipId Int
-  addedByUser   User        @relation(fields: [addedByUserId], references: [id])
-  addedByUserId Int
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now())
+  person        Person       @relation(fields: [personId], references: [id], onDelete: Cascade)
+  personId      Int          @unique
+  partnership   Partnership? @relation(fields: [partnershipId], references: [id])
+  partnershipId Int?
+  addedByUser   User?        @relation(fields: [addedByUserId], references: [id])
+  addedByUserId Int?
 }
 
 model Person {
@@ -204,9 +252,10 @@ model Person {
   name               String
   email              String              @unique
   user               User?
-  addresses          Address[]           @relation
+  addresses          Address[]
   defaultAddressId   Int?
   partnershipContact PartnershipContact?
+  giftPreferences    GiftPreferences[]
 }
 
 // https://medium.com/android-news/international-addresses-7477db08edac
@@ -282,4 +331,110 @@ model Address {
   personId Int?
 }
 
-// TODO: gift preferences
+model GiftPreferences {
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  clothingSizes ClothingSizes?
+  giftNotes     GiftNotes?
+  person        Person         @relation(fields: [personId], references: [id], onDelete: Cascade)
+  personId      Int
+  addedByUser   User           @relation(fields: [addedByUserId], references: [id], onDelete: Cascade)
+  addedByUserId Int
+}
+
+model ClothingSizes {
+  id                Int             @id @default(autoincrement())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @default(now())
+  giftPreferences   GiftPreferences @relation(fields: [giftPreferencesId], references: [id], onDelete: Cascade)
+  giftPreferencesId Int             @unique
+  shoeSize          String?
+  shirt             String?
+  pants             String?
+  jacket            String?
+  dress             String?
+  hat               String?
+}
+
+model GiftNotes {
+  id                Int             @id @default(autoincrement())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @default(now())
+  giftPreferences   GiftPreferences @relation(fields: [giftPreferencesId], references: [id], onDelete: Cascade)
+  giftPreferencesId Int             @unique
+  name              String
+  note              String
+}
+
+model Purchase {
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  status        PurchaseStatus @default(PENDING)
+  listItem      ListItem?      @relation(fields: [listItemId], references: [id])
+  listItemId    Int?
+  quantity      Int            @default(1)
+  purchasedBy   User?          @relation(fields: [purchasedById], references: [id])
+  purchasedById Int?
+  reservation   Reservation?   @relation(fields: [reservationId], references: [id])
+  reservationId Int?
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  CANCELED
+  RETURNED
+  REFUNDED
+}
+
+model ListTag {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  // Why was this tag added or changed
+  note          String?
+  tag           Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId         Int
+  addedByUser   User?    @relation(fields: [addedByUserId], references: [id])
+  addedByUserId Int?
+}
+
+model ListItemTag {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  // Why was this tag added or changed
+  note          String?
+  tag           Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId         Int
+  addedByUser   User?    @relation(fields: [addedByUserId], references: [id])
+  addedByUserId Int?
+}
+
+model Tag {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now())
+  name         String
+  description  String?
+  listItemTags ListItemTag[]
+  listTags     ListTag[]
+  parentTag    Tag?          @relation(name: "tagInheritance", fields: [parentTagId], references: [id])
+  parentTagId  Int?
+  childTags    Tag[]         @relation(name: "tagInheritance")
+
+  @@unique([parentTagId, name])
+}
+
+model PartnershipLink {
+  id            Int         @id @default(autoincrement())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  name          String
+  // Regex?
+  url           String
+  partnership   Partnership @relation(fields: [partnershipId], references: [id], onDelete: Cascade)
+  partnershipId Int
+}
