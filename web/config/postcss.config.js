@@ -5,4 +5,9 @@ module.exports = {
     require('tailwindcss')(path.resolve(__dirname, 'tailwind.config.js')),
     require('autoprefixer'),
   ],
+  purge: {
+    options: {
+      safelist: [/data-theme$/],
+    },
+  },
 }

@@ -1,3 +1,7 @@
+import { useEffect } from 'react'
+
+import { themeChange } from 'theme-change'
+
 import { Set, Router, Route, Private } from '@redwoodjs/router'
 
 import { useAuth } from './auth'
@@ -11,9 +15,13 @@ import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import SignupPage from './pages/SignupPage/SignupPage'
 
 const Routes = () => {
+  useEffect(() => {
+    // !!window.matchMedia?.('(prefers-color-scheme: dark)').matches
+    themeChange(false)
+  }, [])
+
   return (
     <Router useAuth={useAuth}>
-      <Route path="/admin" page={AdminPage} name="admin" />
       <Set wrap={HomeLayout}>
         <Private unauthenticated="forbidden" roles={['admin', 'support']} wrap={AdminLayout}>
           <Route path="/admin" page={AdminPage} name="admin" />

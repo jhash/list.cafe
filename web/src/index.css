@@ -1,3 +1,5 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,200;10..48,300;10..48,400;10..48,500;10..48,600;10..48,700;10..48,800&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;0,9..40,1000;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap'); */
+
 /**
  * START --- SETUP TAILWINDCSS EDIT
  *
@@ -11,3 +13,27 @@
 /**
  * END --- SETUP TAILWINDCSS EDIT
  */
+
+
+/* Define the "system" font family */
+@font-face {
+  font-family: system-ui;
+  font-style: normal;
+  font-weight: 300;
+  src: local(".SFNSText-Light"), local(".HelveticaNeueDeskInterface-Light"), local(".LucidaGrandeUI"), local("Ubuntu Light"), local("Segoe UI Light"), local("Roboto-Light"), local("DroidSans"), local("Tahoma");
+}
+
+/* Now, let's apply it on an element */
+body {
+  font-family: "system-ui";
+}
+
+html, body, #redwood-app {
+  min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-grow: 1;
+
+  font-family: 'DM Sans', 'system-ui';
+}
