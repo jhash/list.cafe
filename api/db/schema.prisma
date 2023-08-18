@@ -22,7 +22,7 @@ model User {
   resetToken               String?
   resetTokenExpiresAt      DateTime?
   webAuthnChallenge        String?                   @unique
-  person                   Person?                   @relation(fields: [personId], references: [id])
+  person                   Person?                   @relation(name: "attachedUser", fields: [personId], references: [id])
   personId                 Int?                      @unique
   credentials              UserCredential[]
   userRoles                UserRole[]
@@ -35,7 +35,8 @@ model User {
   giftPreferences          GiftPreferences[]
   purchases                Purchase[]
   listItemTags             ListItemTag[]
-  ListTag                  ListTag[]
+  listTags                 ListTag[]
+  peopleCreated            Person[]                  @relation(name: "createdPeople")
 }
 
 model UserCredential {
@@ -126,6 +127,7 @@ model List {
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @default(now())
   name                 String
+  description          String?
   type                 ListType              @default(WISHLIST)
   listGroupMemberships ListGroupMembership[]
   listMemberships      ListMembership[]
@@ -156,6 +158,7 @@ enum ListType {
   // Like reddit, voting by default?
   FORUM
   TABLE
+  LINKTREE
 }
 
 enum ListVisibility {
@@ -178,6 +181,22 @@ model ListItem {
   voting       Boolean       @default(false)
   reservations Reservation[]
   purchases    Purchase[]
+  parent       ListItem      @relation(name: "listItemInheritance", fields: [parentId], references: [id])
+  parentId     Int
+  children     ListItem[]    @relation(name: "listItemInheritance")
+  images       Image[]
+}
+
+model Image {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  url       String
+  height    Float
+  width     Float
+  format    String
+  listItems ListItem[]
+  person    Person[]
 }
 
 model Reservation {
@@ -251,12 +270,15 @@ model Person {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @default(now())
   name               String
-  email              String              @unique
-  user               User?
+  email              String?             @unique
+  user               User?               @relation(name: "attachedUser")
   addresses          Address[]
   defaultAddressId   Int?
   partnershipContact PartnershipContact?
   giftPreferences    GiftPreferences[]
+  images             Image[]
+  createdByUser      User?               @relation(name: "createdPeople", fields: [createdByUserId], references: [id])
+  createdByUserId    Int?
 }
 
 // https://medium.com/android-news/international-addresses-7477db08edac
