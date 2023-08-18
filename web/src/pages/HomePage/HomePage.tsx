@@ -16,19 +16,20 @@ const HomePage = () => {
     <>
       <MetaTags title="Home" description="List all of the things" />
       <div className="flex flex-grow select-none flex-col items-center justify-center">
-        <div className="container flex max-w-3xl flex-col gap-6 font-serif">
+        <div className="container flex max-w-3xl flex-col gap-8">
           {/* <div className="text-6xl">List all of the things</div> */}
-          <div className="flex flex-wrap items-center gap-3 whitespace-normal font-serif text-5xl md:whitespace-nowrap">
-            <span className="">Start your own</span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-normal font-serif text-5xl leading-tight md:whitespace-nowrap">
+            Share your
             <RotatingText>
-              <div className="text-purple-700">Wishlist:</div>
-              <div className="text-orange-500">Gift Registry:</div>
-              <div className="text-lime-400">Top 10 List:</div>
-              <div className="text-amber-500">Job List:</div>
+              <div className="text-purple-700">Wishlist</div>
+              <div className="text-orange-500">Gift Registry</div>
+              <div className="text-lime-400">Top 10 List</div>
+              <div className="text-amber-500">Job List</div>
             </RotatingText>
+            with the world
           </div>
           <div className="flex flex-grow flex-col">
-            <label htmlFor="list-item-1" className="label px-0 opacity-50">
+            <label htmlFor="list-item-1" className="label px-0 opacity-80">
               Paste a link here:
             </label>
             <input
