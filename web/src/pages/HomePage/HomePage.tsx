@@ -16,15 +16,15 @@ const HomePage = () => {
     <>
       <MetaTags title="Home" description="List all of the things" />
       <div className="flex flex-grow select-none flex-col items-center justify-center">
-        <div className="container flex max-w-3xl flex-col gap-8">
+        <div className="container flex max-w-3xl flex-col gap-12">
           {/* <div className="text-6xl">List all of the things</div> */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-normal font-serif text-5xl leading-tight md:whitespace-nowrap">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-normal font-serif text-5xl leading-tight">
             Share your
             <RotatingText>
-              <div className="text-purple-700">Wishlist</div>
-              <div className="text-orange-500">Gift Registry</div>
-              <div className="text-lime-400">Top 10 List</div>
-              <div className="text-amber-500">Job List</div>
+              <span className="text-purple-700">Wishlist</span>
+              <span className="text-orange-500">Gift Registry</span>
+              <span className="text-lime-400">Top 10 List</span>
+              <span className="text-amber-500">Job List</span>
             </RotatingText>
             with the world
           </div>
