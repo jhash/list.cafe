@@ -134,6 +134,10 @@ model List {
   listItems            ListItem[]
   visibility           ListVisibility        @default(PRIVATE)
   listViews            ListView[]
+  parent               List                  @relation(name: "listInheritance", fields: [parentId], references: [id])
+  parentId             Int
+  children             List[]                @relation(name: "listInheritance")
+  order                Int
 }
 
 model ListView {
@@ -185,6 +189,7 @@ model ListItem {
   parentId     Int
   children     ListItem[]    @relation(name: "listItemInheritance")
   images       Image[]
+  order        Int
 }
 
 model Image {
