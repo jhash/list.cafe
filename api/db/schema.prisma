@@ -90,6 +90,23 @@ model Group {
   name                 String
   listGroupMemberships ListGroupMembership[]
   groupMemberships     GroupMembership[]
+  type                 GroupType             @default(GENERIC)
+  visibility           GroupVisibility       @default(PRIVATE)
+}
+
+enum GroupType {
+  GENERIC
+  FRIENDS
+  FAMILY
+  COMPANY
+  NON_PROFIT
+}
+
+enum GroupVisibility {
+  PRIVATE
+  INVITE
+  LINK
+  PUBLIC
 }
 
 model ListGroupMembership {
@@ -137,7 +154,7 @@ model List {
   parent               List                  @relation(name: "listInheritance", fields: [parentId], references: [id])
   parentId             Int
   children             List[]                @relation(name: "listInheritance")
-  order                Int
+  order                Int?
 }
 
 model ListView {
@@ -163,6 +180,7 @@ enum ListType {
   FORUM
   TABLE
   LINKTREE
+  JOBS
 }
 
 enum ListVisibility {
@@ -189,7 +207,8 @@ model ListItem {
   parentId     Int
   children     ListItem[]    @relation(name: "listItemInheritance")
   images       Image[]
-  order        Int
+  order        Int?
+  price        Decimal?      @db.Money
 }
 
 model Image {
@@ -197,8 +216,8 @@ model Image {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @default(now())
   url       String
-  height    Float
-  width     Float
+  height    Decimal
+  width     Decimal
   format    String
   listItems ListItem[]
   person    Person[]
@@ -407,6 +426,7 @@ model Purchase {
   purchasedById Int?
   reservation   Reservation?   @relation(fields: [reservationId], references: [id])
   reservationId Int?
+  price         Decimal?       @db.Money
 }
 
 enum PurchaseStatus {
