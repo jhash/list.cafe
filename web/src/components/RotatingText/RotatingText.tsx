@@ -32,7 +32,7 @@ const RotatingText = ({ children }) => {
   return (
     <div className="flex h-16 flex-col overflow-hidden py-2">
       <div
-        className="flex flex-col flex-nowrap gap-4 transition-transform duration-200"
+        className="flex flex-col flex-nowrap gap-4 whitespace-nowrap transition-transform duration-200"
         style={{ transform: `translateY(-${index * 4}rem)` }}
       >
         {children}
