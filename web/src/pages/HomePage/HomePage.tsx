@@ -50,7 +50,7 @@ const HomePage = () => {
             </label>
             <input
               type="text"
-              className="input input-ghost input-lg flex flex-grow rounded-none border-l-0 border-r-0 border-t-0 border-b-black px-0 outline-transparent focus:outline-transparent active:outline-transparent dark:border-b-white md:text-3xl"
+              className="input input-ghost input-lg flex flex-grow rounded-none border-l-0 border-r-0 border-t-0 border-b-black px-0 outline-transparent focus:outline-transparent active:outline-transparent dark:border-b-white sm:text-3xl"
               placeholder="Ex. astonmartin.com/models/vantage"
               ref={firstListItemRef}
               name="list-item-1"
