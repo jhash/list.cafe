@@ -4,11 +4,10 @@ import { Heart } from 'lucide-react'
 
 import { MetaTags } from '@redwoodjs/web'
 
+import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import RotatingText from 'src/components/RotatingText/RotatingText'
 
 const HomePage = () => {
-  const NUMBER_OF_LINES = 5
-
   const firstListItemRef = useRef<HTMLInputElement>(null)
 
   const onSubmit = (event?: FormEvent, text?: string) => {
@@ -84,20 +83,7 @@ const HomePage = () => {
                 onPaste={onPaste}
               />
             </div>
-            <div className="flex max-h-0 flex-col overflow-visible">
-              <div className="flex flex-col gap-6">
-                {[...Array(NUMBER_OF_LINES).keys()].map((value) => (
-                  <div
-                    key={value}
-                    className="h-1.5 rounded bg-gray-400"
-                    style={{
-                      opacity:
-                        ((NUMBER_OF_LINES - value) / NUMBER_OF_LINES) * 0.15,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            <ListFadeOut />
           </form>
         </div>
       </div>
