@@ -15,6 +15,11 @@ module.exports = {
         libreBaskerville: 'Libre Baskerville',
         bricolageGrotesque: 'Bricolage Grotesque',
       },
+      screens: {
+        tall: {
+          raw: '(min-height: 768px)',
+        },
+      },
     },
     fontFamily: {
       sans: ['DM Sans', 'sans-serif'],

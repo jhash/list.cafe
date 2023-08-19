@@ -16,7 +16,6 @@ import SignupPage from './pages/SignupPage/SignupPage'
 
 const Routes = () => {
   useEffect(() => {
-    // !!window.matchMedia?.('(prefers-color-scheme: dark)').matches
     themeChange(false)
   }, [])
 

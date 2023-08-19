@@ -39,7 +39,9 @@ const RotatingText: React.FC<React.HTMLProps<RotatingTextProps>> = ({
   // const endSize = size + 1
 
   return (
-    <span className={`flex h-16 flex-col overflow-hidden py-2 leading-none`}>
+    <span
+      className={`flex h-16 flex-col overflow-hidden py-2 text-5xl leading-none`}
+    >
       <span
         className="flex flex-col flex-nowrap gap-4 whitespace-nowrap transition-transform duration-200"
         style={{ transform: `translateY(-${index * 4}rem)` }}

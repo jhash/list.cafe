@@ -11,7 +11,7 @@ import {
 } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
-import { toast, Toaster } from '@redwoodjs/web/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
 
@@ -113,11 +113,11 @@ const LoginPage = ({ type }) => {
 
   const AuthWebAuthnPrompt = () => {
     return (
-      <div className="rw-webauthn-wrapper">
-        <h2>WebAuthn Login Enabled</h2>
+      <div className="flex flex-col gap-4">
+        <h2 className="text-2xl">WebAuthn Login Enabled</h2>
         <p>Log in with your fingerprint, face or PIN</p>
-        <div className="rw-button-group">
-          <button className="rw-button rw-button-blue" onClick={onAuthenticate}>
+        <div className="flex py-3">
+          <button className="btn btn-info rounded-lg" onClick={onAuthenticate}>
             Open Authenticator
           </button>
         </div>
@@ -126,17 +126,17 @@ const LoginPage = ({ type }) => {
   }
 
   const RegisterWebAuthnPrompt = () => (
-    <div className="rw-webauthn-wrapper">
-      <h2>No more Passwords!</h2>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl">No more Passwords!</h2>
       <p>
         Depending on your device you can log in with your fingerprint, face or
         PIN next time.
       </p>
-      <div className="rw-button-group">
-        <button className="rw-button rw-button-blue" onClick={onRegister}>
+      <div className="flex gap-3 py-3">
+        <button className="btn btn-info rounded-lg" onClick={onRegister}>
           Turn On
         </button>
-        <button className="rw-button" onClick={onSkip}>
+        <button className="btn rounded-lg" onClick={onSkip}>
           Skip for now
         </button>
       </div>
@@ -144,61 +144,63 @@ const LoginPage = ({ type }) => {
   )
 
   const PasswordForm = () => (
-    <Form onSubmit={onSubmit} className="rw-form-wrapper">
-      <Label
-        name="email"
-        className="rw-label"
-        errorClassName="rw-label rw-label-error"
-      >
-        Email
-      </Label>
-      <TextField
-        name="email"
-        className="rw-input"
-        errorClassName="rw-input rw-input-error"
-        ref={emailRef}
-        // autoFocus
-        validation={{
-          required: {
-            value: true,
-            message: 'Email is required',
-          },
-        }}
-      />
+    <Form onSubmit={onSubmit} className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-0.5">
+          <Label
+            name="email"
+            className="label font-medium"
+            errorClassName="label label-error font-medium"
+          >
+            Email
+          </Label>
+          <TextField
+            name="email"
+            className="input input-bordered rounded-md focus:outline-info"
+            errorClassName="input input-error rounded-md"
+            ref={emailRef}
+            validation={{
+              required: {
+                value: true,
+                message: 'Email is required',
+              },
+            }}
+          />
+        </div>
 
-      <FieldError name="email" className="rw-field-error" />
+        <FieldError name="email" className="text-error" />
+      </div>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-0.5">
+          <Label
+            name="password"
+            className="label font-medium"
+            errorClassName="label label-error font-medium"
+          >
+            Password
+          </Label>
+          <PasswordField
+            name="password"
+            className="input input-bordered rounded-md focus:outline-info"
+            errorClassName="input input-error rounded-md"
+            autoComplete="current-password"
+            validation={{
+              required: {
+                value: true,
+                message: 'Password is required',
+              },
+            }}
+          />
+        </div>
 
-      <Label
-        name="password"
-        className="rw-label"
-        errorClassName="rw-label rw-label-error"
-      >
-        Password
-      </Label>
-      <PasswordField
-        name="password"
-        className="rw-input"
-        errorClassName="rw-input rw-input-error"
-        autoComplete="current-password"
-        validation={{
-          required: {
-            value: true,
-            message: 'Password is required',
-          },
-        }}
-      />
+        <FieldError name="password" className="text-error" />
 
-      <div className="rw-forgot-link">
-        <Link to={routes.forgotPassword()} className="rw-forgot-link">
-          Forgot Password?
+        <Link to={routes.forgotPassword()} className="link-info link">
+          Forgot password?
         </Link>
       </div>
 
-      <FieldError name="password" className="rw-field-error" />
-
-      <div className="rw-button-group">
-        <Submit className="rw-button rw-button-blue">Login</Submit>
-      </div>
+      <Submit className="btn btn-secondary rounded-md">Login</Submit>
     </Form>
   )
 
@@ -218,9 +220,9 @@ const LoginPage = ({ type }) => {
     if (showWebAuthn) {
       if (webAuthn.isEnabled()) {
         return (
-          <div className="rw-login-link">
+          <div className="">
             <span>or login with </span>{' '}
-            <a href="?type=password" className="rw-link">
+            <a href="?type=password" className="link-info link">
               email and password
             </a>
           </div>
@@ -228,10 +230,10 @@ const LoginPage = ({ type }) => {
       }
     } else {
       return (
-        <div className="rw-login-link">
+        <div className="">
           <span>Don&apos;t have an account?</span>{' '}
-          <Link to={routes.signup()} className="rw-link">
-            Sign up!
+          <Link to={routes.signup()} className="link-info link">
+            Sign up
           </Link>
         </div>
       )
@@ -244,23 +246,15 @@ const LoginPage = ({ type }) => {
 
   return (
     <>
-      <MetaTags title="Login" />
+      <MetaTags title="Log in" />
 
-      <main className="rw-main">
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Login</h2>
-            </header>
-
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">{formToRender()}</div>
-            </div>
-          </div>
+      <div className="flex flex-grow flex-col items-center justify-center">
+        <div className="flex w-full max-w-sm flex-col gap-6">
+          <h1 className="text-5xl font-bold">Log in</h1>
+          {formToRender()}
           {linkToRender()}
         </div>
-      </main>
+      </div>
     </>
   )
 }
