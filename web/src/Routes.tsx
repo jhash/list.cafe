@@ -14,7 +14,7 @@ const Routes = () => {
   return (
     <Router useAuth={useAuth}>
       <Set wrap={HomeLayout}>
-        <Private unauthenticated="forbidden" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
+        <Private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
           <Route path="/admin" page={AdminPage} name="admin" />
         </Private>
         <Route path="/login" page={LoginPage} name="login" />
@@ -22,7 +22,6 @@ const Routes = () => {
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
         <Route path="/" page={HomePage} name="home" />
-        <Route path="/forbidden" page={ForbiddenPage} name="forbidden" />
         <Route notfound page={NotFoundPage} />
       </Set>
     </Router>

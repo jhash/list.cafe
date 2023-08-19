@@ -15,7 +15,7 @@ type HomeLayoutProps = {
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   const fontsLoaded = useFontFacesLoaded()
 
-  const { isAuthenticated, logOut } = useAuth()
+  const { isAuthenticated, logOut, hasRole } = useAuth()
 
   return (
     <main
@@ -36,14 +36,35 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         <div className="flex select-none flex-nowrap items-center gap-3">
           {isAuthenticated ? (
             <>
-              <button className="btn btn-link" onClick={() => logOut()}>
+              {hasRole(['ADMIN', 'SUPPORT']) && (
+                <Link
+                  className="link font-semibold no-underline hover:underline"
+                  to={routes.admin()}
+                >
+                  admin
+                </Link>
+              )}
+              <button
+                className="btn btn-link p-0 text-base lowercase text-black no-underline dark:text-white"
+                onClick={() => logOut()}
+              >
                 log out
               </button>
             </>
           ) : (
             <>
-              <Link to={routes.login()}>log in</Link>
-              <Link to={routes.signup()}>sign up</Link>
+              <Link
+                className="link font-semibold no-underline hover:underline"
+                to={routes.login()}
+              >
+                log in
+              </Link>
+              <Link
+                className="link font-semibold no-underline hover:underline"
+                to={routes.signup()}
+              >
+                sign up
+              </Link>
             </>
           )}
         </div>
