@@ -31,7 +31,7 @@ const MackenziePage = () => {
               <li key={index} className="flex items-center">
                 <a
                   href={url}
-                  className="link flex h-16 flex-grow items-center gap-4 px-3 text-xl hover:border-x hover:bg-neutral-200 hover:bg-opacity-5"
+                  className="link flex h-16 flex-grow items-center gap-4 border-x border-transparent px-3 text-xl hover:scale-100 hover:border hover:border-neutral-200 hover:bg-neutral-200 hover:bg-opacity-5"
                   target="_top"
                 >
                   <Link2 />
