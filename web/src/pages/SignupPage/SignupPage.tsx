@@ -34,6 +34,7 @@ const SignupPage = () => {
     const response = await signUp({
       username: data.email,
       password: data.password,
+      name: data.name,
     })
 
     if (response.message) {
@@ -48,77 +49,92 @@ const SignupPage = () => {
 
   return (
     <>
-      <MetaTags title="Signup" />
+      <MetaTags title="Sign up" />
 
-      <main className="rw-main">
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Signup</h2>
-            </header>
-
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <Label
-                    name="email"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Email
-                  </Label>
-                  <TextField
-                    name="email"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={emailRef}
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Email is required',
-                      },
-                    }}
-                  />
-                  <FieldError name="email" className="rw-field-error" />
-
-                  <Label
-                    name="password"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Password
-                  </Label>
-                  <PasswordField
-                    name="password"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    autoComplete="current-password"
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Password is required',
-                      },
-                    }}
-                  />
-                  <FieldError name="password" className="rw-field-error" />
-
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">
-                      Sign Up
-                    </Submit>
-                  </div>
-                </Form>
+      <div className="flex flex-grow flex-col items-center justify-center">
+        <div className="flex w-full max-w-sm flex-col gap-12">
+          <h1 className="text-6xl font-bold">Sign up</h1>
+          <div className="flex flex-col gap-6">
+            <Form onSubmit={onSubmit} className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1">
+                <Label
+                  name="name"
+                  className="label font-medium"
+                  errorClassName="label font-medium label-error"
+                >
+                  <span className="label-text text-lg">Name</span>
+                </Label>
+                <TextField
+                  name="name"
+                  className="input input-bordered rounded-lg"
+                  errorClassName="input input-bordered rounded-lg input-error"
+                  validation={{
+                    required: {
+                      value: true,
+                      message: 'Name is required',
+                    },
+                  }}
+                />
+                <FieldError name="email" className="text-error" />
               </div>
+
+              <div className="flex flex-col gap-1">
+                <Label
+                  name="email"
+                  className="label font-medium"
+                  errorClassName="label font-medium label-error"
+                >
+                  <span className="label-text text-lg">Email</span>
+                </Label>
+                <TextField
+                  name="email"
+                  className="input input-bordered rounded-lg"
+                  errorClassName="input input-bordered rounded-lg input-error"
+                  ref={emailRef}
+                  validation={{
+                    required: {
+                      value: true,
+                      message: 'Email is required',
+                    },
+                  }}
+                />
+                <FieldError name="email" className="text-error" />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <Label
+                  name="password"
+                  className="label font-medium"
+                  errorClassName="label font-medium label-error"
+                >
+                  <span className="label-text text-lg">Password</span>
+                </Label>
+                <PasswordField
+                  name="password"
+                  className="input input-bordered rounded-lg"
+                  errorClassName="input input-bordered rounded-lg input-error"
+                  autoComplete="current-password"
+                  validation={{
+                    required: {
+                      value: true,
+                      message: 'Password is required',
+                    },
+                  }}
+                />
+                <FieldError name="password" className="text-error" />
+              </div>
+
+              <Submit className="btn btn-secondary rounded-lg">Sign Up</Submit>
+            </Form>
+            <div className="flex gap-1.5">
+              <span>Already have an account?</span>{' '}
+              <Link to={routes.login()} className="link-info link">
+                Log in
+              </Link>
             </div>
           </div>
-          <div className="rw-login-link">
-            <span>Already have an account?</span>{' '}
-            <Link to={routes.login()} className="rw-link">
-              Log in!
-            </Link>
-          </div>
         </div>
-      </main>
+      </div>
     </>
   )
 }

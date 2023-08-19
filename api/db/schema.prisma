@@ -14,16 +14,8 @@ model User {
   createdAt                DateTime                  @default(now())
   updatedAt                DateTime                  @default(now())
   email                    String                    @unique
-  uuid                     String                    @default(uuid())
-  slug                     String                    @unique
-  url                      String                    @unique
-  hashedPassword           String
-  salt                     String
-  resetToken               String?
-  resetTokenExpiresAt      DateTime?
-  webAuthnChallenge        String?                   @unique
-  person                   Person?                   @relation(name: "attachedUser", fields: [personId], references: [id])
-  personId                 Int?                      @unique
+  person                   Person                    @relation(name: "attachedUser", fields: [personId], references: [id])
+  personId                 Int                       @unique
   credentials              UserCredential[]
   userRoles                UserRole[]
   groupMemberships         GroupMembership[]
@@ -32,11 +24,18 @@ model User {
   partnershipContactsAdded PartnershipContact[]
   listViews                ListView[]
   reservations             Reservation[]
-  giftPreferences          GiftPreferences[]
+  giftPreferencesAdded     GiftPreferences[]
   purchases                Purchase[]
   listItemTags             ListItemTag[]
   listTags                 ListTag[]
   peopleCreated            Person[]                  @relation(name: "createdPeople")
+  // START AUTH
+  hashedPassword           String
+  salt                     String
+  resetToken               String?
+  resetTokenExpiresAt      DateTime?
+  webAuthnChallenge        String?                   @unique
+  // END AUTH
 }
 
 model UserCredential {
@@ -169,6 +168,8 @@ model ListView {
 
 enum ListType {
   WISHLIST
+  WEDDING
+  BABY_SHOWER
   TOP
   BOOKMARKS
   SOCIAL

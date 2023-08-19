@@ -72,7 +72,7 @@ const HomePage = () => {
                 htmlFor="list-item-1"
                 className="label px-0.5 font-medium opacity-90"
               >
-                <span className="label-text">Paste a link here:</span>
+                <span className="label-text text-lg">Paste a link here:</span>
               </label>
               <input
                 type="text"

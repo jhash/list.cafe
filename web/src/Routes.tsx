@@ -14,7 +14,7 @@ const Routes = () => {
   return (
     <Router useAuth={useAuth}>
       <Set wrap={HomeLayout}>
-        <Private unauthenticated="forbidden" roles={['admin', 'support']} wrap={AdminLayout}>
+        <Private unauthenticated="forbidden" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
           <Route path="/admin" page={AdminPage} name="admin" />
         </Private>
         <Route path="/login" page={LoginPage} name="login" />

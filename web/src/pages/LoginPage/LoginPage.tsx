@@ -146,13 +146,13 @@ const LoginPage = ({ type }) => {
   const PasswordForm = () => (
     <Form onSubmit={onSubmit} className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <Label
             name="email"
             className="label font-medium"
             errorClassName="label label-error font-medium"
           >
-            Email
+            <span className="label-text text-lg">Email</span>
           </Label>
           <TextField
             name="email"
@@ -171,13 +171,13 @@ const LoginPage = ({ type }) => {
         <FieldError name="email" className="text-error" />
       </div>
       <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <Label
             name="password"
             className="label font-medium"
             errorClassName="label label-error font-medium"
           >
-            Password
+            <span className="label-text text-lg">Password</span>
           </Label>
           <PasswordField
             name="password"
@@ -220,7 +220,7 @@ const LoginPage = ({ type }) => {
     if (showWebAuthn) {
       if (webAuthn.isEnabled()) {
         return (
-          <div className="">
+          <div>
             <span>or login with </span>{' '}
             <a href="?type=password" className="link-info link">
               email and password
@@ -230,7 +230,7 @@ const LoginPage = ({ type }) => {
       }
     } else {
       return (
-        <div className="">
+        <div className="flex gap-1.5">
           <span>Don&apos;t have an account?</span>{' '}
           <Link to={routes.signup()} className="link-info link">
             Sign up
@@ -249,10 +249,12 @@ const LoginPage = ({ type }) => {
       <MetaTags title="Log in" />
 
       <div className="flex flex-grow flex-col items-center justify-center">
-        <div className="flex w-full max-w-sm flex-col gap-6">
-          <h1 className="text-5xl font-bold">Log in</h1>
-          {formToRender()}
-          {linkToRender()}
+        <div className="flex w-full max-w-sm flex-col gap-12">
+          <h1 className="text-6xl font-bold">Log in</h1>
+          <div className="flex flex-col gap-6">
+            {formToRender()}
+            {linkToRender()}
+          </div>
         </div>
       </div>
     </>

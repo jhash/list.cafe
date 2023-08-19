@@ -41,51 +41,38 @@ const ForgotPasswordPage = () => {
     <>
       <MetaTags title="Forgot Password" />
 
-      <main className="rw-main">
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">
-                Forgot Password
-              </h2>
-            </header>
+      <div className="flex flex-grow flex-col items-center justify-center">
+        <div className="flex w-full max-w-sm flex-col gap-12">
+          <h1 className="text-6xl font-bold leading-tight">Forgot password</h1>
+          <Form onSubmit={onSubmit} className="flex flex-col gap-6">
+            <div className="flex flex-col gap-1">
+              <Label
+                name="email"
+                className="label font-medium"
+                errorClassName="label font-medium label-error"
+              >
+                <span className="label-text text-lg">Email</span>
+              </Label>
+              <TextField
+                name="email"
+                className="input input-bordered rounded-lg"
+                errorClassName="input input-bordered rounded-lg input-error"
+                ref={emailRef}
+                validation={{
+                  required: {
+                    value: true,
+                    message: 'Email is required',
+                  },
+                }}
+              />
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <div className="text-left">
-                    <Label
-                      name="email"
-                      className="rw-label"
-                      errorClassName="rw-label rw-label-error"
-                    >
-                      Email
-                    </Label>
-                    <TextField
-                      name="email"
-                      className="rw-input"
-                      errorClassName="rw-input rw-input-error"
-                      ref={emailRef}
-                      validation={{
-                        required: {
-                          value: true,
-                          message: 'Email is required',
-                        },
-                      }}
-                    />
-
-                    <FieldError name="email" className="rw-field-error" />
-                  </div>
-
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Submit</Submit>
-                  </div>
-                </Form>
-              </div>
+              <FieldError name="email" className="text-error" />
             </div>
-          </div>
+
+            <Submit className="btn btn-secondary">Submit</Submit>
+          </Form>
         </div>
-      </main>
+      </div>
     </>
   )
 }

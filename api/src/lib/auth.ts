@@ -35,18 +35,18 @@ export const getCurrentUser = async (decoded: Decoded) => {
     select: {
       id: true,
       email: true,
-      userRoles: {
-        include: { role: true },
-      },
+      userRoles: true,
     },
   })
 
   const { id, email, userRoles } = user
 
+  console.log(userRoles)
+
   const fullUser = {
     id,
     email,
-    roles: userRoles.map((userRole) => userRole.role.name),
+    roles: userRoles.map((userRole) => userRole.role),
   }
 
   return fullUser

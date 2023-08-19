@@ -1,9 +1,10 @@
 import classNames from 'classnames'
 import { Coffee } from 'lucide-react'
 
-import { Link } from '@redwoodjs/router'
+import { Link, routes } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/dist/toast'
 
+import { useAuth } from 'src/auth'
 import { DarkModeToggle } from 'src/components/DarkModeToggle'
 import { useFontFacesLoaded } from 'src/hooks/useFontFacesLoaded'
 
@@ -14,6 +15,8 @@ type HomeLayoutProps = {
 const HomeLayout = ({ children }: HomeLayoutProps) => {
   const fontsLoaded = useFontFacesLoaded()
 
+  const { isAuthenticated, logOut } = useAuth()
+
   return (
     <main
       className={classNames(
@@ -21,7 +24,7 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
         fontsLoaded ? 'opacity-100' : 'opacity-0'
       )}
     >
-      <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
+      <Toaster toastOptions={{ className: 'rw-toast', duration: 3000 }} />
       <nav className="flex h-16 flex-grow-0 items-center px-4">
         <Link
           to="/"
@@ -31,8 +34,18 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
           <Coffee />
         </Link>
         <div className="flex select-none flex-nowrap items-center gap-3">
-          <Link to="/login">log in</Link>
-          <Link to="/signup">sign up</Link>
+          {isAuthenticated ? (
+            <>
+              <button className="btn btn-link" onClick={() => logOut()}>
+                log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to={routes.login()}>log in</Link>
+              <Link to={routes.signup()}>sign up</Link>
+            </>
+          )}
         </div>
       </nav>
       <div className="flex flex-grow flex-col px-4">{children}</div>

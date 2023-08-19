@@ -29,7 +29,8 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
       const response = await validateResetToken(resetToken)
       if (response.error) {
         setEnabled(false)
-        toast.error(response.error)
+        // navigate(routes.home())
+        setImmediate(() => toast.error(response.error))
       } else {
         setEnabled(true)
       }
@@ -59,60 +60,44 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
 
   return (
     <>
-      <MetaTags title="Reset Password" />
+      <MetaTags title="Reset password" />
 
-      <main className="rw-main">
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">
-                Reset Password
-              </h2>
-            </header>
+      <div className="flex flex-grow flex-col items-center justify-center">
+        <div className="flex w-full max-w-sm flex-col gap-12">
+          <h1 className="text-6xl font-bold leading-tight">Reset password</h1>
+          <Form onSubmit={onSubmit} className="flex flex-col gap-6">
+            <div className="flex flex-col gap-1">
+              <Label
+                name="password"
+                className="label"
+                errorClassName="label label-error"
+              >
+                <span className="label-text text-lg">New password</span>
+              </Label>
+              <PasswordField
+                name="password"
+                autoComplete="new-password"
+                className="input input-bordered rounded-lg"
+                errorClassName="input input-bordered rounded-lg input-error"
+                disabled={!enabled}
+                ref={passwordRef}
+                validation={{
+                  required: {
+                    value: true,
+                    message: 'New password is required',
+                  },
+                }}
+              />
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <div className="text-left">
-                    <Label
-                      name="password"
-                      className="rw-label"
-                      errorClassName="rw-label rw-label-error"
-                    >
-                      New Password
-                    </Label>
-                    <PasswordField
-                      name="password"
-                      autoComplete="new-password"
-                      className="rw-input"
-                      errorClassName="rw-input rw-input-error"
-                      disabled={!enabled}
-                      ref={passwordRef}
-                      validation={{
-                        required: {
-                          value: true,
-                          message: 'New Password is required',
-                        },
-                      }}
-                    />
-
-                    <FieldError name="password" className="rw-field-error" />
-                  </div>
-
-                  <div className="rw-button-group">
-                    <Submit
-                      className="rw-button rw-button-blue"
-                      disabled={!enabled}
-                    >
-                      Submit
-                    </Submit>
-                  </div>
-                </Form>
-              </div>
+              <FieldError name="password" className="text-error" />
             </div>
-          </div>
+
+            <Submit className="btn btn-secondary" disabled={!enabled}>
+              Submit
+            </Submit>
+          </Form>
         </div>
-      </main>
+      </div>
     </>
   )
 }
