@@ -12,7 +12,6 @@ export const DarkModeToggle = () => {
       !localStorage?.getItem('theme') &&
       !!window.matchMedia?.('(prefers-color-scheme: dark)').matches
     ) {
-      document?.documentElement?.setAttribute('data-theme', 'dracula')
       setDarkMode(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -20,8 +19,12 @@ export const DarkModeToggle = () => {
 
   useEffect(() => {
     if (darkMode) {
+      document?.documentElement?.setAttribute('data-theme', 'dracula')
+      localStorage?.setItem('theme', 'dracula')
       document?.documentElement?.classList?.add('dark')
     } else {
+      document?.documentElement?.setAttribute('data-theme', 'cupcake')
+      localStorage?.setItem('theme', 'cupcake')
       document?.documentElement?.classList?.remove('dark')
     }
   }, [darkMode])
@@ -29,17 +32,15 @@ export const DarkModeToggle = () => {
   return (
     <div className="flex flex-nowrap items-center gap-1">
       <Sun size="1rem" />
-      <button data-toggle-theme="dracula,cupcake" className="flex items-center">
-        <input
-          className="toggle"
-          type="checkbox"
-          checked={darkMode}
-          onChange={() => {
-            // themeChange(true)
-            setDarkMode(!darkMode)
-          }}
-        />
-      </button>
+      <input
+        className="toggle"
+        type="checkbox"
+        checked={darkMode}
+        onChange={() => {
+          // themeChange(true)
+          setDarkMode(!darkMode)
+        }}
+      />
       <Moon size="1rem" />
     </div>
   )

@@ -1,7 +1,3 @@
-import { useEffect } from 'react'
-
-import { themeChange } from 'theme-change'
-
 import { Set, Router, Route, Private } from '@redwoodjs/router'
 
 import { useAuth } from './auth'
@@ -15,10 +11,6 @@ import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import SignupPage from './pages/SignupPage/SignupPage'
 
 const Routes = () => {
-  useEffect(() => {
-    themeChange(false)
-  }, [])
-
   return (
     <Router useAuth={useAuth}>
       <Set wrap={HomeLayout}>
