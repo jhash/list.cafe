@@ -43,8 +43,8 @@ const HomePage = () => {
           >
             We{' '}
             <Heart
-              className="fill-purple-600"
               // filter={'drop-shadow(3px 5px 5px rgb(0 0 0 / 0.2))'}
+              className="fill-purple-600"
               strokeOpacity={0.05}
               strokeWidth={0.75}
               size="6rem"

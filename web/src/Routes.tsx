@@ -17,6 +17,7 @@ const Routes = () => {
         <Private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
           <Route path="/admin" page={AdminPage} name="admin" />
         </Private>
+        <Route path="/mackenzie" page={MackenziePage} name="mackenzie" />
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
