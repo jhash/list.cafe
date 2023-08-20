@@ -28,6 +28,7 @@ const MackenziePage = () => {
               { url: 'https://amzn.to/3QLJfcL', name: 'Laundry cart' },
               { url: 'https://amzn.to/44dck41', name: 'Shelf liner' },
               { url: 'https://amzn.to/3sgPD1N', name: 'Hangers' },
+              { url: 'https://amzn.to/44bXE5n', name: 'Micuul Hangers' },
             ].map(({ url, name }, index) => (
               <li key={index} className="flex items-center">
                 <a
