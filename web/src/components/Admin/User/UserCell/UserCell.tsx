@@ -12,11 +12,6 @@ export const QUERY = gql`
       updatedAt
       email
       personId
-      hashedPassword
-      salt
-      resetToken
-      resetTokenExpiresAt
-      webAuthnChallenge
     }
   }
 `

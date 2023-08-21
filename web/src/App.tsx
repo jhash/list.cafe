@@ -7,16 +7,20 @@ import FatalErrorPage from 'src/pages/FatalErrorPage'
 import Routes from 'src/Routes'
 
 import './scaffold.css'
-import { AuthProvider, useAuth } from './auth'
 
 import './index.css'
+
+import { AuthProvider, useAuth } from './auth'
+import { ThemeProvider } from './components/ThemeProvider'
 
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
       <AuthProvider>
         <RedwoodApolloProvider useAuth={useAuth}>
-          <Routes />
+          <ThemeProvider>
+            <Routes />
+          </ThemeProvider>
         </RedwoodApolloProvider>
       </AuthProvider>
     </RedwoodProvider>

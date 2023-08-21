@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .dashboard__sidebar__link {
+    &:not(.dashboard__sidebar__link--active) {
+      @apply dark:text-gray-400 text-gray-600;
+    }
+
+    &:hover {
+      @apply dark:text-gray-50 text-gray-800 bg-gray-300 bg-opacity-30 dark:bg-gray-600 dark:bg-opacity-10 font-medium;
+    }
+
+    &.dashboard__sidebar__link--active {
+      @apply dark:text-white text-black font-medium;
+    }
+  }
+}

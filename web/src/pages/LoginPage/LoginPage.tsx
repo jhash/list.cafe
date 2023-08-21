@@ -34,7 +34,7 @@ const LoginPage = ({ type }) => {
   // should redirect right after login or wait to show the webAuthn prompts?
   useEffect(() => {
     if (isAuthenticated && (!shouldShowWebAuthn || webAuthn.isEnabled())) {
-      navigate(REDIRECT)
+      setImmediate(() => navigate(REDIRECT))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, shouldShowWebAuthn])
@@ -85,7 +85,7 @@ const LoginPage = ({ type }) => {
       await webAuthn.authenticate()
       await reauthenticate()
       toast.success(WELCOME_MESSAGE)
-      navigate(REDIRECT)
+      setImmediate(() => navigate(REDIRECT))
     } catch (e) {
       if (e.name === 'WebAuthnDeviceNotFoundError') {
         toast.error('Device not found, log in with Email/Password to continue')
@@ -100,7 +100,7 @@ const LoginPage = ({ type }) => {
     try {
       await webAuthn.register()
       toast.success(WELCOME_MESSAGE)
-      navigate(REDIRECT)
+      setImmediate(() => navigate(REDIRECT))
     } catch (e) {
       toast.error(e.message)
     }

@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { Moon, Sun } from 'lucide-react'
 
-export const DarkModeToggle = () => {
+export const ThemeContext = createContext(null)
+
+export const ThemeProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState<boolean>(
     localStorage?.getItem('theme') === 'dracula'
   )
 
   useEffect(() => {
+    console.log('load dark mode')
     if (
       !localStorage?.getItem('theme') &&
       !!window.matchMedia?.('(prefers-color-scheme: dark)').matches
@@ -28,6 +31,16 @@ export const DarkModeToggle = () => {
       document?.documentElement?.classList?.remove('dark')
     }
   }, [darkMode])
+
+  return (
+    <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+export const DarkModeToggle = () => {
+  const { darkMode, setDarkMode } = useContext(ThemeContext)
 
   return (
     <div className="flex flex-nowrap items-center gap-1">

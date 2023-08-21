@@ -41,9 +41,7 @@ export const Success = ({
       <div className="flex flex-grow flex-col items-center justify-center">
         <div className="container flex flex-col gap-12">
           <div className="flex flex-col gap-7">
-            <div className="flex items-center gap-x-6 font-serif text-5xl">
-              {name}
-            </div>
+            <div className="flex font-serif text-5xl">{name}</div>
             {!!description && (
               <p className="font-sans text-xl">{description}</p>
             )}

@@ -30,7 +30,7 @@ export const Success = ({ listItems }: CellSuccessProps<ListItemsQuery>) => {
       <li key={index} className="flex items-center">
         <ExternalLink
           href={url}
-          className="link flex h-16 flex-grow items-center gap-4 border-x border-transparent px-3 text-xl hover:scale-100 hover:border hover:border-b-0 hover:border-t-0 hover:border-neutral-200 hover:bg-neutral-200 hover:bg-opacity-5"
+          className="link flex h-16 flex-grow items-center gap-4 border-x border-transparent px-3 text-xl hover:border hover:border-b-0 hover:border-t-0 hover:border-neutral-200 hover:bg-neutral-200 hover:bg-opacity-20"
         >
           <OutsideLink />
           {title}

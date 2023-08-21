@@ -15,4 +15,5 @@ const useAuth = () => {
   const auth = originalUseAuth()
   return { ...auth, currentUser: auth.currentUser as CurrentUser }
 }
+
 export { AuthProvider, useAuth }

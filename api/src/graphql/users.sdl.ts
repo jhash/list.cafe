@@ -8,7 +8,7 @@ export const schema = gql`
     personId: Int!
     # userRoles: [UserRole]!
     # groupMemberships: [GroupMembership]!
-    # listMemberships: [ListMembership]!
+    listMemberships: [ListMembership]!
     # partnershipStatusChanges: [PartnershipStatusChange]!
     # partnershipContactsAdded: [PartnershipContact]!
     # listViews: [ListView]!
@@ -18,11 +18,11 @@ export const schema = gql`
     # listItemTags: [ListItemTag]!
     # listTags: [ListTag]!
     # peopleCreated: [Person]!
-    hashedPassword: String!
-    salt: String!
-    resetToken: String
-    resetTokenExpiresAt: DateTime
-    webAuthnChallenge: String
+    # hashedPassword: String!
+    # salt: String!
+    # resetToken: String
+    # resetTokenExpiresAt: DateTime
+    # webAuthnChallenge: String
   }
 
   type Query {

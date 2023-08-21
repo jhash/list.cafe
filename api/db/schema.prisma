@@ -10,32 +10,34 @@ generator client {
 }
 
 model User {
-  id                       Int                       @id @default(autoincrement())
-  createdAt                DateTime                  @default(now())
-  updatedAt                DateTime                  @default(now())
-  email                    String                    @unique
-  person                   Person                    @relation(name: "attachedUser", fields: [personId], references: [id])
-  personId                 Int                       @unique
-  credentials              UserCredential[]
-  userRoles                UserRole[]
-  groupMemberships         GroupMembership[]
-  listMemberships          ListMembership[]
-  partnershipStatusChanges PartnershipStatusChange[]
-  partnershipContactsAdded PartnershipContact[]
-  listViews                ListView[]
-  reservations             Reservation[]
-  giftPreferencesAdded     GiftPreferences[]
-  purchases                Purchase[]
-  listItemTags             ListItemTag[]
-  listTags                 ListTag[]
-  peopleCreated            Person[]                  @relation(name: "createdPeople")
+  id                           Int                           @id @default(autoincrement())
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime                      @default(now())
+  email                        String                        @unique
+  person                       Person                        @relation(name: "attachedUser", fields: [personId], references: [id])
+  personId                     Int                           @unique
+  credentials                  UserCredential[]
+  userRoles                    UserRole[]
+  groupMemberships             GroupMembership[]
+  listMemberships              ListMembership[]
+  partnershipStatusChanges     PartnershipStatusChange[]
+  partnershipContactsAdded     PartnershipContact[]
+  listViews                    ListView[]
+  reservations                 Reservation[]
+  giftPreferencesAdded         GiftPreferences[]
+  purchases                    Purchase[]
+  listItemTags                 ListItemTag[]
+  listTags                     ListTag[]
+  peopleCreated                Person[]                      @relation(name: "createdPeople")
   // START AUTH
-  hashedPassword           String
-  salt                     String
-  resetToken               String?
-  resetTokenExpiresAt      DateTime?
-  webAuthnChallenge        String?                   @unique
+  hashedPassword               String
+  salt                         String
+  resetToken                   String?
+  resetTokenExpiresAt          DateTime?
+  webAuthnChallenge            String?                       @unique
   // END AUTH
+  partnershipLinkStatusChanges PartnershipLinkStatusChange[]
+  partnershipLinksCreated      PartnershipLink[]
 }
 
 model UserCredential {
@@ -194,24 +196,25 @@ enum ListVisibility {
 }
 
 model ListItem {
-  id           Int           @id @default(autoincrement())
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @default(now())
-  title        String
-  description  String?
-  url          String?
-  list         List          @relation(fields: [listId], references: [id], onDelete: Cascade)
-  listId       Int
-  quantity     Int           @default(1)
-  voting       Boolean       @default(false)
-  reservations Reservation[]
-  purchases    Purchase[]
-  parent       ListItem?     @relation(name: "listItemInheritance", fields: [parentId], references: [id])
-  parentId     Int?
-  children     ListItem[]    @relation(name: "listItemInheritance")
-  images       Image[]
-  order        Int?
-  price        Decimal?      @db.Money
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @default(now())
+  title           String
+  description     String?
+  url             String?
+  list            List             @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId          Int
+  quantity        Int              @default(1)
+  voting          Boolean          @default(false)
+  reservations    Reservation[]
+  purchases       Purchase[]
+  parent          ListItem?        @relation(name: "listItemInheritance", fields: [parentId], references: [id])
+  parentId        Int?
+  children        ListItem[]       @relation(name: "listItemInheritance")
+  images          Image[]
+  order           Int?
+  price           Decimal?         @db.Money
+  partnershipLink PartnershipLink?
 }
 
 model Image {
@@ -246,19 +249,20 @@ enum ReservationStatus {
 }
 
 model Partnership {
-  id                  Int                  @id @default(autoincrement())
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @default(now())
-  name                String
-  notes               String?
-  status              PartnershipStatus    @default(QUEUED)
-  url                 String
-  partnershipContacts PartnershipContact[]
-  partnershipLinks    PartnershipLink[]
+  id                       Int                       @id @default(autoincrement())
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @default(now())
+  name                     String
+  notes                    String?
+  status                   PartnershipStatus         @default(QUEUED)
+  url                      String
+  partnershipContacts      PartnershipContact[]
+  partnershipStatusChanges PartnershipStatusChange[]
+  partnershipLinks         PartnershipLink[]
   // Example AMAZON_ASSOCIATE_ID
-  affiliateId         String?
+  affiliateId              String?
   // Example: associateId (tag? on Amazon) - need to create link with API after 3 purchases
-  affiliateIdParam    String?
+  affiliateIdParam         String?
 }
 
 enum PartnershipStatus {
@@ -272,12 +276,15 @@ enum PartnershipStatus {
 }
 
 model PartnershipStatusChange {
-  id        Int               @id @default(autoincrement())
-  createdAt DateTime          @default(now())
-  from      PartnershipStatus
-  to        PartnershipStatus
-  user      User?             @relation(fields: [userId], references: [id])
-  userId    Int?
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now())
+  from            PartnershipStatus
+  to              PartnershipStatus
+  notes           String
+  changedByUser   User?             @relation(fields: [changedByUserId], references: [id])
+  changedByUserId Int?
+  partnership     Partnership       @relation(fields: [partnershipId], references: [id])
+  partnershipId   Int
 }
 
 model PartnershipContact {
@@ -480,23 +487,48 @@ model Tag {
   @@unique([parentTagId, name])
 }
 
-model PartnershipLink {
-  id            Int         @id @default(autoincrement())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @default(now())
-  name          String
-  // Regex?
-  url           String
-  partnership   Partnership @relation(fields: [partnershipId], references: [id], onDelete: Cascade)
-  partnershipId Int
+model Identifier {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  person    Person?  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  personId  Int?     @unique
+  list      List?    @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId    Int?     @unique
+  group     Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId   Int?     @unique
 }
 
-model Identifier {
-  id       String  @id @default(cuid())
-  person   Person? @relation(fields: [personId], references: [id], onDelete: Cascade)
-  personId Int?    @unique
-  list     List?   @relation(fields: [listId], references: [id], onDelete: Cascade)
-  listId   Int?    @unique
-  group    Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId  Int?    @unique
+model PartnershipLink {
+  id                           String                        @id @default(cuid())
+  createdAt                    DateTime                      @default(now())
+  updatedAt                    DateTime                      @default(now())
+  status                       PartnershipLinkStatus         @default(PENDING)
+  originalUrl                  String
+  partnership                  Partnership?                  @relation(fields: [partnershipId], references: [id])
+  partnershipId                Int?                          @unique
+  listItem                     ListItem?                     @relation(fields: [listItemId], references: [id])
+  listItemId                   Int?                          @unique
+  createdByUser                User?                         @relation(fields: [createdByUserId], references: [id])
+  createdByUserId              Int?
+  partnershipLinkStatusChanges PartnershipLinkStatusChange[]
+}
+
+enum PartnershipLinkStatus {
+  PENDING
+  DIGESTING
+  SUCCESSFUL
+  UNSUCCESSFUL
+}
+
+model PartnershipLinkStatusChange {
+  id                Int                   @id @default(autoincrement())
+  createdAt         DateTime              @default(now())
+  from              PartnershipLinkStatus
+  to                PartnershipLinkStatus
+  notes             String
+  changedByUser     User?                 @relation(fields: [changedByUserId], references: [id])
+  changedByUserId   Int?
+  partnershipLink   PartnershipLink       @relation(fields: [partnershipLinkId], references: [id])
+  partnershipLinkId String
 }
