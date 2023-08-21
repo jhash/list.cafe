@@ -1,14 +1,14 @@
 import { render } from '@redwoodjs/testing/web'
 
-import MackenziePage from './MackenziePage'
+import ExternalLink from './ExternalLink'
 
 //   Improve this test with help from the Redwood Testing Doc:
-//   https://redwoodjs.com/docs/testing#testing-pages-layouts
+//    https://redwoodjs.com/docs/testing#testing-components
 
-describe('MackenziePage', () => {
+describe('ExternalLink', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<MackenziePage />)
+      render(<ExternalLink />)
     }).not.toThrow()
   })
 })

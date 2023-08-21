@@ -91,6 +91,7 @@ model Group {
   groupMemberships     GroupMembership[]
   type                 GroupType             @default(GENERIC)
   visibility           GroupVisibility       @default(PRIVATE)
+  identifier           Identifier?
 }
 
 enum GroupType {
@@ -150,10 +151,11 @@ model List {
   listItems            ListItem[]
   visibility           ListVisibility        @default(PRIVATE)
   listViews            ListView[]
-  parent               List                  @relation(name: "listInheritance", fields: [parentId], references: [id])
-  parentId             Int
+  parent               List?                 @relation(name: "listInheritance", fields: [parentId], references: [id])
+  parentId             Int?
   children             List[]                @relation(name: "listInheritance")
   order                Int?
+  identifier           Identifier?
 }
 
 model ListView {
@@ -196,16 +198,16 @@ model ListItem {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @default(now())
   title        String
-  description  String
-  url          String
+  description  String?
+  url          String?
   list         List          @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId       Int
   quantity     Int           @default(1)
   voting       Boolean       @default(false)
   reservations Reservation[]
   purchases    Purchase[]
-  parent       ListItem      @relation(name: "listItemInheritance", fields: [parentId], references: [id])
-  parentId     Int
+  parent       ListItem?     @relation(name: "listItemInheritance", fields: [parentId], references: [id])
+  parentId     Int?
   children     ListItem[]    @relation(name: "listItemInheritance")
   images       Image[]
   order        Int?
@@ -304,6 +306,7 @@ model Person {
   images             Image[]
   createdByUser      User?               @relation(name: "createdPeople", fields: [createdByUserId], references: [id])
   createdByUserId    Int?
+  identifier         Identifier?
 }
 
 // https://medium.com/android-news/international-addresses-7477db08edac
@@ -486,4 +489,14 @@ model PartnershipLink {
   url           String
   partnership   Partnership @relation(fields: [partnershipId], references: [id], onDelete: Cascade)
   partnershipId Int
+}
+
+model Identifier {
+  id       String  @id @default(cuid())
+  person   Person? @relation(fields: [personId], references: [id], onDelete: Cascade)
+  personId Int?    @unique
+  list     List?   @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId   Int?    @unique
+  group    Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId  Int?    @unique
 }

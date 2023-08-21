@@ -31,6 +31,7 @@ export default async () => {
     //       }
     //     })
     //   }
+
     if (process.env.AMAZON_ASSOCIATE_ID) {
       const partnerships: Prisma.PartnershipCreateArgs['data'][] = [
         {
@@ -48,6 +49,8 @@ export default async () => {
         skipDuplicates: true,
       })
     }
+
+    // TODO: create identifiers for each route that cuts of identifiers page
   } catch (error) {
     console.warn('Please define your seed data.')
     console.error(error)

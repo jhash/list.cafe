@@ -1,0 +1,51 @@
+export const schema = gql`
+  type List {
+    id: Int!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    name: String!
+    description: String
+    type: ListType!
+    identifier: Identifier
+  }
+
+  enum ListType {
+    WISHLIST
+    WEDDING
+    BABY_SHOWER
+    TOP
+    BOOKMARKS
+    SOCIAL
+    FAVORITES
+    AWESOME
+    INVENTORY
+    TODO
+    FORUM
+    TABLE
+    LINKTREE
+    JOBS
+  }
+
+  type Query {
+    lists: [List!]! @requireAuth
+    list(id: Int!): List @requireAuth
+  }
+
+  input CreateListInput {
+    name: String!
+    description: String
+    type: ListType!
+  }
+
+  input UpdateListInput {
+    name: String
+    description: String
+    type: ListType
+  }
+
+  type Mutation {
+    createList(input: CreateListInput!): List! @requireAuth
+    updateList(id: Int!, input: UpdateListInput!): List! @requireAuth
+    deleteList(id: Int!): List! @requireAuth
+  }
+`
