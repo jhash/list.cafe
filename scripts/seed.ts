@@ -67,6 +67,10 @@ export default async () => {
       {
         id: 'admin',
       },
+      {
+        id: 'dashboard',
+      },
+      // TODO: sublinks? or disallow slashes
     ]
 
     await db.identifier.createMany({ data: identifiers, skipDuplicates: true })

@@ -1,19 +1,13 @@
-import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
+
+import PageTitle from 'src/components/PageTitle/PageTitle'
 
 const AdminPage = () => {
   return (
     <>
       <MetaTags title="Admin" description="Admin page" />
 
-      <h1>AdminPage</h1>
-      <p>
-        Find me in <code>./web/src/pages/AdminPage/AdminPage.tsx</code>
-      </p>
-      <p>
-        My default route is named <code>admin</code>, link to me with `
-        <Link to={routes.admin()}>Admin</Link>`
-      </p>
+      <PageTitle>Admin</PageTitle>
     </>
   )
 }

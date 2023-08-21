@@ -1,14 +1,14 @@
 import { render } from '@redwoodjs/testing/web'
 
-import DashboardPageTitle from './DashboardPageTitle'
+import SidebarLayout from './SidebarLayout'
 
 //   Improve this test with help from the Redwood Testing Doc:
-//    https://redwoodjs.com/docs/testing#testing-components
+//   https://redwoodjs.com/docs/testing#testing-pages-layouts
 
-describe('DashboardPageTitle', () => {
+describe('SidebarLayout', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<DashboardPageTitle />)
+      render(<SidebarLayout />)
     }).not.toThrow()
   })
 })

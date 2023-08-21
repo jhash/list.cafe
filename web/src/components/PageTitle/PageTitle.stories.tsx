@@ -12,14 +12,14 @@
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import DashboardPageTitle from './DashboardPageTitle'
+import PageTitle from './PageTitle'
 
-const meta: Meta<typeof DashboardPageTitle> = {
-  component: DashboardPageTitle,
+const meta: Meta<typeof PageTitle> = {
+  component: PageTitle,
 }
 
 export default meta
 
-type Story = StoryObj<typeof DashboardPageTitle>
+type Story = StoryObj<typeof PageTitle>
 
 export const Primary: Story = {}

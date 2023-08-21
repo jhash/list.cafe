@@ -1,6 +1,6 @@
 import { MetaTags } from '@redwoodjs/web'
 
-import DashboardPageTitle from 'src/components/DashboardPageTitle/DashboardPageTitle'
+import PageTitle from 'src/components/PageTitle/PageTitle'
 import { DarkModeToggle } from 'src/components/ThemeProvider'
 
 const SettingsPage = () => {
@@ -13,7 +13,7 @@ const SettingsPage = () => {
   return (
     <>
       <MetaTags title="Settings" description="Settings page" />
-      <DashboardPageTitle>Settings</DashboardPageTitle>
+      <PageTitle>Settings</PageTitle>
       <div className="flex flex-grow flex-col">
         <ul>
           {SETTINGS.map(({ name, Component }, index) => (

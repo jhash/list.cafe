@@ -1,13 +1,13 @@
 import { MetaTags } from '@redwoodjs/web'
 
-import DashboardPageTitle from 'src/components/DashboardPageTitle/DashboardPageTitle'
+import PageTitle from 'src/components/PageTitle/PageTitle'
 
 const ProfilePage = () => {
   return (
     <>
       <MetaTags title="Profile" description="Profile page" />
 
-      <DashboardPageTitle>Profile</DashboardPageTitle>
+      <PageTitle>Profile</PageTitle>
     </>
   )
 }
