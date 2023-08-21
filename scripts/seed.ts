@@ -50,7 +50,26 @@ export default async () => {
       })
     }
 
-    // TODO: create identifiers for each route that cuts of identifiers page
+    // Identifiers for each route that cuts off identifiers catch-all route
+    const identifiers: Prisma.IdentifierCreateArgs['data'][] = [
+      {
+        id: 'reset-password',
+      },
+      {
+        id: 'forgot-password',
+      },
+      {
+        id: 'signup',
+      },
+      {
+        id: 'login',
+      },
+      {
+        id: 'admin',
+      },
+    ]
+
+    await db.identifier.createMany({ data: identifiers, skipDuplicates: true })
   } catch (error) {
     console.warn('Please define your seed data.')
     console.error(error)
