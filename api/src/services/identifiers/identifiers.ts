@@ -12,12 +12,7 @@ export const identifiers: QueryResolvers['identifiers'] = () => {
 
 export const identifier: QueryResolvers['identifier'] = ({ id }) => {
   return db.identifier.findUniqueOrThrow({
-    where: { id },
-    include: {
-      person: true,
-      group: true,
-      list: true,
-    },
+    where: { id: id.toLowerCase() },
   })
 }
 
