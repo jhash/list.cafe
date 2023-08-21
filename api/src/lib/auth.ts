@@ -1,7 +1,7 @@
 import type { Decoded } from '@redwoodjs/api'
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
 
-import { CurrentUser } from '../../../web/src/auth'
+// import { CurrentUser } from '../../../web/src/auth'
 
 import { db } from './db'
 
@@ -23,9 +23,7 @@ import { db } from './db'
  * seen if someone were to open the Web Inspector in their browser.
  */
 
-export const getCurrentUser: (
-  decoded: Decoded
-) => Promise<CurrentUser> = async (decoded: Decoded) => {
+export const getCurrentUser = async (decoded: Decoded) => {
   if (!decoded || typeof decoded.id !== 'number') {
     throw new Error('Invalid decoded')
   }

@@ -61,6 +61,7 @@ const Routes = () => {
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
         <Route path="/{identifier}" page={IdentifierPage} name="identifier" />
+        {/* TODO: prerender */}
         <Route path="/" page={HomePage} name="home" prerender />
         <Route notfound page={NotFoundPage} />
       </Set>

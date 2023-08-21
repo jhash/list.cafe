@@ -1,21 +1,16 @@
 import classNames from 'classnames'
 import { Coffee } from 'lucide-react'
 
-import { Link, routes } from '@redwoodjs/router'
+import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
+import { Link } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/dist/toast'
 
-import { useAuth } from 'src/auth'
 import { DarkModeToggle } from 'src/components/DarkModeToggle'
+import HomeAuthLinks from 'src/components/HomeAuthLinks/HomeAuthLinks'
 import { useFontFacesLoaded } from 'src/hooks/useFontFacesLoaded'
 
-type HomeLayoutProps = {
-  children?: React.ReactNode
-}
-
-const HomeLayout = ({ children }: HomeLayoutProps) => {
+const HomeLayout = ({ children }) => {
   const fontsLoaded = useFontFacesLoaded()
-
-  const { isAuthenticated, logOut, hasRole } = useAuth()
 
   return (
     <main
@@ -34,39 +29,9 @@ const HomeLayout = ({ children }: HomeLayoutProps) => {
           <Coffee />
         </Link>
         <div className="flex select-none flex-nowrap items-center gap-3">
-          {isAuthenticated ? (
-            <>
-              {hasRole(['ADMIN', 'SUPPORT']) && (
-                <Link
-                  className="link font-semibold no-underline hover:underline"
-                  to={routes.admin()}
-                >
-                  admin
-                </Link>
-              )}
-              <button
-                className="btn btn-link p-0 text-base lowercase text-black no-underline dark:text-white"
-                onClick={() => logOut()}
-              >
-                log out
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                className="link font-semibold no-underline hover:underline"
-                to={routes.login()}
-              >
-                log in
-              </Link>
-              <Link
-                className="link font-semibold no-underline hover:underline"
-                to={routes.signup()}
-              >
-                sign up
-              </Link>
-            </>
-          )}
+          <BrowserOnly>
+            <HomeAuthLinks />
+          </BrowserOnly>
         </div>
       </nav>
       <div className="flex flex-grow flex-col px-4">{children}</div>
