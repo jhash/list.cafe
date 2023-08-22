@@ -7,6 +7,7 @@ export const schema = gql`
     description: String
     type: ListType!
     identifier: Identifier
+    listItems: [ListItem]
   }
 
   enum ListType {

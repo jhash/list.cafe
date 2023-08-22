@@ -1,13 +1,15 @@
 import type { FindListQuery, FindListQueryVariables } from 'types/graphql'
 
+import { Redirect, routes } from '@redwoodjs/router'
 import {
   type CellSuccessProps,
-  type CellFailureProps,
+  // type CellFailureProps,
   MetaTags,
 } from '@redwoodjs/web'
 
 import ListItemsCell from 'src/components/ListItemsCell'
 
+import DashboardList from '../DashboardList/DashboardList'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 
 export const QUERY = gql`
@@ -22,18 +24,28 @@ export const QUERY = gql`
 
 export const Loading = () => <div>Loading...</div>
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <Redirect to={routes.home()} />
 
-export const Failure = ({
-  error,
-}: CellFailureProps<FindListQueryVariables>) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
+export const Failure = () => (
+  // {
+  //   error,
+  // }: CellFailureProps<FindListQueryVariables>
+  <Redirect to={routes.home()} />
 )
 
+interface ListCellProps {
+  dashboard?: boolean
+}
 export const Success = ({
   list,
-}: CellSuccessProps<FindListQuery, FindListQueryVariables>) => {
+  dashboard = false,
+}: CellSuccessProps<FindListQuery & ListCellProps, FindListQueryVariables>) => {
+  if (dashboard) {
+    return <DashboardList list={list} />
+  }
+
   const { id, name, description } = list
+
   return (
     <>
       <MetaTags title={name} description={description} />
@@ -41,15 +53,15 @@ export const Success = ({
       <div className="flex flex-grow flex-col items-center justify-center">
         <div className="container flex flex-col gap-12">
           <div className="flex flex-col gap-7">
-            <div className="flex font-serif text-5xl">{name}</div>
+            <div className="flex font-serif text-5xl leading-tight">{name}</div>
             {!!description && (
               <p className="font-sans text-xl">{description}</p>
             )}
           </div>
-          <ul className="flex flex-col divide-y border-y">
-            <ListItemsCell listId={id} />
+          <ul className="flex flex-col gap-2">
+            <ListItemsCell listId={id} dashboard={dashboard} editing={false} />
           </ul>
-          <ListFadeOut />
+          <ListFadeOut noHeight />
         </div>
       </div>
     </>

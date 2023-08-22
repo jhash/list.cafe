@@ -1,3 +1,5 @@
+import type { EditListItemById, UpdateListItemInput } from 'types/graphql'
+
 import {
   Form,
   FormError,
@@ -8,8 +10,6 @@ import {
   CheckboxField,
   Submit,
 } from '@redwoodjs/forms'
-
-import type { EditListItemById, UpdateListItemInput } from 'types/graphql'
 import type { RWGqlError } from '@redwoodjs/forms'
 
 type FormListItem = NonNullable<EditListItemById['listItem']>

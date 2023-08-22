@@ -19,7 +19,7 @@ const AdminLayout = ({ children }) => {
     return <Redirect to={routes.home()} />
   }
 
-  return <SidebarLayout sidebar={<AdminSidebar />}>{children}</SidebarLayout>
+  return <SidebarLayout Sidebar={AdminSidebar}>{children}</SidebarLayout>
 }
 
 export default AdminLayout

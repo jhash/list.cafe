@@ -1,10 +1,10 @@
 import ListCell from 'src/components/ListCell'
 
-interface ListPageProps {
+export interface ListPageProps {
   id: number
 }
 const ListPage = ({ id }: ListPageProps) => {
-  return <ListCell id={id} />
+  return <ListCell id={id} dashboard={false} />
 }
 
 export default ListPage

@@ -6107,6 +6107,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@uidotdev/usehooks@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@uidotdev/usehooks@npm:2.1.1"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: 4b1ace60c2a8926f4fa03a003615ec9e4adb9ad404d3089cde93472b9ca50dbb829134c2879cbcbb58c0b3a8e54266bb73651ca5b884ea60f3a980f529a4b6ba
+  languageName: node
+  linkType: hard
+
 "@vitejs/plugin-react@npm:4.0.4":
   version: 4.0.4
   resolution: "@vitejs/plugin-react@npm:4.0.4"
@@ -21392,6 +21402,7 @@ __metadata:
     "@simplewebauthn/browser": ^7
     "@types/fontfaceobserver": ^2.1.0
     "@types/setimmediate": ^1.0.2
+    "@uidotdev/usehooks": ^2.1.1
     autoprefixer: ^10.4.15
     classnames: ^2.3.2
     daisyui: ^3.5.1

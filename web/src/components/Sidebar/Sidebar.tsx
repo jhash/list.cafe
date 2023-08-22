@@ -1,6 +1,9 @@
+import classNames from 'classnames'
 import { LucideIcon } from 'lucide-react'
 
 import { NavLink } from '@redwoodjs/router'
+
+import { SidebarProps } from '../../layouts/SidebarLayout/SidebarLayout'
 
 export interface SidebarLink {
   name: string
@@ -8,13 +11,17 @@ export interface SidebarLink {
   path: string
 }
 
-interface SidebarProps {
+type SidebarTypeProps = SidebarProps & {
   links: SidebarLink[]
 }
 
-const Sidebar = ({ links }: SidebarProps) => {
+const Sidebar: React.FC<SidebarTypeProps> = ({ links }) => {
   return (
-    <ul className="flex flex-col gap-y-0.5 px-0.5">
+    <ul
+      className={classNames(
+        'flex flex-grow flex-col gap-y-0.5 overflow-auto px-0.5'
+      )}
+    >
       {links.map(({ path, name, Icon }, index) => (
         <NavLink
           to={path}

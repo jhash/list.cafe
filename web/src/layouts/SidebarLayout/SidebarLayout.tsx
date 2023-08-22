@@ -1,27 +1,114 @@
 import './SidebarLayout.scss'
 
-import React from 'react'
+import React, { createContext, useContext, useState } from 'react'
+
+import classNames from 'classnames'
+import { PanelLeft, PanelLeftClose } from 'lucide-react'
 
 import HomeLink from 'src/components/HomeLink/HomeLink'
 
 import MainLayout from '../MainLayout/MainLayout'
 
-type SidebarLayoutProps = React.HTMLProps<HTMLDivElement> & {
-  sidebar: React.ReactNode
+export const SidebarContext = createContext(null)
+
+export interface SidebarProps {
+  open: boolean
+  toggle: () => void
 }
-const SidebarLayout = ({ children, sidebar }: SidebarLayoutProps) => {
+export type SidebarType = React.ElementType<SidebarProps>
+
+type SidebarLayoutProps = React.HTMLProps<HTMLDivElement> & {
+  Sidebar: SidebarType
+}
+const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
+  const [state, setState] = useState<{ open: boolean; closing: boolean }>({
+    open: true,
+    closing: false,
+  })
+  const { open, closing } = state
+  const [hovering, setHovering] = useState<boolean>(false)
+
+  const toggle = () => {
+    if (open) {
+      return close()
+    }
+
+    setState({ open: true, closing: false })
+  }
+  const sidebarProps: SidebarProps = { open, toggle }
+
+  const close = () => {
+    setState({ open: false, closing: true })
+    setTimeout(() => setState({ open: false, closing: false }), 300)
+  }
+
+  const startHovering = (event) => {
+    event?.stopPropagation()
+
+    if (hovering) {
+      return
+    }
+
+    setHovering(true)
+  }
+  const stopHovering = (event) => {
+    event?.stopPropagation()
+    setHovering(false)
+  }
+
   return (
-    <MainLayout>
-      <div className="flex flex-grow divide-x">
-        <div className="flex w-52 flex-shrink-0 flex-grow-0 flex-col gap-y-2">
-          <div className="flex h-16 flex-grow-0 items-center justify-start px-4">
-            <HomeLink />
+    <SidebarContext.Provider value={sidebarProps}>
+      <MainLayout>
+        <div className="relative flex flex-grow">
+          {!open && (
+            <div
+              className={classNames(
+                'pointer-events-auto absolute bottom-0 left-0 top-0 hidden w-2 cursor-pointer md:flex'
+              )}
+              onMouseEnter={startHovering}
+              // onMouseLeave={stopHovering}
+            />
+          )}
+          {open && (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+            <div
+              className="pointer-events-auto absolute bottom-0 left-48 right-0 top-0 z-10 flex flex-grow md:hidden"
+              onClick={() => setState({ open: false, closing: false })}
+            />
+          )}
+          <div
+            className={classNames(
+              'absolute bottom-0 left-0 top-0 z-10 flex w-sidebar flex-shrink-0 flex-grow flex-col flex-nowrap gap-y-2 overflow-hidden whitespace-nowrap border-r transition-maxWidth duration-300',
+              !open && !hovering && 'max-w-0 -translate-x-[1px]',
+              (open || closing) && 'md:static md:bottom-auto md:left-auto',
+              (open || hovering) && 'max-w-sidebar'
+            )}
+            onMouseLeave={stopHovering}
+            style={{
+              background: 'hsl(var(--b1) / var(--tw-bg-opacity, 1))',
+            }}
+          >
+            <div className="flex h-16 flex-grow-0 items-center justify-start px-4">
+              <HomeLink />
+            </div>
+            <Sidebar {...sidebarProps} />
           </div>
-          {sidebar}
+          <div className="flex flex-grow flex-col gap-y-2 px-4">
+            <div className="flex flex-grow flex-col gap-y-10">{children}</div>
+          </div>
         </div>
-        <div className="flex flex-grow flex-col gap-y-2 px-4">{children}</div>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </SidebarContext.Provider>
+  )
+}
+
+export const SidebarButton = () => {
+  const { open, toggle } = useContext(SidebarContext)
+
+  return (
+    <button className="btn btn-ghost flex items-center p-2" onClick={toggle}>
+      {open ? <PanelLeftClose /> : <PanelLeft />}
+    </button>
   )
 }
 

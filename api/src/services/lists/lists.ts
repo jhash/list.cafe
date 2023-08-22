@@ -39,4 +39,7 @@ export const List: ListRelationResolvers = {
   identifier: (_obj, { root }) => {
     return db.list.findUnique({ where: { id: root?.id } }).identifier()
   },
+  listItems: (_obj, { root }) => {
+    return db.list.findUnique({ where: { id: root?.id } }).listItems()
+  },
 }

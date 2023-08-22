@@ -10,7 +10,6 @@ export const ThemeProvider = ({ children }) => {
   )
 
   useEffect(() => {
-    console.log('load dark mode')
     if (
       !localStorage?.getItem('theme') &&
       !!window.matchMedia?.('(prefers-color-scheme: dark)').matches

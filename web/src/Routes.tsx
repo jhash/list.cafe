@@ -7,6 +7,7 @@ import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import DashboardLayout from './layouts/DashboardLayout/DashboardLayout'
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
 import AdminPage from './pages/AdminPage/AdminPage'
+import DashboardListPage from './pages/DashboardListPage/DashboardListPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 import HomePage from './pages/HomePage/HomePage'
 import LoginPage from './pages/LoginPage/LoginPage'
@@ -16,6 +17,7 @@ import SignupPage from './pages/SignupPage/SignupPage'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
+      <Route path="/dashboard-list" page={DashboardListPage} name="dashboardList" />
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
         <Set wrap={ScaffoldLayout} title="ListMemberships" titleTo="adminListMemberships" buttonLabel="New ListMembership" buttonTo="adminNewListMembership">
           <Route path="/admin/list-memberships/new" page={AdminListMembershipNewListMembershipPage} name="adminNewListMembership" />
@@ -82,6 +84,7 @@ const Routes = () => {
       <Set wrap={DashboardLayout}>
         <Route path="/dashboard/groups" page={GroupsPage} name="groups" />
         <Route path="/dashboard/lists" page={ListsPage} name="lists" />
+        <Route path="/dashboard/lists/{id:Int}" page={DashboardListPage} name="list" />
         <Route path="/dashboard/settings" page={SettingsPage} name="settings" />
         <Route path="/dashboard/profile" page={ProfilePage} name="profile" />
         <Route path="/dashboard" page={DashboardPage} name="dashboard" />

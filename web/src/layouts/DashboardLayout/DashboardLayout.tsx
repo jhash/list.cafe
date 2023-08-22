@@ -19,9 +19,7 @@ const DashboardLayout = ({ children }) => {
     return <Redirect to={routes.home()} />
   }
 
-  return (
-    <SidebarLayout sidebar={<DashboardSidebar />}>{children}</SidebarLayout>
-  )
+  return <SidebarLayout Sidebar={DashboardSidebar}>{children}</SidebarLayout>
 }
 
 export default DashboardLayout

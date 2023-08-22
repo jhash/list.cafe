@@ -9,7 +9,7 @@
     }
 
     &:hover {
-      @apply dark:text-gray-50 text-gray-800 bg-gray-300 bg-opacity-30 dark:bg-gray-600 dark:bg-opacity-10 font-medium;
+      @apply dark:text-gray-50 text-gray-800 bg-gray-300 bg-opacity-30 dark:bg-gray-600 dark:bg-opacity-20 font-medium;
     }
 
     &.dashboard__sidebar__link--active {

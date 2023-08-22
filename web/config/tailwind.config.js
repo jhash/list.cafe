@@ -1,9 +1,20 @@
+const colors = require('tailwindcss/colors')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
   content: ['src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      width: {
+        sidebar: '14rem',
+      },
+      maxWidth: {
+        sidebar: '14rem',
+      },
+      transitionProperty: {
+        maxWidth: 'max-width',
+      },
       colors: {
         ivory: '#fffff0',
         whiteSmoke: '#f5f5f5',
@@ -17,8 +28,11 @@ module.exports = {
       },
       screens: {
         tall: {
-          raw: '(min-height: 768px)',
+          raw: '(min-height: 900px)',
         },
+      },
+      borderColor: {
+        DEFAULT: colors.gray[300],
       },
     },
     fontFamily: {

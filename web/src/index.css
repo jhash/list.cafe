@@ -14,6 +14,14 @@
  * END --- SETUP TAILWINDCSS EDIT
  */
 
+@layer base {
+  *,
+  ::before,
+  ::after {
+    @apply dark:border-gray-500 border-gray-300;
+  }
+}
+
 
 /* Define the "system" font family */
 @font-face {

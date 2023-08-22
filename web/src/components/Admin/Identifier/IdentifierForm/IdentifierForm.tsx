@@ -1,3 +1,5 @@
+import type { EditIdentifierById, UpdateIdentifierInput } from 'types/graphql'
+
 import {
   Form,
   FormError,
@@ -6,8 +8,6 @@ import {
   NumberField,
   Submit,
 } from '@redwoodjs/forms'
-
-import type { EditIdentifierById, UpdateIdentifierInput } from 'types/graphql'
 import type { RWGqlError } from '@redwoodjs/forms'
 
 type FormIdentifier = NonNullable<EditIdentifierById['identifier']>

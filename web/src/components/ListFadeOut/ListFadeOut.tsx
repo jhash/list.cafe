@@ -1,10 +1,21 @@
+import classNames from 'classnames'
+
 interface ListFadeOutProps {
   lines?: number
+  noHeight?: boolean
 }
 
-const ListFadeOut: React.FC<ListFadeOutProps> = ({ lines = 5 }) => {
+const ListFadeOut: React.FC<ListFadeOutProps> = ({
+  lines = 5,
+  noHeight = false,
+}) => {
   return (
-    <div className="flex max-h-0 flex-col overflow-visible">
+    <div
+      className={classNames(
+        'flex flex-col overflow-visible',
+        noHeight && 'max-h-0 tall:max-h-none'
+      )}
+    >
       <div className="flex flex-col gap-6">
         {[...Array(lines).keys()].map((value) => (
           <div
