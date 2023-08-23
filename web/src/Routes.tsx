@@ -17,7 +17,6 @@ import SignupPage from './pages/SignupPage/SignupPage'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/dashboard-list" page={DashboardListPage} name="dashboardList" />
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
         <Set wrap={ScaffoldLayout} title="ListMemberships" titleTo="adminListMemberships" buttonLabel="New ListMembership" buttonTo="adminNewListMembership">
           <Route path="/admin/list-memberships/new" page={AdminListMembershipNewListMembershipPage} name="adminNewListMembership" />
@@ -84,6 +83,7 @@ const Routes = () => {
       <Set wrap={DashboardLayout}>
         <Route path="/dashboard/groups" page={GroupsPage} name="groups" />
         <Route path="/dashboard/lists" page={ListsPage} name="lists" />
+        <Route path="/dashboard/lists/new" page={DashboardListPage} name="newList" />
         <Route path="/dashboard/lists/{id:Int}" page={DashboardListPage} name="list" />
         <Route path="/dashboard/settings" page={SettingsPage} name="settings" />
         <Route path="/dashboard/profile" page={ProfilePage} name="profile" />

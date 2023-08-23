@@ -36,6 +36,7 @@ export const schema = gql`
     name: String!
     description: String
     type: ListType!
+    identifier: CreateIdentifierInput
   }
 
   input UpdateListInput {

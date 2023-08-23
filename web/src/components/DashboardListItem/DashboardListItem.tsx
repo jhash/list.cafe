@@ -132,7 +132,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         'flex-grow',
         !!id && 'collapse-arrow collapse rounded-lg border shadow-sm'
       )}
-      name={`list-item-form`}
+      name="list-item-form"
       onSubmit={(input, event) => onSave(input, event)}
     >
       {!!id && (
@@ -187,7 +187,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         <NumberField hidden name="listId" defaultValue={listId} />
         <FormItem
           editing={editing}
-          name={`title`}
+          name="title"
           defaultValue={title}
           className="text-base"
           label="Title"
@@ -196,14 +196,14 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         />
         <FormItem
           editing={editing}
-          name={`url`}
+          name="url"
           defaultValue={url}
           className="text-base"
           label="Link"
         />
         <FormItem
           editing={editing}
-          name={`description`}
+          name="description"
           defaultValue={description}
           className="text-base"
           label="Description"
@@ -211,7 +211,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         <FormItem
           type="number"
           editing={editing}
-          name={`quantity`}
+          name="quantity"
           defaultValue={quantity}
           className="text-base"
           label="Quantity"
@@ -221,7 +221,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           type="number"
           step="0.01"
           editing={editing}
-          name={`price`}
+          name="price"
           defaultValue={price}
           className="text-base"
           label="Price"

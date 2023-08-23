@@ -18,7 +18,14 @@ export const list: QueryResolvers['list'] = ({ id }) => {
 
 export const createList: MutationResolvers['createList'] = ({ input }) => {
   return db.list.create({
-    data: input,
+    data: {
+      ...input,
+      identifier: {
+        create: {
+          id: input.identifier.id,
+        },
+      },
+    },
   })
 }
 

@@ -15,6 +15,7 @@ export const schema = gql`
   }
 
   input CreateIdentifierInput {
+    id: String
     personId: Int
     listId: Int
     groupId: Int

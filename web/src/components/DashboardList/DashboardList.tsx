@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
 
+import { kebabCase } from 'lodash'
 import { startCase, camelCase } from 'lodash'
 import { Pencil, PlusCircle, Save, X } from 'lucide-react'
 import { FindListQuery, ListItem } from 'types/graphql'
 
 import { Form } from '@redwoodjs/forms'
+import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
 import { UPDATE_LIST_MUTATION } from '../Admin/List/EditListCell'
+import { CREATE_LIST_MUTATION } from '../Admin/List/NewList'
 import DashboardListItem from '../DashboardListItem/DashboardListItem'
 import FormItem from '../FormItem/FormItem'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
@@ -49,17 +52,35 @@ const AddItemButton: React.FC<ButtonProps> = ({ ...props }) => (
     <PlusCircle />
   </button>
 )
-const DashboardList: React.FC<FindListQuery> = ({ list }) => {
+const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
+  list,
+}) => {
+  const { id, name, description, identifier, type } = list || {
+    type: 'WISHLIST',
+  }
+
   // TODO: default to if user has edit access
-  const [editing, setEditing] = useState<boolean>(false)
+  const [editing, setEditing] = useState<boolean>(!id)
   const [listItem, setListItem] = useState<Partial<ListItem> | undefined>()
-  const { id, name, description, identifier, type } = list
 
   const [updateListMutation] = useMutation(UPDATE_LIST_MUTATION, {
     onCompleted: () => {
       toast.success('List updated')
       setEditing(false)
       // navigate(routes.lists())
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const [createListMutation] = useMutation(CREATE_LIST_MUTATION, {
+    onCompleted: (data) => {
+      toast.success('List created')
+      setEditing(false)
+      if (data?.createList) {
+        navigate(routes.list({ id: data?.createList.id }))
+      }
     },
     onError: (error) => {
       toast.error(error.message)
@@ -89,16 +110,30 @@ const DashboardList: React.FC<FindListQuery> = ({ list }) => {
       return
     }
 
-    updateListMutation({
-      variables: {
-        id,
-        input: {
-          ...input,
-          // TODO: allow changing id
-          identifier: undefined,
+    if (id) {
+      updateListMutation({
+        variables: {
+          id,
+          input: {
+            ...input,
+            // TODO: allow changing id
+            identifier: undefined,
+          },
         },
-      },
-    })
+      })
+    } else {
+      createListMutation({
+        variables: {
+          input: {
+            ...input,
+            type: type || 'WISHLIST',
+            identifier: {
+              id: kebabCase(input.identifier),
+            },
+          },
+        },
+      })
+    }
   }
 
   useEffect(() => {
@@ -111,7 +146,10 @@ const DashboardList: React.FC<FindListQuery> = ({ list }) => {
 
   return (
     <>
-      <MetaTags title={name} description={description} />
+      <MetaTags
+        title={name || 'Add new list'}
+        description={description || 'Create a new list'}
+      />
       {!!listItem && (
         <dialog id="newListItem" className="modal modal-bottom sm:modal-middle">
           <div className="modal-box relative flex flex-col gap-y-6">
@@ -148,7 +186,7 @@ const DashboardList: React.FC<FindListQuery> = ({ list }) => {
       )}
       <div className="flex max-w-xl flex-col gap-5">
         <Form className="flex flex-col gap-3" onSubmit={onSave}>
-          <PageTitle title={name}>
+          <PageTitle title={name || 'Add new list'}>
             <button
               className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
               type={editing ? 'submit' : 'button'}
@@ -163,31 +201,32 @@ const DashboardList: React.FC<FindListQuery> = ({ list }) => {
           </PageTitle>
           <div className="flex max-w-xl flex-col gap-5">
             <FormItem
-              name={`name`}
+              name="name"
               defaultValue={name}
               editing={editing}
               label={<SectionTitle>Name</SectionTitle>}
               validation={{ required: true }}
             />
             <FormItem
-              name={`identifier`}
-              defaultValue={identifier.id}
+              name="identifier"
+              defaultValue={identifier?.id}
               editing={editing}
               label={<SectionTitle>ID</SectionTitle>}
               validation={{ required: true }}
             >
               <div className="flex items-center p-1 text-sm text-gray-500">
-                {`Ex. list.cafe/${identifier.id}`}
+                {`Ex. list.cafe/${identifier?.id || 'your-list-name'}`}
               </div>
             </FormItem>
             <FormItem
-              name={`description`}
+              name="description"
               defaultValue={description}
               editing={editing}
               label={<SectionTitle>Description</SectionTitle>}
             />
             <FormItem
-              name={`type`}
+              type="text"
+              name="type"
               defaultValue={startCase(camelCase(type))}
               editing={editing}
               label={<SectionTitle>Type</SectionTitle>}
@@ -195,21 +234,27 @@ const DashboardList: React.FC<FindListQuery> = ({ list }) => {
             />
           </div>
         </Form>
+
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <SectionTitle>Items</SectionTitle>
-            <div className="flex items-center gap-3">
-              <AddItemButton onClick={createNewListItem} />
-            </div>
+            {/* TODO: support without having saved */}
+            {!!id && (
+              <div className="flex items-center gap-3">
+                <AddItemButton onClick={createNewListItem} />
+              </div>
+            )}
           </div>
-          <ul className="flex flex-col gap-2">
-            <ListItemsCell
-              listId={id}
-              dashboard
-              editing={editing}
-              onListItemsUpdate={resetNewListItem}
-            />
-          </ul>
+          {!!id && (
+            <ul className="flex flex-col gap-2">
+              <ListItemsCell
+                listId={id}
+                dashboard
+                editing={editing}
+                onListItemsUpdate={resetNewListItem}
+              />
+            </ul>
+          )}
         </div>
         <ListFadeOut />
       </div>

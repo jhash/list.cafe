@@ -9,6 +9,7 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
   ({ editing = true, defaultValue, ...props }, ref) => {
     return editing ? (
       <InputField
+        autoComplete="off"
         defaultValue={defaultValue}
         {...props}
         className="input input-sm flex-grow rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500"

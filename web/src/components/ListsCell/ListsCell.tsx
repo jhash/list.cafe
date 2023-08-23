@@ -23,7 +23,7 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 export const Success = ({ lists }: CellSuccessProps<ListsQuery>) => {
   return (
-    <ul>
+    <ul className="flex flex-col gap-2">
       {lists.map(({ id, name }, index) => {
         return (
           <Link

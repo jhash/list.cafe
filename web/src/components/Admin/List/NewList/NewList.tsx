@@ -6,10 +6,16 @@ import { toast } from '@redwoodjs/web/toast'
 
 import ListForm from 'src/components/Admin/List/ListForm'
 
-const CREATE_LIST_MUTATION = gql`
+export const CREATE_LIST_MUTATION = gql`
   mutation CreateListMutation($input: CreateListInput!) {
     createList(input: $input) {
       id
+      name
+      identifier {
+        id
+      }
+      description
+      type
     }
   }
 `

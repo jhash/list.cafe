@@ -1,8 +1,13 @@
+import DashboardList from 'src/components/DashboardList/DashboardList'
 import ListCell from 'src/components/ListCell'
 
-import { ListPageProps } from '../ListPage/ListPage'
-
-const DashboardListPage = ({ id }: ListPageProps) => {
+interface DashboardListPage {
+  id?: number
+}
+const DashboardListPage = ({ id }: DashboardListPage) => {
+  if (!id) {
+    return <DashboardList />
+  }
   return <ListCell id={id} dashboard />
 }
 

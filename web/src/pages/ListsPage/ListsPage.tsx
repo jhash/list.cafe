@@ -1,3 +1,6 @@
+import { PlusCircle } from 'lucide-react'
+
+import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
@@ -9,7 +12,14 @@ const ListsPage = () => {
     <>
       <MetaTags title="Lists" description="Lists page" />
 
-      <PageTitle>Lists</PageTitle>
+      <PageTitle title="Lists">
+        <Link
+          className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
+          to={routes.newList()}
+        >
+          <PlusCircle />
+        </Link>
+      </PageTitle>
       <ListsCell />
       <ListFadeOut />
     </>
