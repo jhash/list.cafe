@@ -23,6 +23,7 @@ export const QUERY = gql`
       }
       type
       visibility
+      listRoles
     }
   }
 `

@@ -34,3 +34,6 @@ export const AMAZON_REGEX = mapUrlsToRegex(AMAZON_URLS)
 export const TRUSTED_URLS = [...AMAZON_URLS]
 
 export const TRUSTED_REGEX = mapUrlsToRegex(TRUSTED_URLS)
+
+export const LIST_CAFE_DOMAIN =
+  process.env.NODE_ENV === 'development' ? 'localhost:8912' : 'list.cafe'

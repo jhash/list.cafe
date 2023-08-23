@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-import { kebabCase } from 'lodash'
+import intersection from 'lodash/intersection'
+import kebabCase from 'lodash/kebabCase'
 import { Eye, Pencil, PlusCircle, Save, Trash2, X } from 'lucide-react'
-import { FindListQuery, ListItem } from 'types/graphql'
+import { FindListQuery, ListItem, ListRole } from 'types/graphql'
 
-import { Form } from '@redwoodjs/forms'
+import { Controller, Form } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
+import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
+
 import { UPDATE_LIST_MUTATION } from '../Admin/List/EditListCell'
+import { DELETE_LIST_MUTATION } from '../Admin/List/List'
 import { CREATE_LIST_MUTATION } from '../Admin/List/NewList'
 import DashboardListItem from '../DashboardListItem/DashboardListItem'
 import FormItem from '../FormItem/FormItem'
@@ -58,6 +62,11 @@ const LIST_VISIBILITY_OPTIONS = [
   },
 ]
 
+export const listRolesIntersect = (
+  roles: ListRole[] | undefined,
+  authRoles: ListRole[]
+) => !!roles?.length && !!intersection(roles, authRoles).length
+
 declare let window: Window &
   typeof globalThis & {
     newListItem: { showModal: () => void; close: () => void }
@@ -77,13 +86,47 @@ const AddItemButton: React.FC<ButtonProps> = ({ ...props }) => (
 const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
   list,
 }) => {
-  const { id, name, description, identifier, type, visibility } = list || {
-    type: 'WISHLIST',
-  }
+  const { id, name, description, identifier, type, visibility, listRoles } =
+    list || {
+      type: 'WISHLIST',
+    }
+
+  // TODO: remove admin?
+  const canDelete = useMemo(
+    () => listRolesIntersect(listRoles, ['OWNER', 'ADMIN']),
+    [listRoles]
+  )
+
+  const canEdit = useMemo(
+    () => listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN']),
+    [listRoles]
+  )
+
+  const canAdd = useMemo(
+    () =>
+      listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN', 'CONTRIBUTE']),
+    [listRoles]
+  )
 
   // TODO: default to if user has edit access
   const [editing, setEditing] = useState<boolean>(!id)
   const [listItem, setListItem] = useState<Partial<ListItem> | undefined>()
+
+  const [deleteListMutation, { loading: deleteLoading }] = useMutation(
+    DELETE_LIST_MUTATION,
+    {
+      onCompleted: () => {
+        toast.success('List deleted')
+        setEditing(false)
+        navigate(routes.lists())
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+      refetchQueries: [{ query: LIST_CELL_QUERY, variables: { id } }],
+      awaitRefetchQueries: true,
+    }
+  )
 
   const [updateListMutation, { loading: updateLoading }] = useMutation(
     UPDATE_LIST_MUTATION,
@@ -117,7 +160,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     }
   )
 
-  const loading = id ? updateLoading : createLoading
+  const loading = id ? updateLoading || deleteLoading : createLoading
 
   const createNewListItem = () => {
     setListItem({
@@ -134,6 +177,8 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     setListItem(undefined)
   }
 
+  const onDelete = () => deleteListMutation({ variables: { id } })
+
   const onSave = (input, event) => {
     event?.stopPropagation?.()
     event?.preventDefault?.()
@@ -148,8 +193,9 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           id,
           input: {
             ...input,
-            // TODO: allow changing id
-            identifier: undefined,
+            identifier: {
+              id: kebabCase(input.identifier),
+            },
           },
         },
       })
@@ -224,14 +270,24 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           onSubmit={onSave}
         >
           <PageTitle title={name || 'Add new list'}>
-            {!!id && (
-              <Link
-                to={routes.identifier({ identifier: identifier?.id })}
+            {!!id && canDelete && (
+              <button
                 className="btn btn-error flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
                 title="Delete"
+                type="button"
+                onClick={(event) => {
+                  event.preventDefault()
+                  event.stopPropagation()
+
+                  return (
+                    window.confirm(
+                      'Are you sure you want to delete this list?'
+                    ) && onDelete()
+                  )
+                }}
               >
                 <Trash2 />
-              </Link>
+              </button>
             )}
             {!!id && !!identifier?.id && (
               <Link
@@ -242,17 +298,19 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                 <Eye />
               </Link>
             )}
-            <button
-              className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
-              type={editing ? 'submit' : 'button'}
-              onClick={
-                editing
-                  ? undefined
-                  : () => setImmediate(() => setEditing(!editing))
-              }
-            >
-              {editing ? <Save /> : <Pencil />}
-            </button>
+            {!!canEdit && (
+              <button
+                className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
+                type={editing ? 'submit' : 'button'}
+                onClick={
+                  editing
+                    ? undefined
+                    : () => setImmediate(() => setEditing(!editing))
+                }
+              >
+                {editing ? <Save /> : <Pencil />}
+              </button>
+            )}
           </PageTitle>
           <div className="flex flex-col gap-5">
             <FormItem
@@ -269,9 +327,18 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               label={<SectionTitle>ID</SectionTitle>}
               validation={{ required: true }}
             >
-              <div className="flex items-center p-1 text-sm text-gray-500">
-                {`Ex. list.cafe/${identifier?.id || 'your-list-name'}`}
-              </div>
+              <Controller
+                name="identifier"
+                render={({ field: { value } }) => (
+                  <div className="flex items-center p-1 text-sm text-gray-500">
+                    {`Ex. ${LIST_CAFE_DOMAIN}/${
+                      (editing ? value : undefined) ||
+                      identifier?.id ||
+                      'your-list-name'
+                    }`}
+                  </div>
+                )}
+              />
             </FormItem>
             <FormItem
               name="description"
@@ -303,7 +370,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           <div className="flex w-full max-w-full items-center gap-3">
             <SectionTitle>Items</SectionTitle>
             {/* TODO: support without having saved */}
-            {!!id && (
+            {!!id && canAdd && (
               <div className="flex items-center gap-3">
                 <AddItemButton onClick={createNewListItem} />
               </div>

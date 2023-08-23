@@ -14,6 +14,13 @@ export const schema = gql`
     # createdByUser: User
     # createdByUserId: Int
     identifier: Identifier
+    visibility: PersonVisibility
+  }
+
+  enum PersonVisibility {
+    PRIVATE
+    GROUP
+    PUBLIC
   }
 
   type Query {

@@ -15,6 +15,7 @@ export const QUERY = gql`
       quantity
       price
       listId
+      listRoles
     }
   }
 `

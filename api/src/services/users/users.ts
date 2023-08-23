@@ -17,8 +17,26 @@ export const user: QueryResolvers['user'] = ({ id }) => {
 }
 
 export const createUser: MutationResolvers['createUser'] = ({ input }) => {
+  const { email, hashedPassword, salt } = input
   return db.user.create({
-    data: input,
+    data: {
+      email,
+      hashedPassword,
+      salt,
+      userRoles: {
+        create: {},
+      },
+      person: {
+        connectOrCreate: {
+          where: {
+            email: input.email,
+          },
+          create: {
+            ...input.person,
+          },
+        },
+      },
+    },
   })
 }
 

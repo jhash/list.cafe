@@ -2,9 +2,12 @@ import type {
   QueryResolvers,
   MutationResolvers,
   ListItemRelationResolvers,
+  ResolversParentTypes,
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+
+import { List } from '../lists/lists'
 
 export const listItems: QueryResolvers['listItems'] = ({ listId }) => {
   return db.listItem.findMany({
@@ -47,6 +50,17 @@ export const deleteListItem: MutationResolvers['deleteListItem'] = ({ id }) => {
 export const ListItem: ListItemRelationResolvers = {
   list: (_obj, { root }) => {
     return db.listItem.findUnique({ where: { id: root?.id } }).list()
+  },
+  listRoles: (_obj, { root, ...rest }) => {
+    return List.listRoles(
+      {},
+      {
+        root: {
+          id: root?.listId,
+        } as ResolversParentTypes['List'],
+        ...rest,
+      }
+    )
   },
   // reservations: (_obj, { root }) => {
   //   return db.listItem.findUnique({ where: { id: root?.id } }).reservations()

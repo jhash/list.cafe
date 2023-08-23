@@ -32,9 +32,10 @@ export const schema = gql`
 
   input CreateUserInput {
     email: String!
-    personId: Int!
-    hashedPassword: String!
-    salt: String!
+    personId: Int
+    person: CreatePersonInput
+    hashedPassword: String
+    salt: String
     resetToken: String
     resetTokenExpiresAt: DateTime
     webAuthnChallenge: String

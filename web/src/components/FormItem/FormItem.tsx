@@ -29,9 +29,10 @@ const FormItem = forwardRef<HTMLInputElement, FormItemProps>(
           defaultValue={defaultValue}
           ref={ref}
           {...props}
-        />
-        <FieldError name={name} className="px-1 py-1 text-error" />
-        {children}
+        >
+          <FieldError name={name} className="px-1 py-1 text-error" />
+          {children}
+        </FormInput>
       </div>
     )
   }

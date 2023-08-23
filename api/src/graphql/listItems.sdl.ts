@@ -18,6 +18,7 @@ export const schema = gql`
     # images: [Image]!
     order: Int
     price: Float
+    listRoles: [ListRole]
   }
 
   type Query {

@@ -3,6 +3,7 @@ import type { APIGatewayProxyEvent, Context } from 'aws-lambda'
 import { DbAuthHandler, DbAuthHandlerOptions } from '@redwoodjs/auth-dbauth-api'
 
 import { db } from 'src/lib/db'
+import { createUser } from 'src/services/users/users'
 
 export const handler = async (
   event: APIGatewayProxyEvent,
@@ -109,19 +110,12 @@ export const handler = async (
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
     handler: async ({ username, hashedPassword, salt, userAttributes }) => {
-      return await db.user.create({
-        data: {
+      return await createUser({
+        input: {
           email: username,
-          hashedPassword: hashedPassword,
-          salt: salt,
-          person: {
-            create: {
-              name: userAttributes.name,
-            },
-          },
-          userRoles: {
-            create: {},
-          },
+          hashedPassword,
+          salt,
+          person: { name: userAttributes.name, email: username },
         },
       })
     },

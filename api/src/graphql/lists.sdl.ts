@@ -9,6 +9,8 @@ export const schema = gql`
     identifier: Identifier
     visibility: ListVisibility
     listItems: [ListItem]
+    # listMemberships: [ListMembership]
+    listRoles: [ListRole]
   }
 
   enum ListVisibility {

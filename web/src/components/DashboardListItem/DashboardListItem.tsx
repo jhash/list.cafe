@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import classNames from 'classnames'
 import { Save, Trash2 } from 'lucide-react'
@@ -16,6 +16,7 @@ import { toast } from '@redwoodjs/web/dist/toast'
 import { UPDATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/EditListItemCell'
 import { DELETE_LIST_ITEM_MUTATION } from '../Admin/ListItem/ListItem'
 import { CREATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/NewListItem'
+import { listRolesIntersect } from '../DashboardList/DashboardList'
 import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from '../ListItemsCell'
@@ -36,9 +37,16 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   ...listItem
 }) => {
   const titleRef = useRef<HTMLInputElement>()
-  const { id, title, description, url, quantity, price, listId } = listItem
+  const { id, title, description, url, quantity, price, listId, listRoles } =
+    listItem
 
   const [open, setOpen] = useState<boolean>(!id && editing)
+
+  const canDelete = useMemo(
+    () =>
+      listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']),
+    [listRoles]
+  )
 
   const [createListItem, { loading: createLoading, error: createError }] =
     useMutation(CREATE_LIST_ITEM_MUTATION, {
@@ -165,12 +173,20 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
                 <Save size="1rem" />
               </button>
             )}
-            {!!id && (
+            {!!id && canDelete && (
               <button
                 // TODO: don't use z
                 className="btn btn-error z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start rounded-full p-0"
                 disabled={loading}
-                onClick={onDelete}
+                onClick={(event) => {
+                  event.preventDefault()
+                  event.stopPropagation()
+                  return (
+                    window.confirm(
+                      'Are you sure you want to delete this item?'
+                    ) && onDelete()
+                  )
+                }}
               >
                 <Trash2 size="1rem" />
               </button>
