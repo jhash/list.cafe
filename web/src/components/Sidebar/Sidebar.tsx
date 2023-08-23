@@ -17,11 +17,7 @@ type SidebarTypeProps = SidebarProps & {
 
 const Sidebar: React.FC<SidebarTypeProps> = ({ links }) => {
   return (
-    <ul
-      className={classNames(
-        'flex flex-grow flex-col gap-y-0.5 overflow-auto px-0.5'
-      )}
-    >
+    <ul className={classNames('flex flex-grow flex-col gap-y-0.5 px-0.5')}>
       {links.map(({ path, name, Icon }, index) => (
         <NavLink
           to={path}

@@ -129,7 +129,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   return (
     <Form<FormGroup>
       className={classNames(
-        'w-full max-w-full flex-grow overflow-x-hidden',
+        'w-full max-w-full flex-grow',
         !!id && 'collapse-arrow collapse rounded-lg border shadow-sm'
       )}
       name="list-item-form"
@@ -180,7 +180,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       )}
       <div
         className={classNames(
-          'flex w-full max-w-full flex-shrink-0 flex-col flex-nowrap gap-2 overflow-x-hidden',
+          'flex w-full max-w-full flex-shrink-0 flex-col flex-nowrap gap-2',
           !!id && 'collapse-content'
         )}
       >

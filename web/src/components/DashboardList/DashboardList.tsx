@@ -166,8 +166,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                 <SectionTitle>Add new item</SectionTitle>
               </div>
               {/* <button
-              // TODO: don't use z
-              className="btn btn-secondary z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start p-0"
+              className="btn btn-secondary flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start p-0"
               type="submit"
             >
               <Save size="1rem" />
@@ -192,9 +191,9 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </dialog>
       )}
-      <div className="flex w-full max-w-full flex-col gap-5 overflow-x-hidden">
+      <div className="flex w-full max-w-full flex-col gap-5">
         <Form
-          className="flex w-full max-w-full flex-col gap-3 overflow-x-hidden"
+          className="flex w-full max-w-full flex-col gap-3"
           onSubmit={onSave}
         >
           <PageTitle title={name || 'Add new list'}>
@@ -264,8 +263,8 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </Form>
 
-        <div className="flex w-full max-w-full flex-col gap-3 overflow-x-hidden">
-          <div className="flex w-full max-w-full items-center gap-3 overflow-x-hidden">
+        <div className="flex w-full max-w-full flex-col gap-3">
+          <div className="flex w-full max-w-full items-center gap-3">
             <SectionTitle>Items</SectionTitle>
             {/* TODO: support without having saved */}
             {!!id && (
@@ -275,7 +274,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
             )}
           </div>
           {!!id && (
-            <ul className="flex w-full max-w-full flex-col gap-2 overflow-x-hidden">
+            <ul className="flex w-full max-w-full flex-col gap-2">
               <ListItemsCell
                 listId={id}
                 dashboard

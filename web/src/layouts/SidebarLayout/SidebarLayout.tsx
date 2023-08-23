@@ -31,7 +31,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
     open: true,
     closing: false,
   })
-  const { open, closing } = state
+  const { open } = state
   const [hovering, setHovering] = useState<boolean>(false)
 
   const toggle = () => {
@@ -78,28 +78,27 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
           {!open && (
             <div
               className={classNames(
-                'background-gray-500 pointer-events-auto fixed bottom-0 left-0 top-16 hidden w-10 cursor-pointer opacity-50 md:flex'
+                'pointer-events-auto fixed bottom-0 left-0 top-0 hidden w-10 cursor-pointer bg-gray-500 opacity-[2%] md:flex'
               )}
               onMouseEnter={startHovering}
               // onMouseLeave={stopHovering}
             />
           )}
-          {open && (
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-            <div
-              className={classNames(
-                'pointer-events-auto fixed bottom-0 left-0 right-0 top-0 z-10 flex flex-grow transition-opacity md:hidden',
-                open ? 'opacity-80' : 'opacity-0'
-              )}
-              onClick={() => setState({ open: false, closing: false })}
-              style={{ background: 'hsl(var(--b1) / var(--tw-bg-opacity, 1))' }}
-            />
-          )}
+          <button
+            className={classNames(
+              'fixed bottom-0 left-0 right-0 top-0 z-20 flex flex-grow transition-opacity md:hidden',
+              open
+                ? 'pointer-events-auto opacity-80'
+                : 'pointer-events-none opacity-0'
+            )}
+            onClick={() => setState({ open: false, closing: false })}
+            style={{ background: 'hsl(var(--b1) / var(--tw-bg-opacity, 1))' }}
+          />
           <div
             className={classNames(
-              'fixed bottom-0 left-0 top-0 z-10 flex w-sidebar flex-shrink-0 flex-grow flex-col flex-nowrap gap-y-2 overflow-hidden whitespace-nowrap border-r transition-maxWidth duration-300',
+              'fixed bottom-0 left-0 top-0 z-40 flex max-h-full w-sidebar flex-shrink-0 flex-grow flex-col flex-nowrap gap-y-2 overflow-y-auto overflow-x-hidden whitespace-nowrap border-r transition-maxWidth duration-300',
               !open && !hovering && 'max-w-0 -translate-x-[1px]',
-              (open || closing) && 'md:static md:bottom-auto md:left-auto',
+              // (open || closing) && 'md:static md:bottom-auto md:left-auto',
               (open || hovering) && 'max-w-sidebar'
             )}
             onMouseLeave={stopHovering}
@@ -112,7 +111,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
             </div>
             <Sidebar {...sidebarProps} />
           </div>
-          <div className="flex w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-hidden px-4 sm:pl-16">
+          <div className="flex w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-visible px-4 sm:pl-16">
             <div className="flex w-full max-w-xl flex-grow flex-col gap-y-6">
               {children}
             </div>
@@ -129,7 +128,7 @@ export const SidebarButton = () => {
   return (
     <button
       className={classNames(
-        'btn btn-ghost fixed top-1.5 flex h-12 min-h-0 w-10 flex-shrink-0 flex-grow-0 items-center rounded-lg rounded-l-none p-0 transition-left duration-300',
+        'btn btn-ghost fixed top-1.5 z-30 flex h-12 min-h-0 w-10 flex-shrink-0 flex-grow-0 items-center rounded-lg rounded-l-none p-0 transition-left duration-300',
         open ? 'left-sidebar' : 'left-0'
       )}
       onClick={toggle}

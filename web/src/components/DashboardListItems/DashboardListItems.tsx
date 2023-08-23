@@ -15,7 +15,7 @@ const DashboardListItems: React.FC<DashboardListItemsProps> = ({
     return (
       <li
         key={listItem.id || index}
-        className="flex w-full max-w-full items-center overflow-x-hidden"
+        className="flex w-full max-w-full items-center"
       >
         <DashboardListItem
           {...listItem}
