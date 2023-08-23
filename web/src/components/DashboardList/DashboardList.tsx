@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { kebabCase } from 'lodash'
 import { startCase, camelCase } from 'lodash'
-import { Eye, Pencil, PlusCircle, Save, X } from 'lucide-react'
+import { Eye, Pencil, PlusCircle, Save, Trash2, X } from 'lucide-react'
 import { FindListQuery, ListItem } from 'types/graphql'
 
 import { Form } from '@redwoodjs/forms'
@@ -47,7 +47,7 @@ type ButtonProps = Omit<React.HTMLProps<HTMLButtonElement>, 'type'> & {
 const AddItemButton: React.FC<ButtonProps> = ({ ...props }) => (
   <button
     {...props}
-    className="btn btn-ghost flex h-12 w-12 items-center justify-center rounded-full p-0"
+    className="btn btn-ghost flex h-10 min-h-0 w-10 items-center justify-center rounded-full p-0"
   >
     <PlusCircle />
   </button>
@@ -63,29 +63,37 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
   const [editing, setEditing] = useState<boolean>(!id)
   const [listItem, setListItem] = useState<Partial<ListItem> | undefined>()
 
-  const [updateListMutation] = useMutation(UPDATE_LIST_MUTATION, {
-    onCompleted: () => {
-      toast.success('List updated')
-      setEditing(false)
-      // navigate(routes.lists())
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
+  const [updateListMutation, { loading: updateLoading }] = useMutation(
+    UPDATE_LIST_MUTATION,
+    {
+      onCompleted: () => {
+        toast.success('List updated')
+        setEditing(false)
+        // navigate(routes.lists())
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    }
+  )
 
-  const [createListMutation] = useMutation(CREATE_LIST_MUTATION, {
-    onCompleted: (data) => {
-      toast.success('List created')
-      setEditing(false)
-      if (data?.createList) {
-        navigate(routes.list({ id: data?.createList.id }))
-      }
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
+  const [createListMutation, { loading: createLoading }] = useMutation(
+    CREATE_LIST_MUTATION,
+    {
+      onCompleted: (data) => {
+        toast.success('List created')
+        setEditing(false)
+        if (data?.createList) {
+          navigate(routes.list({ id: data?.createList.id }))
+        }
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    }
+  )
+
+  const loading = id ? updateLoading : createLoading
 
   const createNewListItem = () => {
     setListItem({
@@ -106,7 +114,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     event?.stopPropagation?.()
     event?.preventDefault?.()
 
-    if (!editing) {
+    if (!editing || loading) {
       return
     }
 
@@ -184,23 +192,32 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </dialog>
       )}
-      <div className="flex w-full max-w-xl flex-col gap-5 overflow-x-hidden">
+      <div className="flex w-full max-w-full flex-col gap-5 overflow-x-hidden">
         <Form
           className="flex w-full max-w-full flex-col gap-3 overflow-x-hidden"
           onSubmit={onSave}
         >
           <PageTitle title={name || 'Add new list'}>
+            {!!id && (
+              <Link
+                to={routes.identifier({ identifier: identifier?.id })}
+                className="btn btn-error flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
+                title="Delete"
+              >
+                <Trash2 />
+              </Link>
+            )}
             {!!id && !!identifier?.id && (
               <Link
                 to={routes.identifier({ identifier: identifier?.id })}
-                className="btn btn-primary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
+                className="btn btn-primary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
                 title="Preview"
               >
                 <Eye />
               </Link>
             )}
             <button
-              className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
+              className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
               type={editing ? 'submit' : 'button'}
               onClick={
                 editing
@@ -211,7 +228,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               {editing ? <Save /> : <Pencil />}
             </button>
           </PageTitle>
-          <div className="flex max-w-xl flex-col gap-5">
+          <div className="flex flex-col gap-5">
             <FormItem
               name="name"
               defaultValue={name}

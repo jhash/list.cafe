@@ -6,6 +6,9 @@ module.exports = {
   content: ['src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      spacing: {
+        sidebar: '14rem',
+      },
       width: {
         sidebar: '14rem',
       },
@@ -14,6 +17,7 @@ module.exports = {
       },
       transitionProperty: {
         maxWidth: 'max-width',
+        left: 'left',
       },
       colors: {
         ivory: '#fffff0',

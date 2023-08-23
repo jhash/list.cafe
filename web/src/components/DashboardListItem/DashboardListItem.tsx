@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import classNames from 'classnames'
-import { Save, Trash } from 'lucide-react'
+import { Save, Trash2 } from 'lucide-react'
 import {
   CreateListItemInput,
   CreateListItemMutation,
@@ -172,7 +172,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
                 disabled={loading}
                 onClick={onDelete}
               >
-                <Trash size="1rem" />
+                <Trash2 size="1rem" />
               </button>
             )}
           </div>

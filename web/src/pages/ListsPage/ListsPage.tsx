@@ -14,7 +14,7 @@ const ListsPage = () => {
 
       <PageTitle title="Lists">
         <Link
-          className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
+          className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
           to={routes.newList()}
         >
           <PlusCircle />
