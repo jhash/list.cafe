@@ -2,6 +2,7 @@ import 'setimmediate'
 
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
 import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
+// import { InMemoryCache } from '@redwoodjs/web/node_modules/@apollo/client'
 
 import FatalErrorPage from 'src/pages/FatalErrorPage'
 import Routes from 'src/Routes'
@@ -17,7 +18,18 @@ const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
       <AuthProvider>
-        <RedwoodApolloProvider useAuth={useAuth}>
+        <RedwoodApolloProvider
+          useAuth={useAuth}
+          // graphQLClientConfig={{
+          //   cache: new InMemoryCache({
+          //     typePolicies: {
+          //       ListItem: {
+          //         keyFields: ['title', 'url'],
+          //       },
+          //     },
+          //   }),
+          // }}
+        >
           <ThemeProvider>
             <Routes />
           </ThemeProvider>

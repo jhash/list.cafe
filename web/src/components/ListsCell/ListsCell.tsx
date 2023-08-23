@@ -27,7 +27,7 @@ export const Success = ({ lists }: CellSuccessProps<ListsQuery>) => {
       {lists.map(({ id, name }, index) => {
         return (
           <Link
-            key={index}
+            key={id || index}
             to={routes.list({ id })}
             className="link flex h-10 flex-grow items-center gap-4 rounded-md border px-2 no-underline shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
           >

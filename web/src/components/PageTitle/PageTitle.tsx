@@ -1,11 +1,17 @@
 import { SidebarButton } from 'src/layouts/SidebarLayout/SidebarLayout'
 
-const PageTitle = ({ children }) => {
+type PageTitleProps = React.HTMLProps<HTMLDivElement> & {
+  title?: string
+}
+const PageTitle: React.FC<PageTitleProps> = ({ title, children }) => {
   return (
-    <h1 className="flex h-16 select-none items-center gap-3 font-bricolageGrotesque text-3xl font-bold">
+    <div className="flex h-16 select-none items-center gap-3 font-bricolageGrotesque text-3xl font-bold">
       <SidebarButton />
-      {children}
-    </h1>
+      <div className="flex flex-grow items-center whitespace-nowrap">
+        {title || children}
+      </div>
+      {title ? children : null}
+    </div>
   )
 }
 

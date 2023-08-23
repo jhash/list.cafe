@@ -11,6 +11,7 @@
     ]
   },
   "dependencies": {
+    "@apollo/client": "^3.7.17",
     "@redwoodjs/auth-dbauth-web": "6.1.0",
     "@redwoodjs/forms": "6.1.0",
     "@redwoodjs/router": "6.1.0",
@@ -23,6 +24,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "fontfaceobserver": "^2.3.0",
     "humanize-string": "2.1.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.268.0",
     "prettier": "latest",
     "prop-types": "15.8.1",

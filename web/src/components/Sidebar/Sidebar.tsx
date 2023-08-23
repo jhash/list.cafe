@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarTypeProps> = ({ links }) => {
       {links.map(({ path, name, Icon }, index) => (
         <NavLink
           to={path}
-          key={index}
+          key={path || index}
           className="dashboard__sidebar__link flex h-9 flex-nowrap items-center gap-x-3.5 whitespace-nowrap rounded-sm px-3"
           activeClassName="dashboard__sidebar__link--active"
         >

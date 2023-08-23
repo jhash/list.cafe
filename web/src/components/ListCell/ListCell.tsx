@@ -18,19 +18,25 @@ export const QUERY = gql`
       id
       name
       description
+      identifier {
+        id
+      }
+      type
     }
   }
 `
 
 export const Loading = () => <div>Loading...</div>
 
-export const Empty = () => <Redirect to={routes.home()} />
+export const Empty = ({ dashboard }: ListCellProps) => (
+  <Redirect to={dashboard ? routes.lists() : routes.home()} />
+)
 
-export const Failure = () => (
+export const Failure = ({ dashboard }: ListCellProps) => (
   // {
   //   error,
   // }: CellFailureProps<FindListQueryVariables>
-  <Redirect to={routes.home()} />
+  <Redirect to={dashboard ? routes.lists() : routes.home()} />
 )
 
 interface ListCellProps {

@@ -6,10 +6,21 @@ import { toast } from '@redwoodjs/web/toast'
 
 import ListItemForm from 'src/components/Admin/ListItem/ListItemForm'
 
-const CREATE_LIST_ITEM_MUTATION = gql`
+export const CREATE_LIST_ITEM_MUTATION = gql`
   mutation CreateListItemMutation($input: CreateListItemInput!) {
     createListItem(input: $input) {
       id
+      createdAt
+      updatedAt
+      title
+      description
+      url
+      listId
+      quantity
+      voting
+      parentId
+      order
+      price
     }
   }
 `

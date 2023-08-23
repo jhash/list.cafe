@@ -1,9 +1,12 @@
 import './SidebarLayout.scss'
 
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
+import { useWindowSize } from '@uidotdev/usehooks'
 import classNames from 'classnames'
 import { PanelLeft, PanelLeftClose } from 'lucide-react'
+
+import { useLocation } from '@redwoodjs/router'
 
 import HomeLink from 'src/components/HomeLink/HomeLink'
 
@@ -21,6 +24,9 @@ type SidebarLayoutProps = React.HTMLProps<HTMLDivElement> & {
   Sidebar: SidebarType
 }
 const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
+  const { width } = useWindowSize()
+  const { pathname } = useLocation()
+
   const [state, setState] = useState<{ open: boolean; closing: boolean }>({
     open: true,
     closing: false,
@@ -56,6 +62,15 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
     setHovering(false)
   }
 
+  useEffect(() => {
+    if (!width || !open || width >= 768) {
+      return
+    }
+
+    close()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width, pathname])
+
   return (
     <SidebarContext.Provider value={sidebarProps}>
       <MainLayout>
@@ -72,8 +87,12 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
           {open && (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
             <div
-              className="pointer-events-auto absolute bottom-0 left-48 right-0 top-0 z-10 flex flex-grow md:hidden"
+              className={classNames(
+                'pointer-events-auto absolute bottom-0 left-0 right-0 top-0 z-10 flex flex-grow transition-opacity md:hidden',
+                open ? 'opacity-80' : 'opacity-0'
+              )}
               onClick={() => setState({ open: false, closing: false })}
+              style={{ background: 'hsl(var(--b1) / var(--tw-bg-opacity, 1))' }}
             />
           )}
           <div
@@ -106,7 +125,11 @@ export const SidebarButton = () => {
   const { open, toggle } = useContext(SidebarContext)
 
   return (
-    <button className="btn btn-ghost flex items-center p-2" onClick={toggle}>
+    <button
+      className="btn btn-ghost flex items-center p-2"
+      onClick={toggle}
+      type="button"
+    >
       {open ? <PanelLeftClose /> : <PanelLeft />}
     </button>
   )

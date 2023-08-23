@@ -25,7 +25,7 @@ export const QUERY = gql`
     }
   }
 `
-const UPDATE_LIST_ITEM_MUTATION = gql`
+export const UPDATE_LIST_ITEM_MUTATION = gql`
   mutation UpdateListItemMutation($id: Int!, $input: UpdateListItemInput!) {
     updateListItem(id: $id, input: $input) {
       id

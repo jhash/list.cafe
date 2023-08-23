@@ -1,10 +1,10 @@
+import type { CreateListInput } from 'types/graphql'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import ListForm from 'src/components/Admin/List/ListForm'
-
-import type { CreateListInput } from 'types/graphql'
 
 const CREATE_LIST_MUTATION = gql`
   mutation CreateListMutation($input: CreateListInput!) {

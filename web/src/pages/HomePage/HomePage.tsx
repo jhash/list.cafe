@@ -27,7 +27,7 @@ const HomePage = () => {
 
   useEffect(() => {
     setImmediate(() => {
-      firstListItemRef?.current.focus()
+      firstListItemRef?.current?.focus()
     })
   }, [])
 
@@ -75,7 +75,7 @@ const HomePage = () => {
               </label>
               <input
                 type="text"
-                className="input input-ghost input-lg flex flex-grow rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-0.5 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
+                className="input input-ghost input-lg flex flex-grow animate-pulse rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-0.5 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
                 placeholder="Ex. astonmartin.com/models/vantage"
                 ref={firstListItemRef}
                 name="list-item-1"

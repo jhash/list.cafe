@@ -1,15 +1,15 @@
+import type {
+  DeleteListItemMutationVariables,
+  FindListItemById,
+} from 'types/graphql'
+
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { checkboxInputTag, timeTag } from 'src/lib/formatters'
 
-import type {
-  DeleteListItemMutationVariables,
-  FindListItemById,
-} from 'types/graphql'
-
-const DELETE_LIST_ITEM_MUTATION = gql`
+export const DELETE_LIST_ITEM_MUTATION = gql`
   mutation DeleteListItemMutation($id: Int!) {
     deleteListItem(id: $id) {
       id

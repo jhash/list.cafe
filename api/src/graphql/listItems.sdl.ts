@@ -9,7 +9,7 @@ export const schema = gql`
     list: List!
     listId: Int!
     quantity: Int!
-    voting: Boolean!
+    voting: Boolean
     # reservations: [Reservation]!
     # purchases: [Purchase]!
     parent: ListItem
@@ -31,7 +31,7 @@ export const schema = gql`
     url: String!
     listId: Int!
     quantity: Int!
-    voting: Boolean!
+    voting: Boolean
     parentId: Int
     order: Int
     price: Float
