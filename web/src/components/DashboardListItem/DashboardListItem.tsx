@@ -181,7 +181,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       <div
         className={classNames(
           'flex w-full max-w-full flex-shrink-0 flex-col flex-nowrap gap-2',
-          !!id && 'collapse-content'
+          !!id && 'collapse-content overflow-x-hidden'
         )}
       >
         <NumberField hidden name="listId" defaultValue={listId} />
