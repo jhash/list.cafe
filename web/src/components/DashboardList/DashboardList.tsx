@@ -184,8 +184,11 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </dialog>
       )}
-      <div className="flex max-w-xl flex-col gap-5">
-        <Form className="flex flex-col gap-3" onSubmit={onSave}>
+      <div className="flex w-full max-w-xl flex-col gap-5 overflow-x-hidden">
+        <Form
+          className="flex w-full max-w-full flex-col gap-3 overflow-x-hidden"
+          onSubmit={onSave}
+        >
           <PageTitle title={name || 'Add new list'}>
             <button
               className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"

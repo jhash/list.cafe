@@ -5,12 +5,17 @@ type PageTitleProps = React.HTMLProps<HTMLDivElement> & {
 }
 const PageTitle: React.FC<PageTitleProps> = ({ title, children }) => {
   return (
-    <div className="flex h-16 select-none items-center gap-3 font-bricolageGrotesque text-3xl font-bold">
+    <div className="flex h-16 w-full min-w-0 max-w-full select-none items-center gap-3 overflow-x-hidden font-bricolageGrotesque text-3xl font-bold">
       <SidebarButton />
-      <div className="flex flex-grow items-center whitespace-nowrap">
+      <div className="flex min-w-0 flex-1 flex-shrink flex-grow flex-nowrap items-center justify-start overflow-hidden overflow-ellipsis whitespace-nowrap">
         {title || children}
       </div>
-      {title ? children : null}
+
+      {title ? (
+        <div className="flex min-w-0 flex-shrink-0 flex-grow-0 items-center">
+          {children}
+        </div>
+      ) : null}
     </div>
   )
 }

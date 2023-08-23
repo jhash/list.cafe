@@ -74,7 +74,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
   return (
     <SidebarContext.Provider value={sidebarProps}>
       <MainLayout>
-        <div className="relative flex flex-grow">
+        <div className="relative flex w-full max-w-full flex-grow overflow-x-hidden">
           {!open && (
             <div
               className={classNames(
@@ -112,8 +112,10 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
             </div>
             <Sidebar {...sidebarProps} />
           </div>
-          <div className="flex flex-grow flex-col gap-y-2 px-4">
-            <div className="flex flex-grow flex-col gap-y-6">{children}</div>
+          <div className="flex w-full max-w-full flex-grow flex-col gap-y-2 overflow-x-hidden px-4">
+            <div className="flex w-full max-w-full flex-grow flex-col gap-y-6">
+              {children}
+            </div>
           </div>
         </div>
       </MainLayout>
@@ -126,7 +128,7 @@ export const SidebarButton = () => {
 
   return (
     <button
-      className="btn btn-ghost flex items-center p-2"
+      className="btn btn-ghost flex flex-shrink-0 flex-grow-0 items-center p-2"
       onClick={toggle}
       type="button"
     >
