@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import classNames from 'classnames'
-import { Save, Trash2 } from 'lucide-react'
+import { Link2, Save, Trash2 } from 'lucide-react'
 import {
   CreateListItemInput,
   CreateListItemMutation,
@@ -161,22 +161,25 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             'collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 px-4 py-0 pr-12 leading-none'
           )}
         >
-          <div className="flex flex-grow items-center">{title}</div>
+          <div className="flex flex-grow items-center gap-3">
+            {title}
+            {!!url && <Link2 size="1rem" />}
+          </div>
           <div className="flex items-center gap-3">
             {!!open && !!editing && (
               <button
                 // TODO: don't use z
-                className="btn btn-secondary z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start rounded-full p-0"
+                className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
                 type="submit"
                 disabled={loading}
               >
-                <Save size="1rem" />
+                <Save size="1.25rem" />
               </button>
             )}
             {!!id && canDelete && (
               <button
                 // TODO: don't use z
-                className="btn btn-error z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start rounded-full p-0"
+                className="btn btn-error z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
                 disabled={loading}
                 onClick={(event) => {
                   event.preventDefault()
@@ -188,7 +191,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
                   )
                 }}
               >
-                <Trash2 size="1rem" />
+                <Trash2 size="1.25rem" />
               </button>
             )}
           </div>
@@ -196,7 +199,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       )}
       <div
         className={classNames(
-          'flex w-full max-w-full flex-shrink-0 flex-col flex-nowrap gap-2',
+          'flex w-full max-w-full flex-shrink-0 flex-wrap gap-x-5 gap-y-2',
           !!id && 'collapse-content overflow-x-hidden'
         )}
       >
@@ -245,12 +248,14 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         {!!error?.message && (
           <p className="label-error label font-medium">{error?.message}</p>
         )}
-        {!!editing && (
+        {!id && !!open && !!editing && (
           <button
-            className="btn btn-secondary my-4 flex-grow-0 self-start"
+            // TODO: don't use z
+            className="btn btn-secondary z-10 mt-4 flex min-h-0 flex-grow items-center justify-center self-start rounded p-0 px-4"
             type="submit"
             disabled={loading}
           >
+            <Save />
             Save
           </button>
         )}

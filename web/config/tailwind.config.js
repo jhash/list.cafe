@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       spacing: {
         sidebar: '14rem',
+        xl: '14rem',
       },
       width: {
         sidebar: '14rem',

@@ -11,13 +11,16 @@ export type FormItemProps = FormLabelProps &
   }
 
 const FormItem = forwardRef<HTMLInputElement, FormItemProps>(
-  ({ defaultValue, children, editing, name, label, ...props }, ref) => {
+  (
+    { defaultValue, children, editing, name, label, options, ...props },
+    ref
+  ) => {
     if (!editing && !defaultValue) {
       return null
     }
 
     return (
-      <div className="flex w-full max-w-full flex-col gap-1">
+      <div className="flex w-full max-w-xl flex-col gap-1">
         {!!label && (
           <FormLabel name={`${name}-label`} htmlFor={name} {...props}>
             {label}
@@ -28,6 +31,7 @@ const FormItem = forwardRef<HTMLInputElement, FormItemProps>(
           editing={editing}
           defaultValue={defaultValue}
           ref={ref}
+          options={options}
           {...props}
         >
           <FieldError name={name} className="px-1 py-1 text-error" />

@@ -78,7 +78,7 @@ type ButtonProps = Omit<React.HTMLProps<HTMLButtonElement>, 'type'> & {
 const AddItemButton: React.FC<ButtonProps> = ({ ...props }) => (
   <button
     {...props}
-    className="btn btn-ghost flex h-10 min-h-0 w-10 items-center justify-center rounded-full p-0"
+    className="btn btn-secondary flex h-10 min-h-0 w-10 items-center justify-center rounded-full p-0"
   >
     <PlusCircle />
   </button>
@@ -233,7 +233,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           id="newListItem"
           className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
         >
-          <div className="modal-box relative flex h-screen max-h-full min-h-full flex-col gap-y-6 rounded-none sm:h-auto sm:min-h-0 sm:rounded-lg">
+          <div className="modal-box relative flex max-h-full min-h-screen flex-col gap-y-6 rounded-none sm:h-auto sm:min-h-[70vh] sm:rounded-lg">
             <div className="flex items-center gap-3">
               <div className="flex-grow">
                 <SectionTitle>Add new item</SectionTitle>
@@ -264,7 +264,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </dialog>
       )}
-      <div className="flex w-full max-w-full flex-col gap-5">
+      <div className="flex w-full max-w-full flex-col gap-8">
         <Form
           className="flex w-full max-w-full flex-col gap-3"
           onSubmit={onSave}
@@ -312,7 +312,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               </button>
             )}
           </PageTitle>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-wrap gap-5">
             <FormItem
               name="name"
               defaultValue={name}

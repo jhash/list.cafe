@@ -117,8 +117,8 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
               open ? 'sm:pl-sidebar' : 'sm:pl-0'
             )}
           >
-            <div className="flex w-full max-w-full flex-grow flex-col items-center sm:pl-12">
-              <div className="flex w-full max-w-xl flex-grow flex-col gap-y-6">
+            <div className="container flex w-full flex-grow flex-col items-center justify-center sm:pl-12">
+              <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 sm:min-h-[85%]">
                 {children}
               </div>
             </div>
@@ -130,7 +130,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
 }
 
 export const SidebarButton = () => {
-  const { open, toggle } = useContext(SidebarContext)
+  const { open, toggle } = useContext(SidebarContext) || {}
 
   return (
     <button

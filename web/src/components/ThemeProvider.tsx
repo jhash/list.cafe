@@ -39,7 +39,7 @@ export const ThemeProvider = ({ children }) => {
 }
 
 export const DarkModeToggle = () => {
-  const { darkMode, setDarkMode } = useContext(ThemeContext)
+  const { darkMode, setDarkMode } = useContext(ThemeContext) || {}
 
   return (
     <div className="flex flex-nowrap items-center gap-1">

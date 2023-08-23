@@ -73,24 +73,22 @@ const FormInput = forwardRef<
             type,
             name,
             autoComplete: 'off',
-            defaultValue: defaultValue,
+            defaultValue,
             ...props,
             className:
-              'input input-sm flex-grow rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500',
-            errorClassName: 'input input-sm input-error rounded-md flex-grow',
+              'input input-sm rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500',
+            errorClassName: 'input input-sm input-error rounded-md',
             onChange,
             onBlur,
             value,
+            ref,
           }
 
           return (
             <>
               {type === 'select' ? (
                 <>
-                  <SelectField
-                    {...(inputProps as SelectFieldProps)}
-                    ref={ref as React.ForwardedRef<HTMLSelectElement>}
-                  >
+                  <SelectField {...(inputProps as SelectFieldProps)}>
                     {options?.map(({ name, value }, index) => (
                       <option key={index} value={value}>
                         {name || value}
@@ -98,20 +96,13 @@ const FormInput = forwardRef<
                     ))}
                   </SelectField>
                   {!!matchingOption?.description && (
-                    <div className="px-1 py-1 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="p-1 text-sm text-gray-600 dark:text-gray-400">
                       {matchingOption.description}
                     </div>
                   )}
                 </>
               ) : (
-                <InputField
-                  autoComplete="off"
-                  defaultValue={defaultValue}
-                  {...(inputProps as InputFieldProps)}
-                  className="input input-sm flex-grow rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500"
-                  errorClassName="input input-error rounded-md flex-grow"
-                  ref={ref as React.ForwardedRef<HTMLInputElement>}
-                />
+                <InputField {...(inputProps as InputFieldProps)} />
               )}
               {children}
             </>
