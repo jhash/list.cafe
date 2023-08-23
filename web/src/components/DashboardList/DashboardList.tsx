@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { kebabCase } from 'lodash'
-import { startCase, camelCase } from 'lodash'
 import { Eye, Pencil, PlusCircle, Save, Trash2, X } from 'lucide-react'
 import { FindListQuery, ListItem } from 'types/graphql'
 
@@ -14,27 +13,50 @@ import { UPDATE_LIST_MUTATION } from '../Admin/List/EditListCell'
 import { CREATE_LIST_MUTATION } from '../Admin/List/NewList'
 import DashboardListItem from '../DashboardListItem/DashboardListItem'
 import FormItem from '../FormItem/FormItem'
+import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import ListItemsCell from '../ListItemsCell'
 import PageTitle from '../PageTitle/PageTitle'
 import SectionTitle from '../SectionTitle/SectionTitle'
 
-// const LIST_TYPES = [
-//   'AWESOME',
-//   'BABY_SHOWER',
-//   'BOOKMARKS',
-//   'FAVORITES',
-//   'FORUM',
-//   'INVENTORY',
-//   'JOBS',
-//   'LINKTREE',
-//   'SOCIAL',
-//   'TABLE',
-//   'TODO',
-//   'TOP',
-//   'WEDDING',
-//   'WISHLIST',
-// ]
+const LIST_TYPE_OPTIONS = [
+  { value: 'AWESOME', name: 'Awesome' },
+  { value: 'BABY_SHOWER', name: 'BabyShower' },
+  { value: 'BOOKMARKS', name: 'Bookmarks' },
+  { value: 'FAVORITES', name: 'Favorites' },
+  { value: 'FORUM', name: 'Forum' },
+  { value: 'INVENTORY', name: 'Inventory' },
+  { value: 'JOBS', name: 'Jobs' },
+  { value: 'LINKTREE', name: 'Linktree' },
+  { value: 'SOCIAL', name: 'Social' },
+  { value: 'TABLE', name: 'Table' },
+  { value: 'TODO', name: 'Todo' },
+  { value: 'TOP', name: 'Top' },
+  { value: 'WEDDING', name: 'Wedding' },
+  { value: 'WISHLIST', name: 'Wishlist' },
+]
+
+const LIST_VISIBILITY_OPTIONS = [
+  {
+    value: 'PRIVATE',
+    name: 'Private',
+    description: 'Only you and people you invite can access this list',
+  },
+  // TODO: delete this one?
+  // { value: 'GROUP', name: 'Group' },
+  {
+    value: 'LINK',
+    name: 'Link',
+    description:
+      'Anyone with the link can access this list. This list will not appear in public search results',
+  },
+  {
+    value: 'PUBLIC',
+    name: 'Public',
+    description:
+      'This list is accessible by the public and will show in search results',
+  },
+]
 
 declare let window: Window &
   typeof globalThis & {
@@ -55,7 +77,7 @@ const AddItemButton: React.FC<ButtonProps> = ({ ...props }) => (
 const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
   list,
 }) => {
-  const { id, name, description, identifier, type } = list || {
+  const { id, name, description, identifier, type, visibility } = list || {
     type: 'WISHLIST',
   }
 
@@ -74,6 +96,8 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
       onError: (error) => {
         toast.error(error.message)
       },
+      refetchQueries: [{ query: LIST_CELL_QUERY, variables: { id } }],
+      awaitRefetchQueries: true,
     }
   )
 
@@ -256,12 +280,21 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               label={<SectionTitle>Description</SectionTitle>}
             />
             <FormItem
-              type="text"
+              type="select"
+              name="visibility"
+              defaultValue={visibility}
+              editing={editing}
+              label={<SectionTitle>Visibility</SectionTitle>}
+              options={LIST_VISIBILITY_OPTIONS}
+            />
+            <FormItem
+              type="select"
               name="type"
-              defaultValue={startCase(camelCase(type))}
+              defaultValue={type}
               editing={editing}
               label={<SectionTitle>Type</SectionTitle>}
               disabled
+              options={LIST_TYPE_OPTIONS}
             />
           </div>
         </Form>

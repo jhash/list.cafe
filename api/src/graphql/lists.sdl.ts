@@ -7,7 +7,15 @@ export const schema = gql`
     description: String
     type: ListType!
     identifier: Identifier
+    visibility: ListVisibility
     listItems: [ListItem]
+  }
+
+  enum ListVisibility {
+    PRIVATE
+    GROUP
+    LINK
+    PUBLIC
   }
 
   enum ListType {
@@ -37,12 +45,15 @@ export const schema = gql`
     description: String
     type: ListType!
     identifier: CreateIdentifierInput
+    visibility: ListVisibility
   }
 
   input UpdateListInput {
     name: String
     description: String
     type: ListType
+    identifier: CreateIdentifierInput
+    visibility: ListVisibility
   }
 
   type Mutation {

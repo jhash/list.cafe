@@ -22,6 +22,7 @@ export const QUERY = gql`
         id
       }
       type
+      visibility
     }
   }
 `
@@ -65,7 +66,14 @@ export const Success = ({
             )}
           </div>
           <ul className="flex flex-col gap-2">
-            <ListItemsCell listId={id} dashboard={dashboard} editing={false} />
+            <ListItemsCell
+              listId={id}
+              dashboard={dashboard}
+              editing={false}
+              onListItemsUpdate={() => {
+                //
+              }}
+            />
           </ul>
           <ListFadeOut noHeight />
         </div>

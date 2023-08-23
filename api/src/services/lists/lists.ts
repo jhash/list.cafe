@@ -89,6 +89,7 @@ export const list: QueryResolvers['list'] = ({ id }) => {
 }
 
 export const createList: MutationResolvers['createList'] = ({ input }) => {
+  // TODO: delete identifiers
   return db.list.create({
     data: {
       ...input,
@@ -100,13 +101,20 @@ export const createList: MutationResolvers['createList'] = ({ input }) => {
 }
 
 export const updateList: MutationResolvers['updateList'] = ({ id, input }) => {
+  // TODO: delete identifiers
   return db.list.update({
-    data: input,
+    data: {
+      ...input,
+      identifier: {
+        create: input.identifier,
+      },
+    },
     where: { id },
   })
 }
 
 export const deleteList: MutationResolvers['deleteList'] = ({ id }) => {
+  // TODO: delete identifiers
   return db.list.delete({
     where: { id },
   })
