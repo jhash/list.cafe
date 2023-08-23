@@ -4,7 +4,7 @@ export const schema = gql`
     createdAt: DateTime!
     updatedAt: DateTime!
     name: String!
-    email: String
+    email: String @requireAuth
     user: User
     # addresses: [Address]!
     # defaultAddressId: Int
@@ -17,8 +17,8 @@ export const schema = gql`
   }
 
   type Query {
-    people: [Person!]! @requireAuth
-    person(id: Int!): Person @requireAuth
+    people: [Person!]! @skipAuth
+    person(id: Int!): Person @skipAuth
   }
 
   input CreatePersonInput {

@@ -3,7 +3,7 @@ export const schema = gql`
     id: Int!
     createdAt: DateTime!
     updatedAt: DateTime!
-    email: String!
+    email: String! @requireAuth
     person: Person!
     personId: Int!
     # userRoles: [UserRole]!

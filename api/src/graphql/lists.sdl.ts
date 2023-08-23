@@ -28,8 +28,8 @@ export const schema = gql`
   }
 
   type Query {
-    lists: [List!]! @requireAuth
-    list(id: Int!): List @requireAuth
+    lists: [List!]! @skipAuth
+    list(id: Int!): List @skipAuth
   }
 
   input CreateListInput {

@@ -21,9 +21,7 @@ export const createList: MutationResolvers['createList'] = ({ input }) => {
     data: {
       ...input,
       identifier: {
-        create: {
-          id: input.identifier.id,
-        },
+        create: input.identifier,
       },
     },
   })

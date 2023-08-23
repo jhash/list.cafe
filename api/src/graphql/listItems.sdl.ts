@@ -21,8 +21,8 @@ export const schema = gql`
   }
 
   type Query {
-    listItems(listId: Int!): [ListItem!]! @requireAuth
-    listItem(id: Int!): ListItem @requireAuth
+    listItems(listId: Int!): [ListItem!]! @skipAuth
+    listItem(id: Int!): ListItem @skipAuth
   }
 
   input CreateListItemInput {

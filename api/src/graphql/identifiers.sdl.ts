@@ -11,7 +11,7 @@ export const schema = gql`
 
   type Query {
     identifiers: [Identifier!]! @requireAuth
-    identifier(id: String!): Identifier @requireAuth
+    identifier(id: String!): Identifier @skipAuth
   }
 
   input CreateIdentifierInput {
