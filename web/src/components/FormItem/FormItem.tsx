@@ -1,5 +1,7 @@
 import { forwardRef } from 'react'
 
+import { FieldError } from '@redwoodjs/forms'
+
 import FormInput, { FormInputProps } from '../FormInput/FormInput'
 import FormLabel, { FormLabelProps } from '../FormLabel/FormLabel'
 
@@ -28,6 +30,7 @@ const FormItem = forwardRef<HTMLInputElement, FormItemProps>(
           ref={ref}
           {...props}
         />
+        <FieldError name={name} className="px-1 py-1 text-error" />
         {children}
       </div>
     )

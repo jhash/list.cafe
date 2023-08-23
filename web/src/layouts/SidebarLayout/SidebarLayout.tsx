@@ -113,7 +113,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
             <Sidebar {...sidebarProps} />
           </div>
           <div className="flex flex-grow flex-col gap-y-2 px-4">
-            <div className="flex flex-grow flex-col gap-y-10">{children}</div>
+            <div className="flex flex-grow flex-col gap-y-6">{children}</div>
           </div>
         </div>
       </MainLayout>

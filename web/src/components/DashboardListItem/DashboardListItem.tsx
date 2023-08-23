@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
+import classNames from 'classnames'
 import { Save, Trash } from 'lucide-react'
 import {
   CreateListItemInput,
@@ -127,46 +128,62 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
 
   return (
     <Form<FormGroup>
-      className="collapse-arrow collapse flex-grow rounded-lg border shadow-sm"
+      className={classNames(
+        'flex-grow',
+        !!id && 'collapse-arrow collapse rounded-lg border shadow-sm'
+      )}
       name={`list-item-form`}
       onSubmit={(input, event) => onSave(input, event)}
     >
-      <input
-        type="radio"
-        checked={open}
-        onChange={() => {
-          //
-        }}
-        disabled={!id}
-        onClick={() => setOpen(!open)}
-        className="min-h-12 cursor-pointer leading-none"
-      />
-      <div className="collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 px-4 py-0 pr-12 leading-none">
-        <div className="flex flex-grow items-center">{title || 'New item'}</div>
-        <div className="flex items-center gap-3">
-          {!!open && !!editing && (
-            <button
-              // TODO: don't use z
-              className="btn btn-secondary z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start p-0"
-              type="submit"
-              disabled={loading}
-            >
-              <Save size="1rem" />
-            </button>
+      {!!id && (
+        <input
+          type="radio"
+          checked={open}
+          onChange={() => {
+            //
+          }}
+          disabled={!id}
+          onClick={() => setOpen(!open)}
+          className="min-h-12 cursor-pointer leading-none"
+        />
+      )}
+      {!!id && (
+        <div
+          className={classNames(
+            'collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 px-4 py-0 pr-12 leading-none'
           )}
-          {!!id && (
-            <button
-              // TODO: don't use z
-              className="btn btn-error z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start p-0"
-              disabled={loading}
-              onClick={onDelete}
-            >
-              <Trash size="1rem" />
-            </button>
-          )}
+        >
+          <div className="flex flex-grow items-center">{title}</div>
+          <div className="flex items-center gap-3">
+            {!!open && !!editing && (
+              <button
+                // TODO: don't use z
+                className="btn btn-secondary z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start rounded-full p-0"
+                type="submit"
+                disabled={loading}
+              >
+                <Save size="1rem" />
+              </button>
+            )}
+            {!!id && (
+              <button
+                // TODO: don't use z
+                className="btn btn-error z-10 flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start rounded-full p-0"
+                disabled={loading}
+                onClick={onDelete}
+              >
+                <Trash size="1rem" />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-      <div className="collapse-content flex flex-shrink-0 flex-col flex-nowrap gap-2">
+      )}
+      <div
+        className={classNames(
+          'flex flex-shrink-0 flex-col flex-nowrap gap-2',
+          !!id && 'collapse-content'
+        )}
+      >
         <NumberField hidden name="listId" defaultValue={listId} />
         <FormItem
           editing={editing}
@@ -202,7 +219,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         />
         <FormItem
           type="number"
-          step="any"
+          step="0.01"
           editing={editing}
           name={`price`}
           defaultValue={price}

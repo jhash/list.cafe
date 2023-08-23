@@ -150,7 +150,7 @@ const DashboardList: React.FC<FindListQuery> = ({ list }) => {
         <Form className="flex flex-col gap-3" onSubmit={onSave}>
           <PageTitle title={name}>
             <button
-              className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center p-0"
+              className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
               type={editing ? 'submit' : 'button'}
               onClick={
                 editing
