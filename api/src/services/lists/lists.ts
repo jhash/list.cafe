@@ -6,13 +6,85 @@ import type {
 
 import { db } from 'src/lib/db'
 
-export const lists: QueryResolvers['lists'] = () => {
+export const adminLists: QueryResolvers['lists'] = () => {
   return db.list.findMany()
 }
 
+export const lists: QueryResolvers['lists'] = () => {
+  if (!context.currentUser) {
+    return db.list.findMany({
+      where: {
+        visibility: 'PUBLIC',
+      },
+    })
+  }
+
+  return db.list.findMany({
+    where: {
+      OR: [
+        {
+          listMemberships: {
+            some: {
+              userId: context.currentUser.id,
+            },
+          },
+        },
+        {
+          listGroupMemberships: {
+            some: {
+              group: {
+                groupMemberships: {
+                  some: {
+                    userId: context.currentUser.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  })
+}
+
 export const list: QueryResolvers['list'] = ({ id }) => {
+  if (!context.currentUser) {
+    return db.list.findUniqueOrThrow({
+      where: {
+        id,
+        OR: [{ visibility: 'PUBLIC' }, { visibility: 'LINK' }],
+      },
+    })
+  }
+
   return db.list.findUnique({
-    where: { id },
+    where: {
+      id,
+      OR: [
+        { visibility: 'PUBLIC' },
+        { visibility: 'LINK' },
+        {
+          listMemberships: {
+            some: {
+              userId: context.currentUser.id,
+            },
+          },
+        },
+        {
+          listGroupMemberships: {
+            some: {
+              group: {
+                groupMemberships: {
+                  some: {
+                    userId: context.currentUser.id,
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
   })
 }
 

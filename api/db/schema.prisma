@@ -314,6 +314,13 @@ model Person {
   createdByUser      User?               @relation(name: "createdPeople", fields: [createdByUserId], references: [id])
   createdByUserId    Int?
   identifier         Identifier?
+  visibility         PersonVisibility    @default(PRIVATE)
+}
+
+enum PersonVisibility {
+  PRIVATE
+  GROUP
+  PUBLIC
 }
 
 // https://medium.com/android-news/international-addresses-7477db08edac
