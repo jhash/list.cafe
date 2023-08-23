@@ -9,9 +9,9 @@ import MainLayout from '../MainLayout/MainLayout'
 const HomeLayout = ({ children }) => {
   return (
     <MainLayout>
-      <nav className="flex h-16 flex-grow-0 items-center px-4">
+      <nav className="min-h-16 flex w-full max-w-full flex-grow-0 items-center overflow-x-hidden px-4 py-2">
         <HomeLink />
-        <div className="flex select-none flex-nowrap items-center gap-3">
+        <div className="flex flex-shrink select-none flex-wrap items-center justify-end gap-x-3 sm:flex-nowrap">
           <BrowserOnly>
             <HomeAuthLinks />
           </BrowserOnly>

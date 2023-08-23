@@ -14,7 +14,12 @@ const FormLabel: React.FC<FormLabelProps> = ({
       className="label font-medium"
       errorClassName="label label-error font-medium"
     >
-      <span className={classNames('label-text', className || 'text-lg')}>
+      <span
+        className={classNames(
+          'label-text text-ellipsis',
+          className || 'text-lg'
+        )}
+      >
         {children}
       </span>
     </Label>

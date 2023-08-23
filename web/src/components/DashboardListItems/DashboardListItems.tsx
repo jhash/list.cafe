@@ -13,7 +13,10 @@ const DashboardListItems: React.FC<DashboardListItemsProps> = ({
 }) => {
   return listItems.map((listItem, index) => {
     return (
-      <li key={listItem.id || index} className="flex items-center">
+      <li
+        key={listItem.id || index}
+        className="flex w-full max-w-full items-center overflow-x-hidden"
+      >
         <DashboardListItem
           {...listItem}
           editing={editing}

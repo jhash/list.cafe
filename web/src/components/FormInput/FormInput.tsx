@@ -17,7 +17,7 @@ const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
         ref={ref}
       />
     ) : (
-      <p className="min-h-8 flex items-center border border-transparent px-3 text-sm">
+      <p className="min-h-8 flex w-full max-w-full items-center overflow-x-hidden border border-transparent px-3 text-sm">
         {defaultValue}
       </p>
     )

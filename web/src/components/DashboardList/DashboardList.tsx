@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react'
 
 import { kebabCase } from 'lodash'
 import { startCase, camelCase } from 'lodash'
-import { Pencil, PlusCircle, Save, X } from 'lucide-react'
+import { Eye, Pencil, PlusCircle, Save, X } from 'lucide-react'
 import { FindListQuery, ListItem } from 'types/graphql'
 
 import { Form } from '@redwoodjs/forms'
-import { navigate, routes } from '@redwoodjs/router'
+import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
@@ -190,6 +190,15 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           onSubmit={onSave}
         >
           <PageTitle title={name || 'Add new list'}>
+            {!!id && !!identifier?.id && (
+              <Link
+                to={routes.identifier({ identifier: identifier?.id })}
+                className="btn btn-primary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
+                title="Preview"
+              >
+                <Eye />
+              </Link>
+            )}
             <button
               className="btn btn-secondary flex h-12 min-h-0 w-12 flex-grow-0 items-center justify-center rounded-full p-0"
               type={editing ? 'submit' : 'button'}
@@ -238,8 +247,8 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </Form>
 
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-3">
+        <div className="flex w-full max-w-full flex-col gap-3 overflow-x-hidden">
+          <div className="flex w-full max-w-full items-center gap-3 overflow-x-hidden">
             <SectionTitle>Items</SectionTitle>
             {/* TODO: support without having saved */}
             {!!id && (
@@ -249,7 +258,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
             )}
           </div>
           {!!id && (
-            <ul className="flex flex-col gap-2">
+            <ul className="flex w-full max-w-full flex-col gap-2 overflow-x-hidden">
               <ListItemsCell
                 listId={id}
                 dashboard
