@@ -17,7 +17,7 @@ const FormItem = forwardRef<HTMLInputElement, FormItemProps>(
     }
 
     return (
-      <div className="flex w-full max-w-full flex-col gap-1 overflow-x-hidden">
+      <div className="flex w-full max-w-full flex-col gap-1">
         {!!label && (
           <FormLabel name={`${name}-label`} htmlFor={name} {...props}>
             {label}

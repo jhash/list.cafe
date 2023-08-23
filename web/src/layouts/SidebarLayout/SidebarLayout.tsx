@@ -78,7 +78,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
           {!open && (
             <div
               className={classNames(
-                'pointer-events-auto fixed bottom-0 left-0 top-0 hidden w-10 cursor-pointer bg-gray-500 opacity-[2%] md:flex'
+                'pointer-events-auto fixed bottom-0 left-0 top-0 hidden w-10 cursor-pointer bg-gray-500 opacity-[2%] shadow md:flex'
               )}
               onMouseEnter={startHovering}
               // onMouseLeave={stopHovering}
@@ -111,9 +111,16 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
             </div>
             <Sidebar {...sidebarProps} />
           </div>
-          <div className="flex w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-visible px-4 sm:pl-16">
-            <div className="flex w-full max-w-xl flex-grow flex-col gap-y-6">
-              {children}
+          <div
+            className={classNames(
+              'flex w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-visible px-4 transition-padding duration-300',
+              open ? 'sm:pl-sidebar' : 'sm:pl-0'
+            )}
+          >
+            <div className="flex w-full max-w-full flex-grow flex-col items-center sm:pl-12">
+              <div className="flex w-full max-w-xl flex-grow flex-col gap-y-6">
+                {children}
+              </div>
             </div>
           </div>
         </div>
@@ -128,7 +135,7 @@ export const SidebarButton = () => {
   return (
     <button
       className={classNames(
-        'btn btn-ghost fixed top-1.5 z-30 flex h-12 min-h-0 w-10 flex-shrink-0 flex-grow-0 items-center rounded-lg rounded-l-none p-0 transition-left duration-300',
+        'btn btn-ghost absolute top-2 z-30 flex h-12 min-h-0 w-10 flex-shrink-0 flex-grow-0 items-center rounded-lg rounded-l-none p-0 transition-left duration-300',
         open ? 'left-sidebar' : 'left-0'
       )}
       onClick={toggle}

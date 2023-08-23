@@ -159,8 +159,11 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
         description={description || 'Create a new list'}
       />
       {!!listItem && (
-        <dialog id="newListItem" className="modal modal-bottom sm:modal-middle">
-          <div className="modal-box relative flex flex-col gap-y-6">
+        <dialog
+          id="newListItem"
+          className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
+        >
+          <div className="modal-box relative flex h-screen max-h-full min-h-full flex-col gap-y-6 rounded-none sm:h-auto sm:min-h-0 sm:rounded-lg">
             <div className="flex items-center gap-3">
               <div className="flex-grow">
                 <SectionTitle>Add new item</SectionTitle>

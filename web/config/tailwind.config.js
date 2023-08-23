@@ -18,6 +18,7 @@ module.exports = {
       transitionProperty: {
         maxWidth: 'max-width',
         left: 'left',
+        padding: 'padding',
       },
       colors: {
         ivory: '#fffff0',
