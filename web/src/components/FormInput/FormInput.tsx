@@ -108,7 +108,7 @@ const FormInput = forwardRef<
             </>
           )
         }}
-      ></Controller>
+      />
     ) : (
       <>
         <p className="min-h-8 flex w-full max-w-full items-center border border-transparent px-1 text-sm">

@@ -9,6 +9,7 @@ export const schema = gql`
     type: GroupType!
     visibility: GroupVisibility!
     identifier: Identifier
+    groupRoles: [GroupRole]
   }
 
   enum GroupType {
@@ -21,26 +22,27 @@ export const schema = gql`
 
   enum GroupVisibility {
     PRIVATE
-    INVITE
     LINK
     PUBLIC
   }
 
   type Query {
-    groups: [Group!]! @requireAuth
-    group(id: Int!): Group @requireAuth
+    groups: [Group!]! @skipAuth
+    group(id: Int!): Group @skipAuth
   }
 
   input CreateGroupInput {
     name: String!
     type: GroupType!
     visibility: GroupVisibility!
+    identifier: CreateIdentifierInput
   }
 
   input UpdateGroupInput {
     name: String
     type: GroupType
     visibility: GroupVisibility
+    identifier: CreateIdentifierInput
   }
 
   type Mutation {

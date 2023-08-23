@@ -2,6 +2,8 @@ import type {
   QueryResolvers,
   MutationResolvers,
   ListRelationResolvers,
+  ListRole,
+  GroupRole,
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
@@ -10,22 +12,46 @@ export const adminLists: QueryResolvers['lists'] = () => {
   return db.list.findMany()
 }
 
-const listMembershipsWhereClauses = () => {
+const listMembershipsWhereClauses = (
+  listRoles?: ListRole[],
+  groupRoles?: GroupRole[]
+) => {
   return [
     {
       listMemberships: {
         some: {
-          userId: context.currentUser.id,
+          userId: context.currentUser?.id,
+          ...(listRoles
+            ? {
+                listRole: {
+                  in: listRoles,
+                },
+              }
+            : {}),
         },
       },
     },
     {
       listGroupMemberships: {
         some: {
+          ...(listRoles
+            ? {
+                listRole: {
+                  in: listRoles,
+                },
+              }
+            : {}),
           group: {
             groupMemberships: {
               some: {
-                userId: context.currentUser.id,
+                userId: context.currentUser?.id,
+                ...(groupRoles
+                  ? {
+                      groupRole: {
+                        in: groupRoles,
+                      },
+                    }
+                  : {}),
               },
             },
           },
@@ -108,7 +134,15 @@ export const updateList: MutationResolvers['updateList'] = ({ id, input }) => {
         },
       },
     },
-    where: { id },
+    where: {
+      id,
+      OR: [
+        ...listMembershipsWhereClauses(
+          ['ADMIN', 'CONTRIBUTE', 'OWNER', 'EDIT'],
+          ['OWNER', 'ADMIN', 'EDIT']
+        ),
+      ],
+    },
   })
 }
 
@@ -116,35 +150,7 @@ export const deleteList: MutationResolvers['deleteList'] = ({ id }) => {
   return db.list.delete({
     where: {
       id,
-      OR: [
-        {
-          listMemberships: {
-            some: {
-              userId: context.currentUser.id,
-              listRole: {
-                in: ['OWNER'],
-              },
-            },
-          },
-        },
-        {
-          listGroupMemberships: {
-            some: {
-              group: {
-                groupMemberships: {
-                  some: {
-                    userId: context.currentUser.id,
-                    groupRole: {
-                      // TODO: should admin be able to delete?
-                      in: ['OWNER', 'ADMIN'],
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      ],
+      OR: [...listMembershipsWhereClauses(['OWNER'], ['OWNER', 'ADMIN'])],
     },
   })
 }
@@ -160,7 +166,7 @@ export const List: ListRelationResolvers = {
     return (
       await db.list.findUnique({ where: { id: root?.id } }).listMemberships({
         where: {
-          userId: context.currentUser.id,
+          userId: context.currentUser?.id,
         },
       })
     ).map((membership) => membership.listRole)

@@ -19,11 +19,13 @@ const DashboardSidebar: SidebarType = (props) => (
         name: 'Lists',
         Icon: List,
         path: routes.lists(),
+        toNewUrl: routes.newList(),
       },
       {
         name: 'Groups',
         Icon: Users,
         path: routes.groups(),
+        toNewUrl: routes.newGroup(),
       },
       {
         name: 'Profile',

@@ -1,12 +1,12 @@
+import type { CreateGroupInput } from 'types/graphql'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import GroupForm from 'src/components/Admin/Group/GroupForm'
 
-import type { CreateGroupInput } from 'types/graphql'
-
-const CREATE_GROUP_MUTATION = gql`
+export const CREATE_GROUP_MUTATION = gql`
   mutation CreateGroupMutation($input: CreateGroupInput!) {
     createGroup(input: $input) {
       id

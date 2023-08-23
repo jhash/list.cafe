@@ -19,7 +19,7 @@ export const QUERY = gql`
     }
   }
 `
-const UPDATE_GROUP_MUTATION = gql`
+export const UPDATE_GROUP_MUTATION = gql`
   mutation UpdateGroupMutation($id: Int!, $input: UpdateGroupInput!) {
     updateGroup(id: $id, input: $input) {
       id
@@ -28,6 +28,9 @@ const UPDATE_GROUP_MUTATION = gql`
       name
       type
       visibility
+      identifier {
+        id
+      }
     }
   }
 `

@@ -145,18 +145,6 @@ const GroupForm = (props: GroupFormProps) => {
 
         <div className="rw-check-radio-items">
           <RadioField
-            id="group-visibility-1"
-            name="visibility"
-            defaultValue="INVITE"
-            defaultChecked={props.group?.visibility?.includes('INVITE')}
-            className="rw-input"
-            errorClassName="rw-input rw-input-error"
-          />
-          <div>Invite</div>
-        </div>
-
-        <div className="rw-check-radio-items">
-          <RadioField
             id="group-visibility-2"
             name="visibility"
             defaultValue="LINK"

@@ -102,6 +102,8 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     [listRoles]
   )
 
+  const canSave = id ? canEdit : true
+
   const canAdd = useMemo(
     () =>
       listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN', 'CONTRIBUTE']),
@@ -225,7 +227,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
   return (
     <>
       <MetaTags
-        title={name || 'Add new list'}
+        title={name || 'Create a new list'}
         description={description || 'Create a new list'}
       />
       {!!listItem && (
@@ -236,7 +238,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           <div className="modal-box relative flex max-h-full min-h-screen flex-col gap-y-6 rounded-none sm:h-auto sm:min-h-[70vh] sm:rounded-lg">
             <div className="flex items-center gap-3">
               <div className="flex-grow">
-                <SectionTitle>Add new item</SectionTitle>
+                <SectionTitle>Add a new item</SectionTitle>
               </div>
               {/* <button
               className="btn btn-secondary flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start p-0"
@@ -269,7 +271,16 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           className="flex w-full max-w-full flex-col gap-3"
           onSubmit={onSave}
         >
-          <PageTitle title={name || 'Add new list'}>
+          <PageTitle title={name || 'Create a new list'}>
+            {!!id && !!identifier?.id && (
+              <Link
+                to={routes.identifier({ identifier: identifier?.id })}
+                className="btn btn-primary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
+                title="Preview"
+              >
+                <Eye />
+              </Link>
+            )}
             {!!id && canDelete && (
               <button
                 className="btn btn-error flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
@@ -289,16 +300,8 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                 <Trash2 />
               </button>
             )}
-            {!!id && !!identifier?.id && (
-              <Link
-                to={routes.identifier({ identifier: identifier?.id })}
-                className="btn btn-primary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
-                title="Preview"
-              >
-                <Eye />
-              </Link>
-            )}
-            {!!canEdit && (
+
+            {!!canSave && (
               <button
                 className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
                 type={editing ? 'submit' : 'button'}
@@ -312,7 +315,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               </button>
             )}
           </PageTitle>
-          <div className="flex flex-wrap gap-5">
+          <div className="flex flex-wrap gap-x-5 gap-y-3">
             <FormItem
               name="name"
               defaultValue={name}
@@ -332,7 +335,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                 render={({ field: { value } }) => (
                   <div className="flex items-center p-1 text-sm text-gray-500">
                     {`Ex. ${LIST_CAFE_DOMAIN}/${
-                      (editing ? value : undefined) ||
+                      (editing ? kebabCase(value) : undefined) ||
                       identifier?.id ||
                       'your-list-name'
                     }`}

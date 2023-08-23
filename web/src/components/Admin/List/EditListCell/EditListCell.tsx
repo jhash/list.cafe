@@ -28,6 +28,9 @@ export const UPDATE_LIST_MUTATION = gql`
       name
       description
       type
+      identifier {
+        id
+      }
     }
   }
 `

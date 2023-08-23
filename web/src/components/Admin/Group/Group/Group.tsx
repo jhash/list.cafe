@@ -1,12 +1,12 @@
+import type { DeleteGroupMutationVariables, FindGroupById } from 'types/graphql'
+
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { formatEnum, timeTag } from 'src/lib/formatters'
 
-import type { DeleteGroupMutationVariables, FindGroupById } from 'types/graphql'
-
-const DELETE_GROUP_MUTATION = gql`
+export const DELETE_GROUP_MUTATION = gql`
   mutation DeleteGroupMutation($id: Int!) {
     deleteGroup(id: $id) {
       id
