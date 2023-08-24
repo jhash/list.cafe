@@ -39,7 +39,12 @@ export type FormInputProps = (
 ) & {
   editing?: boolean
   type?: FormInputType
-  options?: { name?: string; value: string | number; description?: string }[]
+  options?: {
+    name?: string
+    value: string | number
+    description?: string
+    disabled?: boolean
+  }[]
 }
 const FormInput = forwardRef<
   HTMLInputElement | HTMLSelectElement,
@@ -89,8 +94,8 @@ const FormInput = forwardRef<
               {type === 'select' ? (
                 <>
                   <SelectField {...(inputProps as SelectFieldProps)}>
-                    {options?.map(({ name, value }, index) => (
-                      <option key={index} value={value}>
+                    {options?.map(({ name, value, disabled }, index) => (
+                      <option key={index} value={value} disabled={disabled}>
                         {name || value}
                       </option>
                     ))}

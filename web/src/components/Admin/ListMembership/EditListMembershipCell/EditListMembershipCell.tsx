@@ -22,7 +22,7 @@ export const QUERY = gql`
     }
   }
 `
-const UPDATE_LIST_MEMBERSHIP_MUTATION = gql`
+export const UPDATE_LIST_MEMBERSHIP_MUTATION = gql`
   mutation UpdateListMembershipMutation(
     $id: Int!
     $input: UpdateListMembershipInput!

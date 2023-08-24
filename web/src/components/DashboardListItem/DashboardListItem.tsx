@@ -44,6 +44,12 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
 
   const [open, setOpen] = useState<boolean>(!id && editing)
 
+  const canEdit = useMemo(
+    () =>
+      listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']),
+    [listRoles]
+  )
+
   const canDelete = useMemo(
     () =>
       listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']),
@@ -168,7 +174,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             {!!url && <Link2 size="1rem" />}
           </div>
           <div className="flex items-center gap-3">
-            {!editing && (
+            {!editing && !!canEdit && (
               <button
                 // TODO: don't use z
                 className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"

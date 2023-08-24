@@ -9,7 +9,8 @@ export const schema = gql`
     identifier: Identifier
     visibility: ListVisibility
     listItems: [ListItem]
-    # listMemberships: [ListMembership]
+    listMemberships: [ListMembership]
+    listGroupMemberships: [ListGroupMembership]
     listRoles: [ListRole]
   }
 

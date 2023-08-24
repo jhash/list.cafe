@@ -20,6 +20,7 @@ import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import ListItemsCell from '../ListItemsCell'
+import ListMembershipsCell from '../ListMembershipsCell'
 import PageTitle from '../PageTitle/PageTitle'
 import SectionTitle from '../SectionTitle/SectionTitle'
 
@@ -395,6 +396,22 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                 onListItemsUpdate={resetNewListItem}
                 toggleEditing={() => setEditing(!editing)}
               />
+            </ul>
+          )}
+        </div>
+        <div className="flex w-full max-w-full flex-col gap-3">
+          <div className="flex w-full max-w-full items-center gap-3">
+            <SectionTitle>Members</SectionTitle>
+            {/* TODO: support without having saved */}
+            {/* {!!id && canAdd && (
+              <div className="flex items-center gap-3">
+                <AddItemButton onClick={createNewListItem} disabled={loading} />
+              </div>
+            )} */}
+          </div>
+          {!!id && (
+            <ul className="flex w-full max-w-full flex-col gap-2">
+              <ListMembershipsCell listId={id} />
             </ul>
           )}
         </div>

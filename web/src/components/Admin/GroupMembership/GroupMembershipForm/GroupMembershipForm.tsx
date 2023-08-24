@@ -1,3 +1,8 @@
+import type {
+  EditGroupMembershipById,
+  UpdateGroupMembershipInput,
+} from 'types/graphql'
+
 import {
   Form,
   FormError,
@@ -7,11 +12,6 @@ import {
   RadioField,
   Submit,
 } from '@redwoodjs/forms'
-
-import type {
-  EditGroupMembershipById,
-  UpdateGroupMembershipInput,
-} from 'types/graphql'
 import type { RWGqlError } from '@redwoodjs/forms'
 
 type FormGroupMembership = NonNullable<

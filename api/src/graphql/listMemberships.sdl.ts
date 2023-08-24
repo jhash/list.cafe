@@ -20,6 +20,7 @@ export const schema = gql`
 
   type Query {
     listMemberships: [ListMembership!]! @requireAuth
+    listMembershipsByListId(listId: Int!): [ListMembership!]! @requireAuth
     listMembership(id: Int!): ListMembership @requireAuth
   }
 
@@ -31,8 +32,6 @@ export const schema = gql`
 
   input UpdateListMembershipInput {
     listRole: ListRole
-    listId: Int
-    userId: Int
   }
 
   type Mutation {

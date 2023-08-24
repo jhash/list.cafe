@@ -24,6 +24,12 @@ export const QUERY = gql`
       type
       visibility
       listRoles
+      listMemberships {
+        id
+      }
+      listGroupMemberships {
+        id
+      }
     }
   }
 `

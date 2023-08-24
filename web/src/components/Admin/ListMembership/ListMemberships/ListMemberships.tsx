@@ -1,3 +1,8 @@
+import type {
+  DeleteListMembershipMutationVariables,
+  FindListMemberships,
+} from 'types/graphql'
+
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -5,12 +10,7 @@ import { toast } from '@redwoodjs/web/toast'
 import { QUERY } from 'src/components/Admin/ListMembership/ListMembershipsCell'
 import { formatEnum, timeTag, truncate } from 'src/lib/formatters'
 
-import type {
-  DeleteListMembershipMutationVariables,
-  FindListMemberships,
-} from 'types/graphql'
-
-const DELETE_LIST_MEMBERSHIP_MUTATION = gql`
+export const DELETE_LIST_MEMBERSHIP_MUTATION = gql`
   mutation DeleteListMembershipMutation($id: Int!) {
     deleteListMembership(id: $id) {
       id

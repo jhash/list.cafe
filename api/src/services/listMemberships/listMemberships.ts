@@ -4,9 +4,19 @@ import type {
   ListMembershipRelationResolvers,
 } from 'types/graphql'
 
+import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
+export const listMembershipsByListId: QueryResolvers['listMembershipsByListId'] =
+  ({ listId }) => {
+    return db.listMembership.findMany({ where: { listId } })
+  }
+
 export const listMemberships: QueryResolvers['listMemberships'] = () => {
+  // TODO: add this all over
+  if (!hasRole(['ADMIN', 'SUPPORT'])) {
+    throw new Error('You are not authorized to access this')
+  }
   return db.listMembership.findMany()
 }
 
