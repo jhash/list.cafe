@@ -17,7 +17,9 @@ const HomeLayout = ({ children }) => {
           </BrowserOnly>
         </div>
       </nav>
-      <div className="flex flex-grow flex-col p-4">{children}</div>
+      <div className="flex w-full max-w-full flex-grow flex-col p-4">
+        {children}
+      </div>
       <footer className="flex h-16 flex-grow-0 flex-row-reverse items-center px-4">
         <DarkModeToggle />
       </footer>
