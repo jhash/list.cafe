@@ -1,6 +1,7 @@
 import classNames from 'classnames'
+import { X } from 'lucide-react'
 
-import { Toaster } from '@redwoodjs/web/dist/toast'
+import { ToastBar, Toaster, toast } from '@redwoodjs/web/dist/toast'
 
 import { useFontFacesLoaded } from 'src/hooks/useFontFacesLoaded'
 
@@ -14,7 +15,36 @@ const MainLayout = ({ children }) => {
         fontsLoaded ? 'opacity-100' : 'opacity-0'
       )}
     >
-      <Toaster toastOptions={{ className: 'rw-toast', duration: 3000 }} />
+      <Toaster
+        containerClassName="min-w-screen max-w-screen sm:min-w-auto sm:max-w-auto"
+        toastOptions={{
+          className:
+            'min-w-[12rem] text-left justify-start h-11 py-0 flex items-center pr-2',
+          duration: 3000,
+          position: 'top-left',
+        }}
+      >
+        {(t) => (
+          <ToastBar toast={t}>
+            {({ icon, message }) => (
+              <>
+                {icon}
+                <div className="flex flex-grow items-center justify-start">
+                  {message}
+                </div>
+                {t.type !== 'loading' && (
+                  <button
+                    onClick={() => toast.dismiss(t.id)}
+                    className="btn btn-ghost h-7 min-h-0 w-7 p-0"
+                  >
+                    <X size="1.125rem" />
+                  </button>
+                )}
+              </>
+            )}
+          </ToastBar>
+        )}
+      </Toaster>
       {children}
     </main>
   )

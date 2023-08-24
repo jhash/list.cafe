@@ -17,19 +17,19 @@ import SignupPage from './pages/SignupPage/SignupPage'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Set wrap={ScaffoldLayout} title="ListGroupMemberships" titleTo="adminListGroupMemberships" buttonLabel="New ListGroupMembership" buttonTo="adminNewListGroupMembership">
-        <Route path="/admin/list-group-memberships/new" page={AdminListGroupMembershipNewListGroupMembershipPage} name="adminNewListGroupMembership" />
-        <Route path="/admin/list-group-memberships/{id:Int}/edit" page={AdminListGroupMembershipEditListGroupMembershipPage} name="adminEditListGroupMembership" />
-        <Route path="/admin/list-group-memberships/{id:Int}" page={AdminListGroupMembershipListGroupMembershipPage} name="adminListGroupMembership" />
-        <Route path="/admin/list-group-memberships" page={AdminListGroupMembershipListGroupMembershipsPage} name="adminListGroupMemberships" />
-      </Set>
-      <Set wrap={ScaffoldLayout} title="GroupMemberships" titleTo="adminGroupMemberships" buttonLabel="New GroupMembership" buttonTo="adminNewGroupMembership">
-        <Route path="/admin/group-memberships/new" page={AdminGroupMembershipNewGroupMembershipPage} name="adminNewGroupMembership" />
-        <Route path="/admin/group-memberships/{id:Int}/edit" page={AdminGroupMembershipEditGroupMembershipPage} name="adminEditGroupMembership" />
-        <Route path="/admin/group-memberships/{id:Int}" page={AdminGroupMembershipGroupMembershipPage} name="adminGroupMembership" />
-        <Route path="/admin/group-memberships" page={AdminGroupMembershipGroupMembershipsPage} name="adminGroupMemberships" />
-      </Set>
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
+        <Set wrap={ScaffoldLayout} title="ListGroupMemberships" titleTo="adminListGroupMemberships" buttonLabel="New ListGroupMembership" buttonTo="adminNewListGroupMembership">
+          <Route path="/admin/list-group-memberships/new" page={AdminListGroupMembershipNewListGroupMembershipPage} name="adminNewListGroupMembership" />
+          <Route path="/admin/list-group-memberships/{id:Int}/edit" page={AdminListGroupMembershipEditListGroupMembershipPage} name="adminEditListGroupMembership" />
+          <Route path="/admin/list-group-memberships/{id:Int}" page={AdminListGroupMembershipListGroupMembershipPage} name="adminListGroupMembership" />
+          <Route path="/admin/list-group-memberships" page={AdminListGroupMembershipListGroupMembershipsPage} name="adminListGroupMemberships" />
+        </Set>
+        <Set wrap={ScaffoldLayout} title="GroupMemberships" titleTo="adminGroupMemberships" buttonLabel="New GroupMembership" buttonTo="adminNewGroupMembership">
+          <Route path="/admin/group-memberships/new" page={AdminGroupMembershipNewGroupMembershipPage} name="adminNewGroupMembership" />
+          <Route path="/admin/group-memberships/{id:Int}/edit" page={AdminGroupMembershipEditGroupMembershipPage} name="adminEditGroupMembership" />
+          <Route path="/admin/group-memberships/{id:Int}" page={AdminGroupMembershipGroupMembershipPage} name="adminGroupMembership" />
+          <Route path="/admin/group-memberships" page={AdminGroupMembershipGroupMembershipsPage} name="adminGroupMemberships" />
+        </Set>
         <Set wrap={ScaffoldLayout} title="ListMemberships" titleTo="adminListMemberships" buttonLabel="New ListMembership" buttonTo="adminNewListMembership">
           <Route path="/admin/list-memberships/new" page={AdminListMembershipNewListMembershipPage} name="adminNewListMembership" />
           <Route path="/admin/list-memberships/{id:Int}/edit" page={AdminListMembershipEditListMembershipPage} name="adminEditListMembership" />
