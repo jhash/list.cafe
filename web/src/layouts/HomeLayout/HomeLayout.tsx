@@ -20,7 +20,7 @@ const HomeLayout = ({ children }) => {
       <div className="flex w-full max-w-full flex-grow flex-col p-4">
         {children}
       </div>
-      <footer className="flex h-16 flex-grow-0 flex-row-reverse items-center px-4">
+      <footer className="flex h-16 flex-shrink-0 flex-grow-0 flex-row-reverse items-center px-4">
         <DarkModeToggle />
       </footer>
     </MainLayout>

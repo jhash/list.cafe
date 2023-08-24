@@ -68,8 +68,14 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
     }
 
     close()
+    setHovering(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, pathname])
+
+  useEffect(() => {
+    setHovering(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
 
   return (
     <SidebarContext.Provider value={sidebarProps}>
@@ -113,12 +119,12 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
           </div>
           <div
             className={classNames(
-              'flex w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-visible px-4 transition-padding duration-300',
+              'flex w-full max-w-full flex-grow flex-col items-center gap-y-2 px-4 transition-padding duration-300',
               open ? 'sm:pl-sidebar' : 'sm:pl-0'
             )}
           >
             <div className="container flex w-full flex-grow flex-col items-center justify-center sm:pl-12">
-              <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 sm:min-h-[85%]">
+              <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-y-visible sm:min-h-[85%]">
                 {children}
               </div>
             </div>

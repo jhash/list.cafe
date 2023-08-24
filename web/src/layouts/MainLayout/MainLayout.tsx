@@ -11,7 +11,7 @@ const MainLayout = ({ children }) => {
   return (
     <main
       className={classNames(
-        'flex h-full min-h-full w-full max-w-full flex-grow flex-col overflow-x-hidden transition-opacity duration-500 ease-in',
+        'flex min-h-full w-full max-w-full flex-grow flex-col overflow-x-hidden transition-opacity duration-500 ease-in',
         fontsLoaded ? 'opacity-100' : 'opacity-0'
       )}
     >
