@@ -106,7 +106,6 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   const error = id ? createError : updateError || deleteError
 
   const onSave = (input: CreateListItemInput | UpdateListItemInput, event) => {
-    console.log(input, event)
     event?.stopPropagation?.()
     event?.preventDefault?.()
 
