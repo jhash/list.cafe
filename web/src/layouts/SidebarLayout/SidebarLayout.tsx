@@ -80,7 +80,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
   return (
     <SidebarContext.Provider value={sidebarProps}>
       <MainLayout>
-        <div className="relative flex w-full max-w-full flex-grow overflow-x-hidden">
+        <div className="relative flex w-full max-w-full flex-grow overflow-x-hidden overflow-y-visible">
           {!open && (
             <div
               className={classNames(
@@ -119,12 +119,12 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
           </div>
           <div
             className={classNames(
-              'flex w-full max-w-full flex-grow flex-col items-center gap-y-2 px-4 transition-padding duration-300',
+              'flex min-h-full w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-hidden overflow-y-visible px-4 transition-padding duration-300',
               open ? 'sm:pl-sidebar' : 'sm:pl-0'
             )}
           >
-            <div className="container flex w-full flex-grow flex-col items-center justify-center sm:pl-12">
-              <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-y-visible sm:min-h-[85%]">
+            <div className="container flex min-h-full w-full max-w-full flex-grow flex-col items-center justify-center overflow-x-hidden overflow-y-visible sm:pl-12">
+              <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-x-hidden overflow-y-visible sm:min-h-[85%]">
                 {children}
               </div>
             </div>

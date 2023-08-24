@@ -7,13 +7,13 @@ interface ListFadeOutProps {
 
 const ListFadeOut: React.FC<ListFadeOutProps> = ({
   lines = 5,
-  noHeight = false,
+  // noHeight = false,
 }) => {
   return (
     <div
       className={classNames(
-        'pointer-events-none flex animate-pulse flex-col overflow-visible',
-        noHeight && 'max-h-0 tall:max-h-none'
+        'pointer-events-none flex animate-pulse flex-col overflow-visible'
+        // noHeight && 'max-h-0 tall:max-h-none'
       )}
     >
       <div className="flex flex-col gap-6">
