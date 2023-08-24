@@ -169,6 +169,8 @@ model ListView {
   metadata  Json?
 }
 
+// TODO: ListView: List, Table, Masonry, etc.
+
 enum ListType {
   WISHLIST
   WEDDING

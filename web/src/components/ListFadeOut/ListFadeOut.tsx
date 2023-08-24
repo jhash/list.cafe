@@ -12,7 +12,7 @@ const ListFadeOut: React.FC<ListFadeOutProps> = ({
   return (
     <div
       className={classNames(
-        'flex animate-pulse flex-col overflow-visible',
+        'pointer-events-none flex animate-pulse flex-col overflow-visible',
         noHeight && 'max-h-0 tall:max-h-none'
       )}
     >
