@@ -71,7 +71,11 @@ export const Success = ({
               listId={id}
               dashboard={dashboard}
               editing={false}
+              // TODO: why does the cell make these required?
               onListItemsUpdate={() => {
+                //
+              }}
+              toggleEditing={() => {
                 //
               }}
             />

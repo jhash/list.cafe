@@ -243,6 +243,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               {/* <button
               className="btn btn-secondary flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start p-0"
               type="submit"
+              disabled={loading}
             >
               <Save size="1rem" />
             </button> */}
@@ -296,6 +297,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                     ) && onDelete()
                   )
                 }}
+                disabled={loading}
               >
                 <Trash2 />
               </button>
@@ -310,6 +312,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                     ? undefined
                     : () => setImmediate(() => setEditing(!editing))
                 }
+                disabled={loading}
               >
                 {editing ? <Save /> : <Pencil />}
               </button>
@@ -317,6 +320,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </PageTitle>
           <div className="flex flex-wrap gap-x-5 gap-y-3">
             <FormItem
+              disabled={loading}
               name="name"
               defaultValue={name}
               editing={editing}
@@ -324,6 +328,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               validation={{ required: true }}
             />
             <FormItem
+              disabled={loading}
               name="identifier"
               defaultValue={identifier?.id}
               editing={editing}
@@ -344,12 +349,14 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               />
             </FormItem>
             <FormItem
+              disabled={loading}
               name="description"
               defaultValue={description}
               editing={editing}
               label={<SectionTitle>Description</SectionTitle>}
             />
             <FormItem
+              disabled={loading}
               type="select"
               name="visibility"
               defaultValue={visibility}
@@ -375,7 +382,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
             {/* TODO: support without having saved */}
             {!!id && canAdd && (
               <div className="flex items-center gap-3">
-                <AddItemButton onClick={createNewListItem} />
+                <AddItemButton onClick={createNewListItem} disabled={loading} />
               </div>
             )}
           </div>
@@ -386,6 +393,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
                 dashboard
                 editing={editing}
                 onListItemsUpdate={resetNewListItem}
+                toggleEditing={() => setEditing(!editing)}
               />
             </ul>
           )}

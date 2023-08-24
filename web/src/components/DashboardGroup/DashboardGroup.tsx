@@ -211,6 +211,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
                     ) && onDelete()
                   )
                 }}
+                disabled={loading}
               >
                 <Trash2 />
               </button>
@@ -225,6 +226,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
                     ? undefined
                     : () => setImmediate(() => setEditing(!editing))
                 }
+                disabled={loading}
               >
                 {editing ? <Save /> : <Pencil />}
               </button>
@@ -232,6 +234,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
           </PageTitle>
           <div className="flex flex-wrap gap-x-5 gap-y-3">
             <FormItem
+              disabled={loading}
               name="name"
               defaultValue={name}
               editing={editing}
@@ -239,6 +242,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
               validation={{ required: true }}
             />
             <FormItem
+              disabled={loading}
               name="identifier"
               defaultValue={identifier?.id}
               editing={editing}
@@ -259,6 +263,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
               />
             </FormItem>
             <FormItem
+              disabled={loading}
               type="select"
               name="visibility"
               defaultValue={visibility}

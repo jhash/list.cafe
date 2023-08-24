@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import classNames from 'classnames'
-import { Link2, Save, Trash2 } from 'lucide-react'
+import { Link2, Pencil, Save, Trash2 } from 'lucide-react'
 import {
   CreateListItemInput,
   CreateListItemMutation,
@@ -29,11 +29,13 @@ type DashboardListItemProps = Omit<
 > & {
   id?: number
   editing: boolean
+  toggleEditing?: () => void
   onListItemsUpdate?: () => void
 }
 const DashboardListItem: React.FC<DashboardListItemProps> = ({
   editing = false,
   onListItemsUpdate,
+  toggleEditing,
   ...listItem
 }) => {
   const titleRef = useRef<HTMLInputElement>()
@@ -167,6 +169,17 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             {!!url && <Link2 size="1rem" />}
           </div>
           <div className="flex items-center gap-3">
+            {!editing && (
+              <button
+                // TODO: don't use z
+                className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
+                type="button"
+                onClick={toggleEditing}
+                disabled={loading}
+              >
+                <Pencil size="1.25rem" />
+              </button>
+            )}
             {!!open && !!editing && (
               <button
                 // TODO: don't use z
@@ -207,6 +220,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       >
         <NumberField hidden name="listId" defaultValue={listId} />
         <FormItem
+          disabled={loading}
           editing={editing}
           name="title"
           defaultValue={title}
@@ -216,6 +230,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           ref={titleRef}
         />
         <FormItem
+          disabled={loading}
           editing={editing}
           name="url"
           defaultValue={url}
@@ -223,6 +238,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           label="Link"
         />
         <FormItem
+          disabled={loading}
           editing={editing}
           name="description"
           defaultValue={description}
@@ -230,6 +246,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           label="Description"
         />
         <FormItem
+          disabled={loading}
           type="number"
           editing={editing}
           name="quantity"
@@ -239,6 +256,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           validation={{ required: true }}
         />
         <FormItem
+          disabled={loading}
           type="number"
           step="0.01"
           editing={editing}

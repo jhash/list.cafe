@@ -135,7 +135,7 @@ export const SidebarButton = () => {
   return (
     <button
       className={classNames(
-        'btn btn-ghost absolute top-[0.475rem] z-30 flex h-12 min-h-0 w-10 flex-shrink-0 flex-grow-0 items-center rounded-lg rounded-l-none p-0 transition-left duration-300',
+        'btn btn-ghost fixed top-[0.475rem] z-30 flex h-12 min-h-0 w-10 flex-shrink-0 flex-grow-0 items-center rounded-lg rounded-l-none p-0 transition-left duration-300 sm:bottom-[0.475rem] sm:top-auto',
         open ? 'left-sidebar' : 'left-0'
       )}
       onClick={toggle}

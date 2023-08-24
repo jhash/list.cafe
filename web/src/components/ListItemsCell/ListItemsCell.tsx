@@ -32,12 +32,14 @@ interface ListItemsCellProps {
   dashboard?: boolean
   editing?: boolean
   onListItemsUpdate?: () => void
+  toggleEditing?: () => void
 }
 export const Success = ({
   listItems,
   dashboard = false,
   editing = false,
   onListItemsUpdate,
+  toggleEditing,
 }: CellSuccessProps<ListItemsQuery & ListItemsCellProps>) => {
   if (dashboard) {
     return (
@@ -45,6 +47,7 @@ export const Success = ({
         listItems={listItems}
         editing={editing}
         onListItemsUpdate={onListItemsUpdate}
+        toggleEditing={toggleEditing}
       />
     )
   }
