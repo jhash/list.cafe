@@ -8,11 +8,21 @@ import FormLabel, { FormLabelProps } from '../FormLabel/FormLabel'
 export type FormItemProps = FormLabelProps &
   FormInputProps & {
     label?: React.ReactNode
+    description?: React.ReactNode
   }
 
 const FormItem = forwardRef<HTMLInputElement, FormItemProps>(
   (
-    { defaultValue, children, editing, name, label, options, ...props },
+    {
+      description,
+      defaultValue,
+      children,
+      editing = true,
+      name,
+      label,
+      options,
+      ...props
+    },
     ref
   ) => {
     if (!editing && !defaultValue) {
@@ -35,6 +45,11 @@ const FormItem = forwardRef<HTMLInputElement, FormItemProps>(
           {...props}
         >
           <FieldError name={name} className="px-1 py-1 text-error" />
+          {!!description && (
+            <div className="p-1 text-sm text-gray-600 dark:text-gray-400">
+              {description}
+            </div>
+          )}
           {children}
         </FormInput>
       </div>

@@ -26,7 +26,6 @@ model User {
   listViews                    ListView[]
   reservations                 Reservation[]
   giftPreferencesAdded         GiftPreferences[]
-  purchases                    Purchase[]
   listItemTags                 ListItemTag[]
   listTags                     ListTag[]
   peopleCreated                Person[]                      @relation(name: "createdPeople")
@@ -209,6 +208,7 @@ model ListView {
 // TODO: ListView: List, Table, Masonry, etc.
 
 enum ListType {
+  GIFTS
   WISHLIST
   WEDDING
   BABY_SHOWER
@@ -245,7 +245,6 @@ model ListItem {
   quantity        Int              @default(1)
   voting          Boolean          @default(false)
   reservations    Reservation[]
-  purchases       Purchase[]
   parent          ListItem?        @relation(name: "listItemInheritance", fields: [parentId], references: [id])
   parentId        Int?
   children        ListItem[]       @relation(name: "listItemInheritance")
@@ -268,16 +267,18 @@ model Image {
 }
 
 model Reservation {
-  id         Int        @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @default(now())
-  listItem   ListItem   @relation(fields: [listItemId], references: [id], onDelete: Cascade)
+  id         Int               @id @default(autoincrement())
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @default(now())
+  listItem   ListItem          @relation(fields: [listItemId], references: [id], onDelete: Cascade)
   listItemId Int
-  quantity   Int        @default(1)
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quantity   Int               @default(1)
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   comment    String?
-  purchases  Purchase[]
+  price      Decimal?          @db.Money
+  status     ReservationStatus @default(RESERVED)
+  // purchaseStatus PurchaseStatus?
 }
 
 enum ReservationStatus {
@@ -285,6 +286,14 @@ enum ReservationStatus {
   RELEASED
   FULFILLED
 }
+
+// enum PurchaseStatus {
+//   PENDING
+//   COMPLETED
+//   CANCELED
+//   RETURNED
+//   REFUNDED
+// }
 
 model Partnership {
   id                       Int                       @id @default(autoincrement())
@@ -468,29 +477,6 @@ model GiftNotes {
   giftPreferencesId Int             @unique
   name              String
   note              String
-}
-
-model Purchase {
-  id            Int            @id @default(autoincrement())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
-  status        PurchaseStatus @default(PENDING)
-  listItem      ListItem?      @relation(fields: [listItemId], references: [id])
-  listItemId    Int?
-  quantity      Int            @default(1)
-  purchasedBy   User?          @relation(fields: [purchasedById], references: [id])
-  purchasedById Int?
-  reservation   Reservation?   @relation(fields: [reservationId], references: [id])
-  reservationId Int?
-  price         Decimal?       @db.Money
-}
-
-enum PurchaseStatus {
-  PENDING
-  COMPLETED
-  CANCELED
-  RETURNED
-  REFUNDED
 }
 
 model ListTag {

@@ -54,11 +54,6 @@ export const groupRolesIntersect = (
   authRoles: GroupRole[]
 ) => !!roles?.length && !!intersection(roles, authRoles).length
 
-declare let window: Window &
-  typeof globalThis & {
-    newGroupItem: { showModal: () => void; close: () => void }
-  }
-
 const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
   group,
 }) => {

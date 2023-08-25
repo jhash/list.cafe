@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { X } from 'lucide-react'
 
 import SectionTitle from '../SectionTitle/SectionTitle'
@@ -5,12 +7,30 @@ import SectionTitle from '../SectionTitle/SectionTitle'
 type ModalProps = React.HTMLProps<HTMLDialogElement> & {
   onClose: () => void
   title: string
+  open: boolean
+  id: string
 }
-const Modal = ({ title, onClose, children, ...props }: ModalProps) => {
+const Modal = ({
+  open,
+  title,
+  onClose,
+  children,
+  id,
+  ...props
+}: ModalProps) => {
+  useEffect(() => {
+    if (open) {
+      window?.[id]?.showModal()
+    } else {
+      window?.[id]?.close()
+    }
+  }, [open, id])
+
   return (
     <dialog
+      id={id}
       {...props}
-      className="modal modal-bottom z-40 p-0 sm:modal-middle sm:p-4"
+      className="modal modal-bottom z-40 cursor-default p-0 sm:modal-middle sm:p-4"
     >
       <div className="modal-box relative flex max-h-full min-h-screen flex-col gap-y-6 rounded-none sm:h-auto sm:min-h-0 sm:rounded-lg">
         <div className="flex items-center gap-3">

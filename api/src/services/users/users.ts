@@ -79,16 +79,13 @@ export const User: UserRelationResolvers = {
   // listViews: (_obj, { root }) => {
   //   return db.user.findUnique({ where: { id: root?.id } }).listViews()
   // },
-  // reservations: (_obj, { root }) => {
-  //   return db.user.findUnique({ where: { id: root?.id } }).reservations()
-  // },
+  reservations: (_obj, { root }) => {
+    return db.user.findUnique({ where: { id: root?.id } }).reservations()
+  },
   // giftPreferencesAdded: (_obj, { root }) => {
   //   return db.user
   //     .findUnique({ where: { id: root?.id } })
   //     .giftPreferencesAdded()
-  // },
-  // purchases: (_obj, { root }) => {
-  //   return db.user.findUnique({ where: { id: root?.id } }).purchases()
   // },
   // listItemTags: (_obj, { root }) => {
   //   return db.user.findUnique({ where: { id: root?.id } }).listItemTags()

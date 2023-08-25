@@ -6,11 +6,11 @@ export const schema = gql`
     title: String!
     description: String
     url: String!
-    list: List!
+    list: List
     listId: Int!
     quantity: Int!
     voting: Boolean
-    # reservations: [Reservation]!
+    reservations: [Reservation]!
     # purchases: [Purchase]!
     parent: ListItem
     parentId: Int

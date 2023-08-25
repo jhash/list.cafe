@@ -1,11 +1,15 @@
 import { forwardRef } from 'react'
 
+import classNames from 'classnames'
+
 import {
   Controller,
   InputField,
   InputFieldProps,
   SelectField,
   SelectFieldProps,
+  TextAreaField,
+  TextAreaFieldProps,
 } from '@redwoodjs/forms'
 
 declare const INPUT_TYPES: readonly [
@@ -30,12 +34,18 @@ declare const INPUT_TYPES: readonly [
   'time',
   'url',
   'week',
-  'select'
+  'select',
+  'textarea'
 ]
+type FormInputElement =
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLTextAreaElement
 export type FormInputType = (typeof INPUT_TYPES)[number]
 export type FormInputProps = (
   | Omit<InputFieldProps, 'type'>
   | SelectFieldProps
+  | TextAreaFieldProps
 ) & {
   editing?: boolean
   type?: FormInputType
@@ -46,12 +56,9 @@ export type FormInputProps = (
     disabled?: boolean
   }[]
   hideDescription?: boolean
-  onChange?: React.FormEventHandler<HTMLInputElement | HTMLSelectElement>
+  onChange?: React.FormEventHandler<FormInputElement>
 }
-const FormInput = forwardRef<
-  HTMLInputElement | HTMLSelectElement,
-  FormInputProps
->(
+const FormInput = forwardRef<FormInputElement, FormInputProps>(
   (
     {
       editing = true,
@@ -86,8 +93,10 @@ const FormInput = forwardRef<
             autoCapitalize: 'off',
             defaultValue,
             ...props,
-            className:
-              'input input-sm rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500',
+            className: classNames(
+              'input input-sm rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500 leading-normal',
+              type === 'textarea' && 'py-1'
+            ),
             errorClassName: 'input input-sm input-error rounded-md',
             ...controllerProps,
             onChange,
@@ -113,6 +122,8 @@ const FormInput = forwardRef<
                     </div>
                   )}
                 </>
+              ) : type === 'textarea' ? (
+                <TextAreaField {...(inputProps as TextAreaFieldProps)} />
               ) : (
                 <InputField {...(inputProps as InputFieldProps)} />
               )}

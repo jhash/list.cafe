@@ -20,7 +20,29 @@ export const createUserInvite: MutationResolvers['createUserInvite'] = ({
   input,
 }) => {
   return db.userInvite.create({
-    data: input,
+    data: {
+      user: {
+        connectOrCreate: {
+          where: {
+            id: input.userId,
+          },
+          create: {
+            email: input.email,
+            person: {
+              connectOrCreate: {
+                where: {
+                  email: input.email,
+                },
+                create: {
+                  email: input.email,
+                  name: input.name,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
 }
 

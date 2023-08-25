@@ -9,6 +9,7 @@ import {
   ListItem,
   ListMembership,
   ListRole,
+  ListType,
 } from 'types/graphql'
 
 import { Controller, Form, NumberField } from '@redwoodjs/forms'
@@ -34,22 +35,46 @@ import Modal from '../Modal/Modal'
 import PageTitle from '../PageTitle/PageTitle'
 import SectionTitle from '../SectionTitle/SectionTitle'
 
-const LIST_TYPE_OPTIONS = [
-  { value: 'AWESOME', name: 'Awesome' },
-  { value: 'BABY_SHOWER', name: 'BabyShower' },
-  { value: 'BOOKMARKS', name: 'Bookmarks' },
+interface ListTypeOption {
+  value: string
+  name: string
+  description?: string
+  reservations?: boolean
+  disabled?: boolean
+}
+export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
+  { value: 'WISHLIST', name: 'Wishlist', reservations: true },
+  { value: 'WEDDING', name: 'Wedding Registry', reservations: true },
+  { value: 'BABY_SHOWER', name: 'Baby Shower', reservations: true },
+  {
+    value: 'GIFTS',
+    name: 'Gift Registry',
+    description:
+      'Gift registry of any kind. Maybe a birthday party? A quinceañera?',
+    reservations: true,
+  },
+  {
+    value: 'TOP',
+    name: 'Top (n) List',
+    description: "Ex. Top 10 flip phones that don't suck",
+  },
   { value: 'FAVORITES', name: 'Favorites' },
-  { value: 'FORUM', name: 'Forum' },
-  { value: 'INVENTORY', name: 'Inventory' },
-  { value: 'JOBS', name: 'Jobs' },
-  { value: 'LINKTREE', name: 'Linktree' },
-  { value: 'SOCIAL', name: 'Social' },
-  { value: 'TABLE', name: 'Table' },
-  { value: 'TODO', name: 'Todo' },
-  { value: 'TOP', name: 'Top' },
-  { value: 'WEDDING', name: 'Wedding' },
-  { value: 'WISHLIST', name: 'Wishlist' },
+  { value: 'JOBS', name: 'Jobs', disabled: true },
+  // { value: 'AWESOME', name: 'Awesome' },
+  // { value: 'BOOKMARKS', name: 'Bookmarks' },
+  // { value: 'FORUM', name: 'Forum' },
+  // { value: 'INVENTORY', name: 'Inventory' },
+  // { value: 'LINKTREE', name: 'Linktree' },
+  // { value: 'SOCIAL', name: 'Social' },
+  // { value: 'TABLE', name: 'Table' },
+  // { value: 'TODO', name: 'Todo' },
 ]
+
+export const matchListTypeOption = (value?: ListType) =>
+  value ? LIST_TYPE_OPTIONS.find((option) => option.value === value) : undefined
+
+export const reservationsEnabled = (value?: ListType) =>
+  !!matchListTypeOption(value)?.reservations
 
 const LIST_VISIBILITY_OPTIONS = [
   {
@@ -77,16 +102,6 @@ export const listRolesIntersect = (
   roles: ListRole[] | undefined,
   authRoles: ListRole[]
 ) => !!roles?.length && !!intersection(roles, authRoles).length
-
-interface ModalType {
-  showModal: () => void
-  close: () => void
-}
-declare let window: Window &
-  typeof globalThis & {
-    newListItem: ModalType
-    newListMembership: ModalType
-  }
 
 type CreateListMembershipForm = NonNullable<
   CreateListMembershipMutation['createListMembership']
@@ -152,14 +167,6 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     })
   }
 
-  useEffect(() => {
-    if (listItem) {
-      window?.newListItem?.showModal()
-    } else {
-      window?.newListItem?.close()
-    }
-  }, [listItem])
-
   const [listMembership, setListMembership] = useState<
     Partial<ListMembership> | undefined
   >()
@@ -173,14 +180,6 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
       __typename: 'ListMembership',
     })
   }
-
-  useEffect(() => {
-    if (listMembership) {
-      window?.newListMembership?.showModal()
-    } else {
-      window?.newListMembership?.close()
-    }
-  }, [listMembership])
 
   const [deleteListMutation, { loading: deleteLoading }] = useMutation(
     DELETE_LIST_MUTATION,
@@ -312,12 +311,14 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           title="Add a new item"
           className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
           onClose={resetListItem}
+          open={!!listItem}
         >
           <DashboardListItem
             url=""
             quantity={1}
             title=""
             listId={id}
+            reservations={[]}
             {...listItem}
             editing
             onListItemsUpdate={resetListItem}
@@ -330,6 +331,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           id="newListMembership"
           className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
           onClose={resetListMembership}
+          open={!!listMembership}
         >
           <Form<CreateListMembershipForm>
             className="flex w-full max-w-full flex-grow flex-col gap-3"
@@ -477,7 +479,6 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               defaultValue={type}
               editing={editing}
               label={<SectionTitle>Type</SectionTitle>}
-              disabled
               options={LIST_TYPE_OPTIONS}
             />
           </div>

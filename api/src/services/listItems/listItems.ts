@@ -62,12 +62,9 @@ export const ListItem: ListItemRelationResolvers = {
       }
     )
   },
-  // reservations: (_obj, { root }) => {
-  //   return db.listItem.findUnique({ where: { id: root?.id } }).reservations()
-  // },
-  // purchases: (_obj, { root }) => {
-  //   return db.listItem.findUnique({ where: { id: root?.id } }).purchases()
-  // },
+  reservations: (_obj, { root }) => {
+    return db.listItem.findUnique({ where: { id: root?.id } }).reservations()
+  },
   // parent: (_obj, { root }) => {
   //   return db.listItem.findUnique({ where: { id: root?.id } }).parent()
   // },

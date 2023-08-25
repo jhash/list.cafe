@@ -22,6 +22,7 @@ export const schema = gql`
   }
 
   enum ListType {
+    GIFTS
     WISHLIST
     WEDDING
     BABY_SHOWER

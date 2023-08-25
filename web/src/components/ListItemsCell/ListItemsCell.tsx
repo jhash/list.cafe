@@ -16,6 +16,17 @@ export const QUERY = gql`
       price
       listId
       listRoles
+      list {
+        type
+      }
+      reservations {
+        id
+        userId
+        status
+        quantity
+        listItemId
+        comment
+      }
     }
   }
 `

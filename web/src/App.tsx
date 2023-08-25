@@ -1,5 +1,7 @@
 import 'setimmediate'
 
+import './index.d.ts'
+
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
 import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
 // import { InMemoryCache } from '@redwoodjs/web/node_modules/@apollo/client'

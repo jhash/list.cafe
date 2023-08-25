@@ -13,7 +13,7 @@ export const schema = gql`
     # partnershipStatusChanges: [PartnershipStatusChange]!
     # partnershipContactsAdded: [PartnershipContact]!
     # listViews: [ListView]!
-    # reservations: [Reservation]!
+    reservations: [Reservation]!
     # giftPreferencesAdded: [GiftPreferences]!
     # purchases: [Purchase]!
     # listItemTags: [ListItemTag]!
