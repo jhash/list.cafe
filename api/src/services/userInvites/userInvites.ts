@@ -12,7 +12,12 @@ export const userInvites: QueryResolvers['userInvites'] = () => {
 
 export const userInvite: QueryResolvers['userInvite'] = ({ id }) => {
   return db.userInvite.findUnique({
-    where: { id },
+    where: {
+      id,
+      expiresAt: {
+        lt: new Date(),
+      },
+    },
   })
 }
 
