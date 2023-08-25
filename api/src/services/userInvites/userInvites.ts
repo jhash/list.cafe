@@ -15,7 +15,7 @@ export const userInvite: QueryResolvers['userInvite'] = ({ id }) => {
     where: {
       id,
       expiresAt: {
-        lt: new Date(),
+        gt: new Date(),
       },
     },
   })
