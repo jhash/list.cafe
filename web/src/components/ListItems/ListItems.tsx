@@ -216,7 +216,7 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
               'text-lg font-bold leading-normal',
               allReserved ? 'text-warning' : 'text-info'
             )}
-          >{`${allReserved ? 'WARNING: it looks like' : ''}${
+          >{`${allReserved ? 'WARNING: it looks like ' : ''}${
             allReserved && listItem.quantity > 1
               ? 'all'
               : `${quantityReserved}${
