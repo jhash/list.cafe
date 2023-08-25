@@ -21,7 +21,7 @@ import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from '../ListItemsCell'
 
-type FormGroup = NonNullable<CreateListItemMutation['createListItem']>
+type CreateListItemForm = NonNullable<CreateListItemMutation['createListItem']>
 
 type DashboardListItemProps = Omit<
   ListItemsQuery['listItems'][number],
@@ -39,6 +39,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   ...listItem
 }) => {
   const titleRef = useRef<HTMLInputElement>()
+
   const { id, title, description, url, quantity, price, listId, listRoles } =
     listItem
 
@@ -62,7 +63,6 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         toast.success('List item created')
         onListItemsUpdate?.()
         setOpen(false)
-        // navigate(routes.adminGroups())
       },
       onError: (error) => {
         toast.error(error.message)
@@ -79,7 +79,6 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       onCompleted: () => {
         toast.success('List item updated')
         setOpen(false)
-        // navigate(routes.adminGroups())
       },
       onError: (error) => {
         toast.error(error.message)
@@ -95,10 +94,8 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     useMutation(DELETE_LIST_ITEM_MUTATION, {
       onCompleted: () => {
         toast.success('List item deleted')
-        // navigate(routes.adminGroups())
       },
       onError: (error) => {
-        console.error(error)
         toast.error(error.message)
       },
       refetchQueries: [
@@ -142,7 +139,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   }, [titleRef])
 
   return (
-    <Form<FormGroup>
+    <Form<CreateListItemForm>
       className={classNames(
         'w-full max-w-full flex-grow',
         !!id && 'collapse-arrow collapse rounded-lg border shadow-sm'

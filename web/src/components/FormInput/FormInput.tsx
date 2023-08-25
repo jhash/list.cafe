@@ -45,6 +45,8 @@ export type FormInputProps = (
     description?: string
     disabled?: boolean
   }[]
+  hideDescription?: boolean
+  onChange?: React.FormEventHandler<HTMLInputElement | HTMLSelectElement>
 }
 const FormInput = forwardRef<
   HTMLInputElement | HTMLSelectElement,
@@ -58,6 +60,9 @@ const FormInput = forwardRef<
       options,
       name,
       children,
+      hideDescription,
+      onChange,
+      onBlur,
       ...props
     },
     ref
@@ -69,7 +74,7 @@ const FormInput = forwardRef<
     return editing ? (
       <Controller
         name={name}
-        render={({ field: { onChange, onBlur, value, name } }) => {
+        render={({ field: { value, ...controllerProps } }) => {
           const matchingOption = options?.find(
             (option) => option.value === (value || defaultValue)
           )
@@ -78,14 +83,16 @@ const FormInput = forwardRef<
             type,
             name,
             autoComplete: 'off',
+            autoCapitalize: 'off',
             defaultValue,
             ...props,
             className:
               'input input-sm rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500',
             errorClassName: 'input input-sm input-error rounded-md',
+            ...controllerProps,
             onChange,
             onBlur,
-            value,
+            // value,
             ref,
           }
 
@@ -100,7 +107,7 @@ const FormInput = forwardRef<
                       </option>
                     ))}
                   </SelectField>
-                  {!!matchingOption?.description && (
+                  {!hideDescription && !!matchingOption?.description && (
                     <div className="p-1 text-sm text-gray-600 dark:text-gray-400">
                       {matchingOption.description}
                     </div>
@@ -120,7 +127,7 @@ const FormInput = forwardRef<
           {defaultMatchingOption?.name || defaultValue}
         </p>
         {children}
-        {!!defaultMatchingOption?.description && (
+        {!hideDescription && !!defaultMatchingOption?.description && (
           <div className="px-1 text-sm text-gray-600 dark:text-gray-400">
             {defaultMatchingOption.description}
           </div>

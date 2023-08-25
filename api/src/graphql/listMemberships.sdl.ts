@@ -27,7 +27,9 @@ export const schema = gql`
   input CreateListMembershipInput {
     listRole: ListRole!
     listId: Int!
-    userId: Int!
+    userId: Int
+    name: String
+    email: String
   }
 
   input UpdateListMembershipInput {

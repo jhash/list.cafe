@@ -15,11 +15,12 @@ const MainLayout = ({ children }) => {
         fontsLoaded ? 'opacity-100' : 'opacity-0'
       )}
     >
+      {children}
       <Toaster
-        containerClassName="min-w-screen max-w-screen sm:min-w-auto sm:max-w-auto"
+        containerClassName="min-w-screen max-w-screen sm:min-w-auto sm:max-w-auto z-50"
         toastOptions={{
           className:
-            'min-w-[12rem] text-left justify-start h-11 py-0 flex items-center pr-2',
+            'min-w-[12rem] text-left justify-start h-11 py-0 flex items-center pr-2 z-50',
           duration: 3000,
           position: 'top-left',
         }}
@@ -45,7 +46,6 @@ const MainLayout = ({ children }) => {
           </ToastBar>
         )}
       </Toaster>
-      {children}
     </main>
   )
 }

@@ -54,7 +54,12 @@ export const Success = ({
   list,
   dashboard = false,
 }: CellSuccessProps<FindListQuery & ListCellProps, FindListQueryVariables>) => {
+  console.log(list.listRoles)
+
   if (dashboard) {
+    if (!list.listRoles.length) {
+      return <Redirect to={routes.lists()} />
+    }
     return <DashboardList list={list} />
   }
 

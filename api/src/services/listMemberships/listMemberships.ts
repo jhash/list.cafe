@@ -28,8 +28,44 @@ export const listMembership: QueryResolvers['listMembership'] = ({ id }) => {
 
 export const createListMembership: MutationResolvers['createListMembership'] =
   ({ input }) => {
+    if (!input.email && !input.userId) {
+      throw new Error('Either an email or a user id is required')
+    }
+
     return db.listMembership.create({
-      data: input,
+      data: {
+        list: {
+          connect: {
+            id: input.listId,
+          },
+        },
+        listRole: input.listRole,
+        user: {
+          connectOrCreate: {
+            where: input.userId
+              ? {
+                  id: input.userId,
+                }
+              : {
+                  email: input.email,
+                },
+            create: {
+              email: input.email,
+              person: {
+                connectOrCreate: {
+                  where: {
+                    email: input.email,
+                  },
+                  create: {
+                    email: input.email,
+                    name: input.name,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     })
   }
 

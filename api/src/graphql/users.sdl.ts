@@ -18,8 +18,8 @@ export const schema = gql`
     # listItemTags: [ListItemTag]!
     # listTags: [ListTag]!
     # peopleCreated: [Person]!
-    # hashedPassword: String!
-    # salt: String!
+    # hashedPassword: String
+    # salt: String
     # resetToken: String
     # resetTokenExpiresAt: DateTime
     # webAuthnChallenge: String

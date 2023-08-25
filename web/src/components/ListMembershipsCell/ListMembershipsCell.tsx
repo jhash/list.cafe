@@ -9,6 +9,7 @@ export const QUERY = gql`
     listMemberships: listMembershipsByListId(listId: $listId) {
       id
       listRole
+      listId
       user {
         id
         person {

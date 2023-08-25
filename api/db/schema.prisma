@@ -30,8 +30,8 @@ model User {
   listTags                     ListTag[]
   peopleCreated                Person[]                      @relation(name: "createdPeople")
   // START AUTH
-  hashedPassword               String
-  salt                         String
+  hashedPassword               String?
+  salt                         String?
   resetToken                   String?
   resetTokenExpiresAt          DateTime?
   webAuthnChallenge            String?                       @unique
@@ -119,6 +119,9 @@ model ListGroupMembership {
   listId    Int
   group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId   Int
+
+  // TODO: add listRole if groups can have more than one role
+  @@unique([listId, groupId])
 }
 
 enum ListRole {
@@ -138,6 +141,9 @@ model ListMembership {
   listId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
+
+  // TODO: add listRole if users can have more than one role
+  @@unique([listId, userId])
 }
 
 model List {

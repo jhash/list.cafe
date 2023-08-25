@@ -1,11 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import intersection from 'lodash/intersection'
 import kebabCase from 'lodash/kebabCase'
-import { Eye, Pencil, PlusCircle, Save, Trash2, X } from 'lucide-react'
-import { FindListQuery, ListItem, ListRole } from 'types/graphql'
+import { Eye, Pencil, PlusCircle, Save, Trash2 } from 'lucide-react'
+import {
+  CreateListMembershipMutation,
+  FindListQuery,
+  ListItem,
+  ListMembership,
+  ListRole,
+} from 'types/graphql'
 
-import { Controller, Form } from '@redwoodjs/forms'
+import { Controller, Form, NumberField } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
@@ -15,12 +21,16 @@ import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
 import { UPDATE_LIST_MUTATION } from '../Admin/List/EditListCell'
 import { DELETE_LIST_MUTATION } from '../Admin/List/List'
 import { CREATE_LIST_MUTATION } from '../Admin/List/NewList'
+import { CREATE_LIST_MEMBERSHIP_MUTATION } from '../Admin/ListMembership/NewListMembership'
 import DashboardListItem from '../DashboardListItem/DashboardListItem'
+import { LIST_ROLE_TYPES } from '../DashboardListMembership/DashboardListMembership'
 import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import ListItemsCell from '../ListItemsCell'
 import ListMembershipsCell from '../ListMembershipsCell'
+import { QUERY as LIST_MEMBERSHIPS_CELL_QUERY } from '../ListMembershipsCell'
+import Modal from '../Modal/Modal'
 import PageTitle from '../PageTitle/PageTitle'
 import SectionTitle from '../SectionTitle/SectionTitle'
 
@@ -68,10 +78,19 @@ export const listRolesIntersect = (
   authRoles: ListRole[]
 ) => !!roles?.length && !!intersection(roles, authRoles).length
 
+interface ModalType {
+  showModal: () => void
+  close: () => void
+}
 declare let window: Window &
   typeof globalThis & {
-    newListItem: { showModal: () => void; close: () => void }
+    newListItem: ModalType
+    newListMembership: ModalType
   }
+
+type CreateListMembershipForm = NonNullable<
+  CreateListMembershipMutation['createListMembership']
+>
 
 type ButtonProps = Omit<React.HTMLProps<HTMLButtonElement>, 'type'> & {
   type?: 'submit' | 'reset' | 'submit'
@@ -111,9 +130,57 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     [listRoles]
   )
 
-  // TODO: default to if user has edit access
+  const canAddMembers = useMemo(
+    () => listRolesIntersect(listRoles, ['OWNER', 'ADMIN']),
+    [listRoles]
+  )
+
   const [editing, setEditing] = useState<boolean>(!id)
+
   const [listItem, setListItem] = useState<Partial<ListItem> | undefined>()
+  const resetListItem = () => {
+    setListItem(undefined)
+  }
+  const createNewListItem = () => {
+    setListItem({
+      title: '',
+      description: '',
+      listId: id,
+      url: '',
+      quantity: 1,
+      __typename: 'ListItem',
+    })
+  }
+
+  useEffect(() => {
+    if (listItem) {
+      window?.newListItem?.showModal()
+    } else {
+      window?.newListItem?.close()
+    }
+  }, [listItem])
+
+  const [listMembership, setListMembership] = useState<
+    Partial<ListMembership> | undefined
+  >()
+  const resetListMembership = () => {
+    setListMembership(undefined)
+  }
+  const createNewListMembership = () => {
+    setListMembership({
+      listId: id,
+      listRole: 'VIEW',
+      __typename: 'ListMembership',
+    })
+  }
+
+  useEffect(() => {
+    if (listMembership) {
+      window?.newListMembership?.showModal()
+    } else {
+      window?.newListMembership?.close()
+    }
+  }, [listMembership])
 
   const [deleteListMutation, { loading: deleteLoading }] = useMutation(
     DELETE_LIST_MUTATION,
@@ -163,22 +230,26 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     }
   )
 
-  const loading = id ? updateLoading || deleteLoading : createLoading
+  const [
+    createListMembershipMutation,
+    { loading: createListMembershipLoading, error: createListMembershipError },
+  ] = useMutation(CREATE_LIST_MEMBERSHIP_MUTATION, {
+    onCompleted: () => {
+      toast.success('Member added')
+      resetListMembership()
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    refetchQueries: [
+      { query: LIST_MEMBERSHIPS_CELL_QUERY, variables: { listId: id } },
+    ],
+    awaitRefetchQueries: true,
+  })
 
-  const createNewListItem = () => {
-    setListItem({
-      title: '',
-      description: '',
-      listId: id,
-      url: '',
-      quantity: 1,
-      __typename: 'ListItem',
-    })
-  }
-
-  const resetNewListItem = () => {
-    setListItem(undefined)
-  }
+  const loading = id
+    ? updateLoading || deleteLoading || createListMembershipLoading
+    : createLoading
 
   const onDelete = () => deleteListMutation({ variables: { id } })
 
@@ -217,13 +288,17 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     }
   }
 
+  const emailRef = useRef<HTMLInputElement>()
+
   useEffect(() => {
-    if (listItem) {
-      window?.newListItem?.showModal()
-    } else {
-      window?.newListItem?.close()
+    if (!listMembership) {
+      return
     }
-  }, [listItem])
+
+    setImmediate(() =>
+      (emailRef?.current as unknown as HTMLInputElement | null)?.focus()
+    )
+  }, [emailRef, listMembership])
 
   return (
     <>
@@ -232,41 +307,72 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
         description={description || 'Create a new list'}
       />
       {!!listItem && (
-        <dialog
+        <Modal
           id="newListItem"
+          title="Add a new item"
           className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
+          onClose={resetListItem}
         >
-          <div className="modal-box relative flex max-h-full min-h-screen flex-col gap-y-6 rounded-none sm:h-auto sm:min-h-[70vh] sm:rounded-lg">
-            <div className="flex items-center gap-3">
-              <div className="flex-grow">
-                <SectionTitle>Add a new item</SectionTitle>
+          <DashboardListItem
+            url=""
+            quantity={1}
+            title=""
+            listId={id}
+            {...listItem}
+            editing
+            onListItemsUpdate={resetListItem}
+          />
+        </Modal>
+      )}
+      {!!listMembership && (
+        <Modal
+          title="Add a new member"
+          id="newListMembership"
+          className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
+          onClose={resetListMembership}
+        >
+          <Form<CreateListMembershipForm>
+            className="flex w-full max-w-full flex-grow flex-col gap-3"
+            name="listMembershipForm"
+            onSubmit={(input) =>
+              createListMembershipMutation({ variables: { input } })
+            }
+          >
+            <NumberField hidden name="listId" defaultValue={id} />
+            <FormItem
+              name="email"
+              type="email"
+              label="Email"
+              editing
+              validation={{ required: true }}
+              ref={emailRef}
+            />
+            <FormItem name="name" type="text" label="Name" editing />
+            <FormItem
+              name="listRole"
+              type="select"
+              label="Access"
+              defaultValue={listMembership.listRole}
+              editing
+              validation={{ required: true }}
+              options={LIST_ROLE_TYPES}
+            />
+            {!!createListMembershipError && (
+              <div className="text-error">
+                {createListMembershipError.message}
               </div>
-              {/* <button
-              className="btn btn-secondary flex h-8 min-h-0 w-8 flex-grow-0 items-center justify-center self-start p-0"
+            )}
+            <button
+              // TODO: don't use z
+              className="btn btn-secondary z-10 mt-4 flex min-h-0 w-full flex-grow items-center justify-center self-start rounded p-0 px-4"
               type="submit"
               disabled={loading}
             >
-              <Save size="1rem" />
-            </button> */}
-              <button
-                className="btn flex h-8 min-h-0 w-8 items-center justify-center rounded-full p-0"
-                onClick={resetNewListItem}
-                type="button"
-              >
-                <X size="1.125rem" />
-              </button>
-            </div>
-            <DashboardListItem
-              url=""
-              quantity={1}
-              title=""
-              listId={id}
-              {...listItem}
-              editing
-              onListItemsUpdate={resetNewListItem}
-            />
-          </div>
-        </dialog>
+              <Save />
+              Save
+            </button>
+          </Form>
+        </Modal>
       )}
       <div className="flex w-full max-w-full flex-col gap-8">
         <Form
@@ -294,7 +400,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
 
                   return (
                     window.confirm(
-                      'Are you sure you want to delete this list?'
+                      'Are you sure you want to remove this member?'
                     ) && onDelete()
                   )
                 }}
@@ -377,44 +483,54 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </Form>
 
-        <div className="flex w-full max-w-full flex-col gap-3">
-          <div className="flex w-full max-w-full items-center gap-3">
-            <SectionTitle>Items</SectionTitle>
-            {/* TODO: support without having saved */}
-            {!!id && canAdd && (
-              <div className="flex items-center gap-3">
-                <AddItemButton onClick={createNewListItem} disabled={loading} />
+        {!!id && (
+          <>
+            <div className="flex w-full max-w-full flex-col gap-3">
+              <div className="flex w-full max-w-full items-center gap-3">
+                <SectionTitle>Items</SectionTitle>
+                {/* TODO: support without having saved? */}
+                {!!id && canAdd && (
+                  <div className="flex items-center gap-3">
+                    <AddItemButton
+                      onClick={createNewListItem}
+                      disabled={loading}
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          {!!id && (
-            <ul className="flex w-full max-w-full flex-col gap-2">
-              <ListItemsCell
-                listId={id}
-                dashboard
-                editing={editing}
-                onListItemsUpdate={resetNewListItem}
-                toggleEditing={() => setEditing(!editing)}
-              />
-            </ul>
-          )}
-        </div>
-        <div className="flex w-full max-w-full flex-col gap-3">
-          <div className="flex w-full max-w-full items-center gap-3">
-            <SectionTitle>Members</SectionTitle>
-            {/* TODO: support without having saved */}
-            {/* {!!id && canAdd && (
-              <div className="flex items-center gap-3">
-                <AddItemButton onClick={createNewListItem} disabled={loading} />
+              {!!id && (
+                <ul className="flex w-full max-w-full flex-col gap-2">
+                  <ListItemsCell
+                    listId={id}
+                    dashboard
+                    editing={editing}
+                    onListItemsUpdate={resetListItem}
+                    toggleEditing={() => setEditing(!editing)}
+                  />
+                </ul>
+              )}
+            </div>
+            <div className="flex w-full max-w-full flex-col gap-3">
+              <div className="flex w-full max-w-full items-center gap-3">
+                <SectionTitle>Members</SectionTitle>
+                {/* TODO: support without having saved? */}
+                {!!id && canAddMembers && (
+                  <div className="flex items-center gap-3">
+                    <AddItemButton
+                      onClick={createNewListMembership}
+                      disabled={loading}
+                    />
+                  </div>
+                )}
               </div>
-            )} */}
-          </div>
-          {!!id && (
-            <ul className="flex w-full max-w-full flex-col gap-2">
-              <ListMembershipsCell listId={id} />
-            </ul>
-          )}
-        </div>
+              {!!id && (
+                <ul className="flex w-full max-w-full flex-col gap-2">
+                  <ListMembershipsCell listId={id} />
+                </ul>
+              )}
+            </div>
+          </>
+        )}
         <ListFadeOut />
       </div>
     </>
