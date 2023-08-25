@@ -137,7 +137,7 @@ export const createListMembership: MutationResolvers['createListMembership'] =
             : email,
         subject: `${
           context.currentUser.person?.name
-            ? `${context.currentUser.person?.name} has invited you `
+            ? `${context.currentUser.person?.name} has invited you`
             : "You've been invited"
         } to the list ${membership.list.name} on list.cafe`,
         // TODO: tell them what role
