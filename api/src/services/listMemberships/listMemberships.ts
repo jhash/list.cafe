@@ -6,7 +6,7 @@ import type {
 
 import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
-import { resend } from 'src/lib/email'
+import { sendEmail } from 'src/lib/email'
 import { LIST_CAFE_URL } from 'src/lib/url'
 
 export const listMembershipsByListId: QueryResolvers['listMembershipsByListId'] =
@@ -55,14 +55,40 @@ export const createListMembership: MutationResolvers['createListMembership'] =
         userInvites: {
           create: {
             user: {
-              connect: input.userId
-                ? {
-                    id: input.userId,
-                  }
-                : {
-                    email: input.email,
+              connectOrCreate: {
+                where: input.userId
+                  ? {
+                      id: input.userId,
+                    }
+                  : {
+                      email: input.email,
+                    },
+                create: {
+                  userRoles: {
+                    create: {},
                   },
+                  email: input.email,
+                  person: {
+                    connectOrCreate: {
+                      where: {
+                        email: input.email,
+                      },
+                      create: {
+                        email: input.email,
+                        name: input.name,
+                        createdByUser: {
+                          connect: {
+                            id: context.currentUser.id,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
+            name: input.name,
+            email: input.email,
           },
         },
         user: {
@@ -129,12 +155,8 @@ export const createListMembership: MutationResolvers['createListMembership'] =
 
       const invite = invites.find((invite) => invite.status === 'PENDING')
 
-      resend.emails.send({
-        from: 'info@list.cafe',
-        to:
-          process.env.NODE_ENV === 'development'
-            ? process.env.DEVELOPER_EMAIL
-            : email,
+      sendEmail({
+        to: email,
         subject: `${
           context.currentUser.person?.name
             ? `${context.currentUser.person?.name} has invited you`
