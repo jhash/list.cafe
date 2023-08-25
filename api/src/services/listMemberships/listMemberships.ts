@@ -6,6 +6,8 @@ import type {
 
 import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
+import { resend } from 'src/lib/email'
+import { LIST_CAFE_URL } from 'src/lib/url'
 
 export const listMembershipsByListId: QueryResolvers['listMembershipsByListId'] =
   ({ listId }) => {
@@ -27,12 +29,22 @@ export const listMembership: QueryResolvers['listMembership'] = ({ id }) => {
 }
 
 export const createListMembership: MutationResolvers['createListMembership'] =
-  ({ input }) => {
+  async ({ input }) => {
+    if (!context.currentUser?.id) {
+      throw new Error('You must be logged in to create memberships')
+    }
     if (!input.email && !input.userId) {
       throw new Error('Either an email or a user id is required')
     }
 
-    return db.listMembership.create({
+    if (
+      context.currentUser?.email &&
+      context.currentUser?.email === input.email
+    ) {
+      throw new Error('You cannot add yourself as a member')
+    }
+
+    const membership = await db.listMembership.create({
       data: {
         list: {
           connect: {
@@ -40,6 +52,19 @@ export const createListMembership: MutationResolvers['createListMembership'] =
           },
         },
         listRole: input.listRole,
+        userInvites: {
+          create: {
+            user: {
+              connect: input.userId
+                ? {
+                    id: input.userId,
+                  }
+                : {
+                    email: input.email,
+                  },
+            },
+          },
+        },
         user: {
           connectOrCreate: {
             where: input.userId
@@ -50,6 +75,15 @@ export const createListMembership: MutationResolvers['createListMembership'] =
                   email: input.email,
                 },
             create: {
+              userRoles: {
+                create: {},
+              },
+              userInvites: {
+                create: {
+                  name: input.name,
+                  email: input.email,
+                },
+              },
               email: input.email,
               person: {
                 connectOrCreate: {
@@ -59,6 +93,11 @@ export const createListMembership: MutationResolvers['createListMembership'] =
                   create: {
                     email: input.email,
                     name: input.name,
+                    createdByUser: {
+                      connect: {
+                        id: context.currentUser.id,
+                      },
+                    },
                   },
                 },
               },
@@ -66,15 +105,59 @@ export const createListMembership: MutationResolvers['createListMembership'] =
           },
         },
       },
+      include: {
+        list: true,
+        user: {
+          include: {
+            userInvites: true,
+            person: true,
+          },
+        },
+      },
     })
-  }
 
-export const updateListMembership: MutationResolvers['updateListMembership'] =
-  ({ id, input }) => {
-    return db.listMembership.update({
-      data: input,
-      where: { id },
-    })
+    const invites = membership.user?.userInvites?.filter(
+      (invite) => invite.listMembershipId === membership.id
+    )
+
+    // TODO: still send email to existing user with a pending invite
+    // TODO: move to a job
+    if (invites?.length && (input.email || membership.user?.email)) {
+      const email =
+        input.email || membership.user?.email || membership.user?.person?.email
+      const name = input.name || membership.user?.person?.name
+
+      const invite = invites.find((invite) => invite.status === 'PENDING')
+
+      resend.emails.send({
+        from: 'info@list.cafe',
+        to:
+          process.env.NODE_ENV === 'development'
+            ? process.env.DEVELOPER_EMAIL
+            : email,
+        subject: `${
+          context.currentUser.person?.name
+            ? `${context.currentUser.person?.name} has invited you `
+            : "You've been invited"
+        } to the list ${membership.list.name} on list.cafe`,
+        // TODO: tell them what role
+        html: `${name ? `<p>Hi ${name}</p>` : ''}<p>${
+          context.currentUser?.person?.name
+            ? `${context.currentUser?.person?.name} has invited you to the list `
+            : "You've been invited to the list "
+        }<strong>${membership.list.name}</strong>!</p>
+        <p>View the list here: <a href="${
+          invite
+            ? membership.user?.hashedPassword
+              ? // TODO: redirect to list
+                `${LIST_CAFE_URL}/dashboard/lists/${membership.listId}?userInviteId=${invite.id}`
+              : `${LIST_CAFE_URL}/signup?userInviteId=${invite.id}`
+            : `${LIST_CAFE_URL}/dashboard/lists/${membership.listId}`
+        }">${membership.list.name}</a></p>`,
+      })
+    }
+
+    return membership
   }
 
 export const deleteListMembership: MutationResolvers['deleteListMembership'] =

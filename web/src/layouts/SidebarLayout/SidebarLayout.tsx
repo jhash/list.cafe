@@ -119,12 +119,16 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
           </div>
           <div
             className={classNames(
-              'flex min-h-full w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-hidden overflow-y-visible px-4 transition-padding duration-300',
-              open ? 'sm:pl-sidebar' : 'sm:pl-0'
+              'flex min-h-full w-full max-w-full flex-grow flex-col items-center gap-y-2 overflow-x-hidden overflow-y-visible px-4 transition-padding duration-300 sm:pl-0 sm:pr-14',
+              open ? 'sm:pl-sidebar' : ''
             )}
           >
-            <div className="container flex min-h-full w-full max-w-full flex-grow flex-col items-center justify-center overflow-x-hidden overflow-y-visible sm:pl-12">
-              <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-x-hidden overflow-y-visible sm:min-h-[85%]">
+            <div
+              className={classNames(
+                'container flex min-h-full w-full max-w-full flex-grow flex-col items-center justify-center overflow-x-visible overflow-y-visible sm:pl-14'
+              )}
+            >
+              <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-x-visible overflow-y-visible sm:min-h-[85%]">
                 {children}
               </div>
             </div>

@@ -10,6 +10,11 @@ export const CREATE_LIST_MEMBERSHIP_MUTATION = gql`
   mutation CreateListMembershipMutation($input: CreateListMembershipInput!) {
     createListMembership(input: $input) {
       id
+      user {
+        userInvites {
+          id
+        }
+      }
     }
   }
 `

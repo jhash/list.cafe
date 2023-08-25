@@ -57,7 +57,7 @@ const DashboardListMembership = ({
   const [updateListMembership, { loading: updateLoading, error: updateError }] =
     useMutation(UPDATE_LIST_MEMBERSHIP_MUTATION, {
       onCompleted: () => {
-        toast.success('List membership updated')
+        toast.success('Member updated')
       },
       onError: (error) => {
         toast.error(error.message)
@@ -72,7 +72,7 @@ const DashboardListMembership = ({
   const [deleteListMembership, { loading: deleteLoading, error: deleteError }] =
     useMutation(DELETE_LIST_MEMBERSHIP_MUTATION, {
       onCompleted: () => {
-        toast.success('List membership deleted')
+        toast.success('Member removed')
       },
       onError: (error) => {
         toast.error(error.message)

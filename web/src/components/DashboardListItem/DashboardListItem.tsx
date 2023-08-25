@@ -216,7 +216,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       <div
         className={classNames(
           'flex w-full max-w-full flex-shrink-0 flex-wrap gap-x-5 gap-y-2',
-          !!id && 'collapse-content overflow-x-hidden',
+          !!id && 'collapse-content overflow-x-visible',
           !!open && 'py-4'
         )}
       >

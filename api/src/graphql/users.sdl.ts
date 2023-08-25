@@ -9,6 +9,7 @@ export const schema = gql`
     # userRoles: [UserRole]!
     # groupMemberships: [GroupMembership]!
     listMemberships: [ListMembership]!
+    userInvites: [UserInvite]
     # partnershipStatusChanges: [PartnershipStatusChange]!
     # partnershipContactsAdded: [PartnershipContact]!
     # listViews: [ListView]!

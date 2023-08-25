@@ -38,15 +38,17 @@ export const getCurrentUser = async (decoded: Decoded) => {
       id: true,
       email: true,
       userRoles: true,
+      person: true,
     },
   })
 
-  const { id, email, userRoles } = user
+  const { id, email, userRoles, person } = user
 
   const fullUser = {
     id,
     email,
     roles: userRoles.map((userRole) => userRole.role),
+    person,
   }
 
   return fullUser

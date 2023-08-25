@@ -16,6 +16,7 @@ model User {
   email                        String                        @unique
   person                       Person                        @relation(name: "attachedUser", fields: [personId], references: [id])
   personId                     Int                           @unique
+  verified                     Boolean?                      @default(false)
   credentials                  UserCredential[]
   userRoles                    UserRole[]
   groupMemberships             GroupMembership[]
@@ -38,6 +39,7 @@ model User {
   // END AUTH
   partnershipLinkStatusChanges PartnershipLinkStatusChange[]
   partnershipLinksCreated      PartnershipLink[]
+  userInvites                  UserInvite[]
 }
 
 model UserCredential {
@@ -66,15 +68,43 @@ enum Role {
   ADMIN
 }
 
+model UserInvite {
+  id                String           @id @default(cuid())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @default(now())
+  expiresAt         DateTime         @default(dbgenerated("now() + interval '3 days'"))
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            Int
+  status            InviteStatus     @default(PENDING)
+  name              String?
+  email             String?
+  listMembership    ListMembership?  @relation(fields: [listMembershipId], references: [id], onDelete: Cascade)
+  listMembershipId  Int?
+  groupMembership   GroupMembership? @relation(fields: [groupMembershipId], references: [id], onDelete: Cascade)
+  groupMembershipId Int?
+}
+
+enum InviteStatus {
+  PENDING
+  SENT
+  OPENED
+  CLICKED
+  EXPIRED
+  COMPLETE
+  ACCEPTED
+  DECLINED
+}
+
 model GroupMembership {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  groupRole GroupRole @default(VIEW)
-  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId   Int
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now())
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupRole   GroupRole    @default(VIEW)
+  group       Group        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     Int
+  userInvites UserInvite[]
 }
 
 enum GroupRole {
@@ -133,14 +163,15 @@ enum ListRole {
 }
 
 model ListMembership {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  listRole  ListRole @default(VIEW)
-  list      List     @relation(fields: [listId], references: [id], onDelete: Cascade)
-  listId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now())
+  listRole    ListRole     @default(VIEW)
+  list        List         @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId      Int
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  userInvites UserInvite[]
 
   // TODO: add listRole if users can have more than one role
   @@unique([listId, userId])
