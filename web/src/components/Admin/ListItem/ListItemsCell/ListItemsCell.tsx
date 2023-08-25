@@ -20,6 +20,9 @@ export const QUERY = gql`
       parentId
       order
       price
+      reservations {
+        status
+      }
     }
   }
 `

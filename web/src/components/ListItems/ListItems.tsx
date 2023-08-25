@@ -172,7 +172,13 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
 
     createReservationMutation({
       variables: {
-        input,
+        input: {
+          ...input,
+          user: {
+            email: (input as CreateReservationInput).user?.person?.email,
+            ...(input as CreateReservationInput).user,
+          },
+        },
       },
     })
   }
