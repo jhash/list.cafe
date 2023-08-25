@@ -121,6 +121,7 @@ export const createList: MutationResolvers['createList'] = ({ input }) => {
 }
 
 export const updateList: MutationResolvers['updateList'] = ({ id, input }) => {
+  // TODO: delete attached reservations if not reservable? or message attached users?
   return db.list.update({
     data: {
       ...input,

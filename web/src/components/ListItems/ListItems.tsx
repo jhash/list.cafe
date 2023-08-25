@@ -20,6 +20,7 @@ import { useAuth } from 'src/auth'
 import { reservationsEnabled } from '../DashboardList/DashboardList'
 import ExternalLink from '../ExternalLink/ExternalLink'
 import FormItem from '../FormItem/FormItem'
+import { QUERY as LIST_ITEMS_CELL_QUERY } from '../ListItemsCell'
 import Modal from '../Modal/Modal'
 import SectionTitle from '../SectionTitle/SectionTitle'
 
@@ -83,7 +84,7 @@ type ListItemReservationsButtons = {
 const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
   listItem,
 }) => {
-  const { list, reservations } = listItem
+  const { list, reservations, listId } = listItem
   const [reservation, setReservation] = useState<
     Partial<Reservation> | undefined
   >()
@@ -131,6 +132,7 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
       ),
     [nonReleasedReservations]
   )
+  const allReserved = quantityReserved >= listItem.quantity
 
   const [createReservationMutation, { loading: createLoading }] = useMutation(
     CREATE_RESERVATION_MUTATION,
@@ -142,6 +144,8 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
       onError: (error) => {
         toast.error(error.message)
       },
+      refetchQueries: [{ query: LIST_ITEMS_CELL_QUERY, variables: { listId } }],
+      awaitRefetchQueries: true,
     }
   )
 
@@ -155,6 +159,8 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
       onError: (error) => {
         toast.error(error.message)
       },
+      refetchQueries: [{ query: LIST_ITEMS_CELL_QUERY, variables: { listId } }],
+      awaitRefetchQueries: true,
     }
   )
 
@@ -205,9 +211,24 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
           </>
         )}
         {!!reservedByOthers && (
-          <p className="text-lg font-bold leading-normal text-warning">{`WARNING: it looks like ${quantityReserved} of these items ${
+          <p
+            className={classNames(
+              'text-lg font-bold leading-normal',
+              allReserved ? 'text-warning' : 'text-info'
+            )}
+          >{`${allReserved ? 'WARNING: it looks like' : ''}${
+            allReserved && listItem.quantity > 1
+              ? 'all'
+              : `${quantityReserved}${
+                  listItem.quantity > 1 ? ` out of ${listItem.quantity}` : ''
+                }`
+          } of these items ${
             quantityReserved === 1 ? 'has' : 'have'
-          } been reserved by someone else. You might want to hold off on reserving this item as well`}</p>
+          } been reserved.${
+            allReserved
+              ? ' You might want to hold off on reserving this item as well.'
+              : ''
+          }`}</p>
         )}
         <FormItem
           type="select"
@@ -317,7 +338,9 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
         className={classNames(
           'btn flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0',
           reservedByOthers
-            ? 'btn-warning'
+            ? allReserved
+              ? 'btn-warning'
+              : 'btn-info'
             : reservedByUser
             ? 'btn-primary'
             : 'btn-secondary'
