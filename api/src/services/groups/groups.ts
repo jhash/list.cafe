@@ -95,8 +95,6 @@ export const updateGroup: MutationResolvers['updateGroup'] = ({
   id,
   input,
 }) => {
-  console.log('UPDATE GROUP INPUT', input)
-
   return db.group.update({
     data: {
       ...input,

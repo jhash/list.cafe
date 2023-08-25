@@ -90,15 +90,19 @@ const DashboardListMembership = ({
   return (
     <li
       key={id}
-      className="min-h-12 flex w-full max-w-full flex-grow items-center gap-3 rounded-lg border px-4 leading-none shadow-sm"
+      className="min-h-12 flex w-full max-w-full flex-grow flex-nowrap items-center gap-3 overflow-x-hidden rounded-lg border px-4 leading-none shadow-sm"
     >
       {!!user?.person && (
-        <div className="flex flex-grow items-center gap-3">
-          {user?.person?.name}
-          <span className="text-sm text-gray-500">{user?.person?.email}</span>
+        <div className="flex flex-shrink flex-grow items-center gap-3 overflow-hidden overflow-ellipsis">
+          <div className="flex-shrink whitespace-normal">
+            {user?.person?.name}
+          </div>
+          <span className="flex-shrink overflow-hidden overflow-ellipsis text-sm text-gray-500">
+            {user?.person?.email}
+          </span>
         </div>
       )}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-shrink-0 items-center gap-3">
         {!!error && <span className="text-error">{error.message}</span>}
         {!!canDelete && currentUser.id !== membership.user?.id && (
           <button

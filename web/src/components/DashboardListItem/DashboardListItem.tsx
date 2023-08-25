@@ -142,7 +142,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     <Form<CreateListItemForm>
       className={classNames(
         'w-full max-w-full flex-grow',
-        !!id && 'collapse-arrow collapse rounded-lg border shadow-sm'
+        !!id && 'collapse collapse-arrow rounded-lg border shadow-sm'
       )}
       name="list-item-form"
       onSubmit={(input, event) => onSave(input, event)}
@@ -168,7 +168,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         >
           <div className="flex flex-grow items-center gap-3">
             {title}
-            {!!url && <Link2 size="1rem" />}
+            {!!url && <Link2 size="1rem" className="flex-shrink-0" />}
           </div>
           <div className="flex items-center gap-3">
             {!editing && !!canEdit && (

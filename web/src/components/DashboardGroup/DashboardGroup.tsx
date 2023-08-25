@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import intersection from 'lodash/intersection'
 import kebabCase from 'lodash/kebabCase'
 import { Eye, Pencil, Save, Trash2 } from 'lucide-react'
-import { FindGroupQuery, GroupRole } from 'types/graphql'
+import { FindGroupQuery, GroupRole, GroupType } from 'types/graphql'
 
 import { Controller, Form } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
@@ -21,13 +21,25 @@ import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import PageTitle from '../PageTitle/PageTitle'
 import SectionTitle from '../SectionTitle/SectionTitle'
 
-const GROUP_TYPE_OPTIONS = [
-  { value: 'GENERIC', name: 'Generic' },
+interface GroupTypeOption {
+  value: string
+  name: string
+  description?: string
+  disabled?: boolean
+  badgeColor?: string
+}
+const GROUP_TYPE_OPTIONS: GroupTypeOption[] = [
+  { value: 'GENERIC', name: 'General' },
   { value: 'FRIENDS', name: 'Friends' },
   { value: 'FAMILY', name: 'Family' },
   { value: 'COMPANY', name: 'Company' },
   { value: 'NON_PROFIT', name: 'Non-Profit' },
 ]
+
+export const matchGroupTypeOption = (value?: GroupType) =>
+  value
+    ? GROUP_TYPE_OPTIONS.find((option) => option.value === value)
+    : undefined
 
 const GROUP_VISIBILITY_OPTIONS = [
   {
@@ -57,14 +69,10 @@ export const groupRolesIntersect = (
 const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
   group,
 }) => {
-  const {
-    id,
-    name,
-    identifier,
-    type = 'GENERIC',
-    visibility = 'PRIVATE',
-    groupRoles,
-  } = group || {}
+  const { id, name, identifier, type, visibility, groupRoles } = group || {
+    type: 'GENERIC',
+    visibility: 'PRIVATE',
+  }
 
   // TODO: remove admin?
   const canDelete = useMemo(
@@ -148,7 +156,6 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
           id,
           input: {
             ...input,
-            type,
             identifier: {
               id: kebabCase(input.identifier),
             },
@@ -160,7 +167,6 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
         variables: {
           input: {
             ...input,
-            type,
             identifier: {
               id: kebabCase(input.identifier),
             },
@@ -272,7 +278,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
               defaultValue={type}
               editing={editing}
               label={<SectionTitle>Type</SectionTitle>}
-              disabled
+              disabled={loading}
               options={GROUP_TYPE_OPTIONS}
             />
           </div>

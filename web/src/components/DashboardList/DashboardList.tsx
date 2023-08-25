@@ -41,9 +41,15 @@ interface ListTypeOption {
   description?: string
   reservations?: boolean
   disabled?: boolean
+  badgeColor?: string
 }
 export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
-  { value: 'WISHLIST', name: 'Wishlist', reservations: true },
+  {
+    value: 'WISHLIST',
+    name: 'Wishlist',
+    reservations: true,
+    badgeColor: 'badge-primary',
+  },
   { value: 'WEDDING', name: 'Wedding Registry', reservations: true },
   { value: 'BABY_SHOWER', name: 'Baby Shower', reservations: true },
   {
@@ -57,6 +63,7 @@ export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
     value: 'TOP',
     name: 'Top (n) List',
     description: "Ex. Top 10 flip phones that don't suck",
+    badgeColor: 'badge-purple-400 bg-purple-400',
   },
   { value: 'FAVORITES', name: 'Favorites' },
   { value: 'JOBS', name: 'Jobs', disabled: true },
@@ -474,6 +481,7 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
               options={LIST_VISIBILITY_OPTIONS}
             />
             <FormItem
+              disabled={loading}
               type="select"
               name="type"
               defaultValue={type}
