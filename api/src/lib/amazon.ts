@@ -39,8 +39,8 @@ export const AMAZON_REGEX = new RegExp(
 export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
   let link = originalLink
   let images = []
-  const title = ''
-  const description = ''
+  let title = ''
+  let description = ''
 
   try {
     link = `${
@@ -57,73 +57,14 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
       alt: element.getAttribute('alt'),
     }))
 
-    // browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath,
-    //   headless:
-    //     process.env.NODE_ENV === 'development' ? 'new' : chromium.headless,
-    //   ignoreHTTPSErrors: true,
-    //   // headless: 'new',
-    // })
+    title =
+      dom.window.document.querySelector('#productTitle')?.textContent.trim() ||
+      ''
 
-    // browser = await puppeteer.launch({
-    //   args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath,
-    //   headless: true,
-    //   ignoreHTTPSErrors: true,
-    // })
-
-    // await page.waitForSelector('#imgTagWrapperId img')
-
-    // const productTitle = await page.$('#productTitle')
-
-    // if (productTitle) {
-    //   title = (
-    //     (await page.evaluate(
-    //       (el: HTMLSpanElement) => el.textContent,
-    //       productTitle
-    //     )) ||
-    //     (await page.title()) ||
-    //     ''
-    //   ).trim()
-    // }
-
-    // const productDescription = await page.$('#productDescription')
-
-    // if (productDescription) {
-    //   description = (
-    //     (await page.evaluate(
-    //       (el: HTMLSpanElement) => el.textContent,
-    //       productDescription
-    //     )) ||
-    //     (await page.evaluate(
-    //       () =>
-    //         (
-    //           document.querySelector('meta[name="description"]') as
-    //             | HTMLMetaElement
-    //             | undefined
-    //         )?.content
-    //     )) ||
-    //     ''
-    //   ).trim()
-    // }
-
-    // const imageElements = await page.$$('#imgTagWrapperId')
-    // images = []
-    // for (const imageElement of imageElements) {
-    //   images.push(
-    //     await page.evaluate(
-    //       (element) => ({
-    //         src: element.querySelector('img').getAttribute('src'),
-    //         alt:
-    //           element.querySelector('img').getAttribute('alt') || 'Link image',
-    //       }),
-    //       imageElement
-    //     )
-    //   )
-    // }
+    description =
+      dom.window.document
+        .querySelector('#productDescription')
+        ?.textContent.trim() || ''
   } catch (error) {
     console.error(error)
   }
