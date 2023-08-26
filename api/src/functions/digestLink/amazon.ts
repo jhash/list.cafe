@@ -1,13 +1,14 @@
-let chrome = {
+let chromium = {
   args: [],
   defaultViewport: '',
   executablePath: undefined,
+  headless: 'new',
 }
 let puppeteer
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
   // running on the Vercel platform.
-  chrome = require('chrome-aws-lambda')
+  chromium = require('@sparticuz/chromium')
   puppeteer = require('puppeteer-core')
 } else {
   // running locally.
@@ -17,7 +18,7 @@ if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
 const LOCAL_CHROME_EXECUTABLE =
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
-// import chromium from 'chrome-aws-lambda'
+// import chromium from 'chromium-aws-lambda'
 // import puppeteer from 'puppeteer'
 
 import { DigestHandler } from './digestLink'
@@ -78,21 +79,21 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
     // })
 
     // browser = await puppeteer.launch({
-    //   args: [...chrome.args, '--hide-scrollbars', '--disable-web-security'],
-    //   defaultViewport: chrome.defaultViewport,
-    //   executablePath: await chrome.executablePath,
+    //   args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath,
     //   headless: true,
     //   ignoreHTTPSErrors: true,
     // })
 
     const executablePath =
-      (await chrome.executablePath) || LOCAL_CHROME_EXECUTABLE
+      (await chromium.executablePath) || LOCAL_CHROME_EXECUTABLE
 
     const browser = await puppeteer.launch({
       executablePath,
-      // args: chrome.args,
+      // args: chromium.args,
       args: [
-        ...chrome.args,
+        ...chromium.args,
         '--autoplay-policy=user-gesture-required',
         '--disable-background-networking',
         '--disable-background-timer-throttling',
@@ -129,7 +130,8 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
         '--use-gl=swiftshader',
         '--use-mock-keychain',
       ],
-      headless: process.env.NODE_ENV === 'development' ? 'new' : false,
+      defaultViewport: chromium.defaultViewport,
+      headless: chromium.headless || 'new',
     })
 
     const page = await browser.newPage()

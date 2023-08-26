@@ -8,16 +8,13 @@
     "@redwoodjs/auth-dbauth-api": "6.1.0",
     "@redwoodjs/graphql-server": "6.1.0",
     "@simplewebauthn/server": "^7",
+    "@sparticuz/chromium": "^116",
     "@types/puppeteer": "^7.0.4",
-    "chrome-aws-lambda": "10.1.0",
-    "puppeteer-core": "10.1.0",
+    "puppeteer-core": "^21.1.0",
     "resend": "^1.0.0"
   },
   "devDependencies": {
     "prisma": "latest",
     "puppeteer": "^21.1.0"
-  },
-  "engines": {
-    "node": "14.x"
   }
 }
