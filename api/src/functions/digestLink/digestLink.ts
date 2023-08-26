@@ -1,8 +1,14 @@
 import type { APIGatewayEvent, Context } from 'aws-lambda'
+import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
 import { logger } from 'src/lib/logger'
 
-import { AMAZON_REGEX, fetchAmazonLink } from '../../lib/amazon'
+import {
+  AMAZON_PRODUCT_REGEX,
+  AMAZON_WISHLIST_REGEX,
+  fetchAmazonProductLink,
+  fetchAmazonWishlistLink,
+} from '../../lib/amazon'
 
 /**
  * The handler function is your code that processes http request events.
@@ -21,21 +27,17 @@ import { AMAZON_REGEX, fetchAmazonLink } from '../../lib/amazon'
  * function, and execution environment.
  */
 
-interface DigestedImage {
-  src: string
-  alt: string
+export type DigestedItem = Omit<CreateListItemInput, 'listId'>
+export type DigestedList = CreateListInput & {
+  listItems: DigestedItem[]
 }
-
-export interface DigestedLink {
-  link: string
-  images: DigestedImage[]
-  title: string
-  description: string
-}
-export type DigestHandler = (link: string) => Promise<DigestedLink>
+export type DigestHandler = (link: string) => Promise<DigestedList>
 const digest: DigestHandler = async (link: string) => {
-  if (link.match(AMAZON_REGEX)) {
-    return await fetchAmazonLink(link)
+  if (link.match(AMAZON_PRODUCT_REGEX)) {
+    return await fetchAmazonProductLink(link)
+  }
+  if (link.match(AMAZON_WISHLIST_REGEX)) {
+    return await fetchAmazonWishlistLink(link)
   }
 }
 export const handler = async (event: APIGatewayEvent, _context: Context) => {

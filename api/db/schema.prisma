@@ -255,15 +255,18 @@ model ListItem {
 }
 
 model Image {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @default(now())
-  url       String
-  height    Decimal
-  width     Decimal
-  format    String
-  listItems ListItem[]
-  person    Person[]
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now())
+  url        String
+  height     Decimal
+  width      Decimal
+  format     String
+  listItem   ListItem? @relation(fields: [listItemId], references: [id])
+  listItemId Int?
+  person     Person?   @relation(fields: [personId], references: [id])
+  personId   Int?
+  alt        String?
 }
 
 model Reservation {

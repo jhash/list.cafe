@@ -10,7 +10,7 @@ export const schema = gql`
     # defaultAddressId: Int
     # partnershipContact: PartnershipContact
     # giftPreferences: [GiftPreferences]!
-    # images: [Image]!
+    images: [Image]!
     # createdByUser: User
     # createdByUserId: Int
     identifier: Identifier

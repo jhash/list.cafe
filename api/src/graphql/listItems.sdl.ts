@@ -15,7 +15,7 @@ export const schema = gql`
     parent: ListItem
     parentId: Int
     children: [ListItem]!
-    # images: [Image]!
+    images: [Image]!
     order: Int
     price: Float
     listRoles: [ListRole]
@@ -36,6 +36,7 @@ export const schema = gql`
     parentId: Int
     order: Int
     price: Float
+    images: [CreateImageInput]
   }
 
   input UpdateListItemInput {

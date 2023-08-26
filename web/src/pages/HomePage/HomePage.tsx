@@ -7,6 +7,7 @@ import {
 } from 'react'
 
 import { Heart } from 'lucide-react'
+import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
 import { MetaTags } from '@redwoodjs/web'
 
@@ -16,21 +17,14 @@ import RotatingText from 'src/components/RotatingText/RotatingText'
 import SectionTitle from 'src/components/SectionTitle/SectionTitle'
 import { api } from 'src/lib/api'
 
-interface DigestedImage {
-  src: string
-  alt: string
-}
-
-export interface DigestedLink {
-  link: string
-  images: DigestedImage[]
-  title: string
-  description: string
+export type DigestedItem = Omit<CreateListItemInput, 'listId'>
+export type DigestedList = CreateListInput & {
+  listItems: DigestedItem[]
 }
 
 const HomePage = () => {
   const [digestingLink, setDigestingLink] = useState<boolean>(false)
-  const [digestedLink, setDigestedLink] = useState<DigestedLink>()
+  const [digestedList, setDigestedList] = useState<DigestedList>()
   const firstListItemRef = useRef<HTMLInputElement>(null)
 
   const onSubmit = async (event?: FormEvent, text?: string) => {
@@ -51,7 +45,7 @@ const HomePage = () => {
     })
 
     if (data) {
-      setDigestedLink(data)
+      setDigestedList(data)
     }
     setDigestingLink(false)
   }
@@ -103,32 +97,65 @@ const HomePage = () => {
           >
             {digestingLink ? (
               <div>Loading...</div>
-            ) : digestedLink ? (
-              <ExternalLink
-                href={digestedLink.link}
-                className="flex flex-col gap-y-3"
-              >
-                {!!digestedLink.title && (
+            ) : digestedList ? (
+              <div className="flex flex-col gap-y-3">
+                {!!digestedList.name && (
                   <div className="flex flex-col gap-y-2">
-                    <SectionTitle>Title</SectionTitle>
-                    {digestedLink.title}
+                    <SectionTitle>List Name</SectionTitle>
+                    {digestedList.name}
                   </div>
                 )}
-                {!!digestedLink.description && (
+                {!!digestedList.description && (
                   <div className="flex flex-col gap-y-2">
-                    <SectionTitle>Description</SectionTitle>
-                    {digestedLink.description}
+                    <SectionTitle>List Description</SectionTitle>
+                    {digestedList.description}
                   </div>
                 )}
-                {!!digestedLink.images?.length && (
+                {!!digestedList.type && (
                   <div className="flex flex-col gap-y-2">
-                    <SectionTitle>Images</SectionTitle>
-                    {digestedLink.images?.map(({ src, alt }, index) => (
-                      <img key={index} src={src} alt={alt} />
-                    ))}
+                    <SectionTitle>List Type</SectionTitle>
+                    {digestedList.type}
                   </div>
                 )}
-              </ExternalLink>
+                {!!digestedList.listItems.length && (
+                  <div className="flex flex-col gap-y-3 divide-y">
+                    <SectionTitle>Items</SectionTitle>
+                    {digestedList.listItems.map(
+                      ({ url, title, description, images }, index) => (
+                        <ExternalLink
+                          href={url}
+                          className="flex flex-col gap-y-3 py-3"
+                          key={index}
+                        >
+                          {!!title && (
+                            <div className="flex flex-col gap-y-2">
+                              <SectionTitle>Title</SectionTitle>
+                              {title}
+                            </div>
+                          )}
+                          {!!description && (
+                            <div className="flex flex-col gap-y-2">
+                              <SectionTitle>Description</SectionTitle>
+                              {description}
+                            </div>
+                          )}
+                          {!!images?.length && (
+                            <div
+                              className="flex flex-col gap-y-2"
+                              style={{ maxWidth: 150 }}
+                            >
+                              <SectionTitle>Images</SectionTitle>
+                              {images?.map(({ url, alt }, index) => (
+                                <img key={index} src={url} alt={alt} />
+                              ))}
+                            </div>
+                          )}
+                        </ExternalLink>
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="flex flex-grow flex-col">
                 <label

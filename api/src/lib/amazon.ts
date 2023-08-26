@@ -1,7 +1,7 @@
 import { gotScraping } from 'got-scraping'
 import { JSDOM } from 'jsdom'
 
-import { DigestHandler } from '../functions/digestLink/digestLink'
+import { DigestHandler, DigestedItem } from '../functions/digestLink/digestLink'
 
 const AMAZON_URLS = [
   'amazon.ca',
@@ -28,24 +28,42 @@ const AMAZON_URLS = [
   'amzn.to',
 ]
 
-export const AMAZON_REGEX = new RegExp(
-  `https?\\:\\/\\/(www)?.(${AMAZON_URLS.join('|').replaceAll(
-    '.',
-    '\\.'
-  )})\\/(.+\\/)?((dp|gp)\\/)(product\\/)?([^\\/\\?]+)(?=\\/?.+\\??.+)`,
-  'g'
+const createAmazonRegex = (innerSection: string) =>
+  new RegExp(
+    `https?\\:\\/\\/(www)?.(${AMAZON_URLS.join('|').replaceAll(
+      '.',
+      '\\.'
+    )})\\/(.+\\/)?${innerSection}([^\\/\\?]+)(?=\\/?.+\\??.+)`,
+    'g'
+  )
+const AMAZON_REGEX_PRODUCT_SECTION = '((dp|gp)\\/)(product\\/)?'
+export const AMAZON_PRODUCT_REGEX = createAmazonRegex(
+  AMAZON_REGEX_PRODUCT_SECTION
+)
+const AMAZON_REGEX_WISHLIST_SECTION = '(hz/)(wishlist/)?(ls/)?'
+export const AMAZON_WISHLIST_REGEX = createAmazonRegex(
+  AMAZON_REGEX_WISHLIST_SECTION
 )
 
-export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
-  let link = originalLink
+const insertAmazonTags = (link: string, regex: RegExp) => {
+  return `${link.match(regex)?.[0] || link.replace(/\?.*/g, '')}?tag=${
+    process.env.AMAZON_ASSOCIATE_ID
+  }`
+}
+
+console.log('AMAZON_PRODUCT_REGEX', AMAZON_PRODUCT_REGEX)
+console.log('AMAZON_WISHLIST_REGEX', AMAZON_WISHLIST_REGEX)
+
+export const fetchAmazonProductLink: DigestHandler = async (
+  originalLink: string
+) => {
+  let url = originalLink
   let images = []
   let title = ''
   let description = ''
 
   try {
-    link = `${
-      originalLink.match(AMAZON_REGEX)?.[0] || originalLink.replace(/\?.*/g, '')
-    }?tag=${process.env.AMAZON_ASSOCIATE_ID}`
+    url = insertAmazonTags(originalLink, AMAZON_PRODUCT_REGEX)
 
     const { body } = await gotScraping.get(originalLink)
     // console.log(body)
@@ -70,9 +88,75 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
   }
 
   return {
-    link,
-    title,
-    images,
-    description,
+    listItems: [{ url, title, images, description, quantity: 1 }],
+    name: 'My Amazon Wishlist',
+    type: 'WISHLIST',
+  }
+}
+
+export const fetchAmazonWishlistLink: DigestHandler = async (
+  originalLink: string
+) => {
+  console.log('fetch amazon wishlist link')
+  // let link = originalLink
+  let listItems: DigestedItem[] = []
+  let name = ''
+  // const groupName = ''
+  // const description = ''
+
+  try {
+    // link = insertAmazonTags(originalLink, AMAZON_WISHLIST_REGEX)
+
+    const { body } = await gotScraping.get(
+      `${originalLink.replace(/\?.*/, '')}?viewType=list`
+    )
+    const dom = new JSDOM(body)
+
+    // groupName =
+    //   dom.window.document
+    //     .querySelector('g-list-header-wrapper')
+    //     ?.textContent.trim() || ''
+
+    name =
+      dom.window.document
+        .querySelector('#profile-list-name')
+        ?.textContent.trim() || ''
+
+    listItems = [...dom.window.document.querySelectorAll('.a-list-item')]
+      .filter((element) => !!element.querySelector('img'))
+      .map((element) => {
+        const img = element.querySelector('img')
+        const itemName = element.querySelector("[id^='itemName']")
+        const url = insertAmazonTags(
+          `https://amazon.com${itemName.getAttribute('href') || ''}`,
+          AMAZON_PRODUCT_REGEX
+        )
+        const title = (itemName?.textContent || img.getAttribute('alt')).trim()
+        const quantity = +(
+          element
+            .querySelector("span[id^='itemRequested_']")
+            ?.textContent.trim() || 1
+        )
+
+        return {
+          images: [
+            {
+              url: img.getAttribute('src'),
+              alt: title,
+            },
+          ],
+          title,
+          url,
+          quantity,
+        }
+      })
+  } catch (error) {
+    console.error(error)
+  }
+
+  return {
+    name,
+    listItems,
+    type: 'WISHLIST',
   }
 }
