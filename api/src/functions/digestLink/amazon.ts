@@ -1,6 +1,9 @@
+import chromium from 'chrome-aws-lambda'
 import puppeteer from 'puppeteer'
 
 import { DigestHandler } from './digestLink'
+
+// const puppeteer = require('puppeteer-core')
 
 const AMAZON_URLS = [
   'amazon.ca',
@@ -40,15 +43,21 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
   let images = []
   let title = ''
   let description = ''
+  let browser
 
   try {
     link = `${
       originalLink.match(AMAZON_REGEX)?.[0] || originalLink.replace(/\?.*/g, '')
     }?tag=${process.env.AMAZON_ASSOCIATE_ID}`
 
-    const browser = await puppeteer.launch({
-      // headless: false,
-      headless: 'new',
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless:
+        process.env.NODE_ENV === 'development' ? 'new' : chromium.headless,
+      ignoreHTTPSErrors: true,
+      // headless: 'new',
     })
 
     const page = await browser.newPage()
@@ -107,6 +116,8 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    browser?.close?.()
   }
 
   return {
