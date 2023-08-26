@@ -5260,13 +5260,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sparticuz/chromium@npm:^116":
+"@sparticuz/chromium-min@npm:^116":
   version: 116.0.0
-  resolution: "@sparticuz/chromium@npm:116.0.0"
+  resolution: "@sparticuz/chromium-min@npm:116.0.0"
   dependencies:
     follow-redirects: ^1.15.2
     tar-fs: ^3.0.4
-  checksum: 42e1867dd2ca4ee5271bc1f774d39bcafc4063fe206c0ad50dc2d6eedf06c8519b28e42502058451e2688077e040bbb18091b1d5e70cf4e519b5afc6390f68b4
+  checksum: 1a05ddb6d1382683272528bc62b56a7a9f1398701600aaa027af899d7712baaa015ee2123acdcef43555b87e13f52412229881caf25d268b3f4b4b6e75bb58cc
   languageName: node
   linkType: hard
 
@@ -7113,7 +7113,7 @@ __metadata:
     "@redwoodjs/auth-dbauth-api": 6.1.0
     "@redwoodjs/graphql-server": 6.1.0
     "@simplewebauthn/server": ^7
-    "@sparticuz/chromium": ^116
+    "@sparticuz/chromium-min": ^116
     "@types/puppeteer": ^7.0.4
     prisma: latest
     puppeteer: ^21.1.0

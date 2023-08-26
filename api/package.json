@@ -8,7 +8,7 @@
     "@redwoodjs/auth-dbauth-api": "6.1.0",
     "@redwoodjs/graphql-server": "6.1.0",
     "@simplewebauthn/server": "^7",
-    "@sparticuz/chromium": "^116",
+    "@sparticuz/chromium-min": "^116",
     "@types/puppeteer": "^7.0.4",
     "puppeteer-core": "^21.1.0",
     "resend": "^1.0.0"

@@ -8,7 +8,7 @@ let puppeteer
 
 if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
   // running on the Vercel platform.
-  chromium = require('@sparticuz/chromium')
+  chromium = require('@sparticuz/chromium-min')
   puppeteer = require('puppeteer-core')
 } else {
   // running locally.
@@ -87,10 +87,15 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
     // })
 
     const executablePath =
-      (await chromium.executablePath) || LOCAL_CHROME_EXECUTABLE
+      (await chromium?.executablePath?.(
+        'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
+      )) ||
+      (await chromium?.executablePath) ||
+      LOCAL_CHROME_EXECUTABLE
 
     const browser = await puppeteer.launch({
       executablePath,
+      ignoreHTTPSErrors: true,
       // args: chromium.args,
       args: [
         ...chromium.args,
