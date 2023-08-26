@@ -21,7 +21,7 @@ const LOCAL_CHROME_EXECUTABLE =
 // import chromium from 'chromium-aws-lambda'
 // import puppeteer from 'puppeteer'
 
-import { DigestHandler } from './digestLink'
+import { DigestHandler } from '../functions/digestLink/digestLink'
 
 const AMAZON_URLS = [
   'amazon.ca',

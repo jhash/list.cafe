@@ -2,7 +2,7 @@ import type { APIGatewayEvent, Context } from 'aws-lambda'
 
 import { logger } from 'src/lib/logger'
 
-import { AMAZON_REGEX, fetchAmazonLink } from './amazon'
+import { AMAZON_REGEX, fetchAmazonLink } from '../../lib/amazon'
 
 /**
  * The handler function is your code that processes http request events.
