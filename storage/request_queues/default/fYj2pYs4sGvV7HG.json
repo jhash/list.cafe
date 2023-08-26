@@ -1,0 +1,9 @@
+{
+	"id": "fYj2pYs4sGvV7HG",
+	"json": "{\"id\":\"fYj2pYs4sGvV7HG\",\"url\":\"https://www.amazon.com/dp/B09PQNKH2T/?coliid=I35TPF0GQRSU69&colid=3JO3NCP2XUTMK&th=1\",\"loadedUrl\":\"https://www.amazon.com/dp/B09PQNKH2T/?coliid=I35TPF0GQRSU69&colid=3JO3NCP2XUTMK&th=1\",\"uniqueKey\":\"https://www.amazon.com/dp/B09PQNKH2T?colid=3JO3NCP2XUTMK&coliid=I35TPF0GQRSU69&th=1\",\"method\":\"GET\",\"noRetry\":false,\"retryCount\":0,\"errorMessages\":[],\"headers\":{},\"userData\":{\"__crawlee\":{\"state\":4}},\"handledAt\":\"2023-08-25T21:59:19.116Z\"}",
+	"method": "GET",
+	"orderNo": null,
+	"retryCount": 0,
+	"uniqueKey": "https://www.amazon.com/dp/B09PQNKH2T?colid=3JO3NCP2XUTMK&coliid=I35TPF0GQRSU69&th=1",
+	"url": "https://www.amazon.com/dp/B09PQNKH2T/?coliid=I35TPF0GQRSU69&colid=3JO3NCP2XUTMK&th=1"
+}

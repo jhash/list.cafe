@@ -1,16 +1,40 @@
-import { ClipboardEventHandler, FormEvent, useEffect, useRef } from 'react'
+import {
+  ClipboardEventHandler,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import { Heart } from 'lucide-react'
 
 import { MetaTags } from '@redwoodjs/web'
 
+import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import RotatingText from 'src/components/RotatingText/RotatingText'
+import SectionTitle from 'src/components/SectionTitle/SectionTitle'
+import { api } from 'src/lib/api'
+
+interface DigestedImage {
+  src: string
+  alt: string
+}
+
+export interface DigestedLink {
+  link: string
+  images: DigestedImage[]
+  title: string
+  description: string
+}
 
 const HomePage = () => {
+  const [digestingLink, setDigestingLink] = useState<boolean>(false)
+  const [digestedLink, setDigestedLink] = useState<DigestedLink>()
   const firstListItemRef = useRef<HTMLInputElement>(null)
 
-  const onSubmit = (event?: FormEvent, text?: string) => {
+  const onSubmit = async (event?: FormEvent, text?: string) => {
+    setDigestingLink(true)
     event?.preventDefault()
     event?.stopPropagation()
 
@@ -19,6 +43,17 @@ const HomePage = () => {
     if (!link?.trim()) {
       return
     }
+
+    const { data } = await api.get('/digestLink', {
+      params: {
+        link,
+      },
+    })
+
+    if (data) {
+      setDigestedLink(data)
+    }
+    setDigestingLink(false)
   }
 
   const onPaste: ClipboardEventHandler<HTMLInputElement> = (event) => {
@@ -66,23 +101,53 @@ const HomePage = () => {
             className="flex flex-grow flex-col gap-7 p-1"
             onSubmit={onSubmit}
           >
-            <div className="flex flex-grow flex-col">
-              <label
-                htmlFor="list-item-1"
-                className="label px-0.5 font-medium opacity-90"
+            {digestingLink ? (
+              <div>Loading...</div>
+            ) : digestedLink ? (
+              <ExternalLink
+                href={digestedLink.link}
+                className="flex flex-col gap-y-3"
               >
-                <span className="label-text text-lg">Paste a link here:</span>
-              </label>
-              <input
-                type="text"
-                className="input input-ghost input-lg flex flex-grow animate-pulse rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-0.5 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
-                placeholder="Ex. astonmartin.com/models/vantage"
-                ref={firstListItemRef}
-                name="list-item-1"
-                id="list-item-1"
-                onPaste={onPaste}
-              />
-            </div>
+                {!!digestedLink.title && (
+                  <div className="flex flex-col gap-y-2">
+                    <SectionTitle>Title</SectionTitle>
+                    {digestedLink.title}
+                  </div>
+                )}
+                {!!digestedLink.description && (
+                  <div className="flex flex-col gap-y-2">
+                    <SectionTitle>Description</SectionTitle>
+                    {digestedLink.description}
+                  </div>
+                )}
+                {!!digestedLink.images?.length && (
+                  <div className="flex flex-col gap-y-2">
+                    <SectionTitle>Images</SectionTitle>
+                    {digestedLink.images?.map(({ src, alt }, index) => (
+                      <img key={index} src={src} alt={alt} />
+                    ))}
+                  </div>
+                )}
+              </ExternalLink>
+            ) : (
+              <div className="flex flex-grow flex-col">
+                <label
+                  htmlFor="list-item-1"
+                  className="label px-0.5 font-medium opacity-90"
+                >
+                  <span className="label-text text-lg">Paste a link here:</span>
+                </label>
+                <input
+                  type="text"
+                  className="input input-ghost input-lg flex flex-grow animate-pulse rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-0.5 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
+                  placeholder="Ex. astonmartin.com/models/vantage"
+                  ref={firstListItemRef}
+                  name="list-item-1"
+                  id="list-item-1"
+                  onPaste={onPaste}
+                />
+              </div>
+            )}
             <ListFadeOut />
           </form>
         </div>

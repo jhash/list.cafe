@@ -25,7 +25,9 @@ const AMAZON_URLS = [
 
 const mapUrlsToRegex = (urls: string[]) =>
   new RegExp(
-    `^(https?:\/\/)?(${urls.map((url) => url.replace('.', '\\.')).join('|')})`,
+    `^(https?:\\/\\/)?(www\\.)?(${urls
+      .map((url) => url.replaceAll('.', '\\.'))
+      .join('|')})`,
     'gmi'
   )
 

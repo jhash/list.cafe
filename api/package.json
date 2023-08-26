@@ -8,7 +8,17 @@
     "@redwoodjs/auth-dbauth-api": "6.1.0",
     "@redwoodjs/graphql-server": "6.1.0",
     "@simplewebauthn/server": "^7",
-    "resend": "^1.0.0"
+    "@types/puppeteer": "^7.0.4",
+    "@types/request-promise": "^4.1.48",
+    "@types/x-ray": "^2.3.3",
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "crawlee": "^3.5.2",
+    "playwright": "^1.37.1",
+    "puppeteer": "^21.1.0",
+    "request-promise": "^4.2.6",
+    "resend": "^1.0.0",
+    "x-ray": "^2.3.4"
   },
   "devDependencies": {
     "prisma": "latest"

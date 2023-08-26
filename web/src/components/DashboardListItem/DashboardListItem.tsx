@@ -38,7 +38,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   toggleEditing,
   ...listItem
 }) => {
-  const titleRef = useRef<HTMLInputElement>()
+  const linkRef = useRef<HTMLInputElement>()
 
   const { id, title, description, url, quantity, price, listId, listRoles } =
     listItem
@@ -133,16 +133,14 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   }, [id])
 
   useEffect(() => {
-    setImmediate(() =>
-      (titleRef?.current as unknown as HTMLInputElement | null)?.focus()
-    )
-  }, [titleRef])
+    setImmediate(() => linkRef?.current?.focus())
+  }, [linkRef])
 
   return (
     <Form<CreateListItemForm>
       className={classNames(
         'w-full max-w-full flex-grow',
-        !!id && 'collapse collapse-arrow rounded-lg border shadow-sm'
+        !!id && 'collapse-arrow collapse rounded-lg border shadow-sm'
       )}
       name="list-item-form"
       onSubmit={(input, event) => onSave(input, event)}
@@ -217,10 +215,19 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         className={classNames(
           'flex w-full max-w-full flex-shrink-0 flex-wrap gap-x-5 gap-y-2',
           !!id && 'collapse-content overflow-x-visible',
-          !!open && 'py-4'
+          !!open && !!id && 'py-4'
         )}
       >
         <NumberField hidden name="listId" defaultValue={listId} />
+        <FormItem
+          disabled={loading}
+          editing={editing}
+          name="url"
+          defaultValue={url}
+          className="text-base"
+          label="Link"
+          ref={linkRef}
+        />
         <FormItem
           disabled={loading}
           editing={editing}
@@ -229,15 +236,6 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           className="text-base"
           label="Title"
           validation={{ required: true }}
-          ref={titleRef}
-        />
-        <FormItem
-          disabled={loading}
-          editing={editing}
-          name="url"
-          defaultValue={url}
-          className="text-base"
-          label="Link"
         />
         <FormItem
           disabled={loading}
