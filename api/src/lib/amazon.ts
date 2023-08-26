@@ -1,25 +1,5 @@
-let chromium = {
-  args: [],
-  defaultViewport: '',
-  executablePath: undefined,
-  headless: 'new',
-}
-let puppeteer
-
-if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-  // running on the Vercel platform.
-  chromium = require('@sparticuz/chromium-min')
-  puppeteer = require('puppeteer-core')
-} else {
-  // running locally.
-  puppeteer = require('puppeteer')
-}
-
-const LOCAL_CHROME_EXECUTABLE =
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-
-// import chromium from 'chromium-aws-lambda'
-// import puppeteer from 'puppeteer'
+import { gotScraping } from 'got-scraping'
+import { JSDOM } from 'jsdom'
 
 import { DigestHandler } from '../functions/digestLink/digestLink'
 
@@ -59,14 +39,23 @@ export const AMAZON_REGEX = new RegExp(
 export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
   let link = originalLink
   let images = []
-  let title = ''
-  let description = ''
-  let browser
+  const title = ''
+  const description = ''
 
   try {
     link = `${
       originalLink.match(AMAZON_REGEX)?.[0] || originalLink.replace(/\?.*/g, '')
     }?tag=${process.env.AMAZON_ASSOCIATE_ID}`
+
+    const { body } = await gotScraping.get(originalLink)
+    // console.log(body)
+    const dom = new JSDOM(body)
+    images = [
+      ...dom.window.document.querySelectorAll('#imgTagWrapperId img'),
+    ].map((element) => ({
+      src: element.getAttribute('src'),
+      alt: element.getAttribute('alt'),
+    }))
 
     // browser = await puppeteer.launch({
     //   args: chromium.args,
@@ -86,117 +75,57 @@ export const fetchAmazonLink: DigestHandler = async (originalLink: string) => {
     //   ignoreHTTPSErrors: true,
     // })
 
-    const executablePath =
-      (await chromium?.executablePath?.(
-        'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
-      )) ||
-      (await chromium?.executablePath) ||
-      LOCAL_CHROME_EXECUTABLE
+    // await page.waitForSelector('#imgTagWrapperId img')
 
-    const browser = await puppeteer.launch({
-      executablePath,
-      ignoreHTTPSErrors: true,
-      // args: chromium.args,
-      args: [
-        ...chromium.args,
-        '--autoplay-policy=user-gesture-required',
-        '--disable-background-networking',
-        '--disable-background-timer-throttling',
-        '--disable-backgrounding-occluded-windows',
-        '--disable-breakpad',
-        '--disable-client-side-phishing-detection',
-        '--disable-component-update',
-        '--disable-default-apps',
-        '--disable-dev-shm-usage',
-        '--disable-domain-reliability',
-        '--disable-extensions',
-        '--disable-features=AudioServiceOutOfProcess',
-        '--disable-hang-monitor',
-        '--disable-ipc-flooding-protection',
-        '--disable-notifications',
-        '--disable-offer-store-unmasked-wallet-cards',
-        '--disable-popup-blocking',
-        '--disable-print-preview',
-        '--disable-prompt-on-repost',
-        '--disable-renderer-backgrounding',
-        '--disable-setuid-sandbox',
-        '--disable-speech-api',
-        '--disable-sync',
-        '--hide-scrollbars',
-        '--ignore-gpu-blacklist',
-        '--metrics-recording-only',
-        '--mute-audio',
-        '--no-default-browser-check',
-        '--no-first-run',
-        '--no-pings',
-        '--no-sandbox',
-        '--no-zygote',
-        '--password-store=basic',
-        '--use-gl=swiftshader',
-        '--use-mock-keychain',
-      ],
-      defaultViewport: chromium.defaultViewport,
-      headless: chromium.headless || 'new',
-    })
+    // const productTitle = await page.$('#productTitle')
 
-    const page = await browser.newPage()
+    // if (productTitle) {
+    //   title = (
+    //     (await page.evaluate(
+    //       (el: HTMLSpanElement) => el.textContent,
+    //       productTitle
+    //     )) ||
+    //     (await page.title()) ||
+    //     ''
+    //   ).trim()
+    // }
 
-    await page.goto(originalLink)
+    // const productDescription = await page.$('#productDescription')
 
-    await page.waitForSelector('#imgTagWrapperId img')
+    // if (productDescription) {
+    //   description = (
+    //     (await page.evaluate(
+    //       (el: HTMLSpanElement) => el.textContent,
+    //       productDescription
+    //     )) ||
+    //     (await page.evaluate(
+    //       () =>
+    //         (
+    //           document.querySelector('meta[name="description"]') as
+    //             | HTMLMetaElement
+    //             | undefined
+    //         )?.content
+    //     )) ||
+    //     ''
+    //   ).trim()
+    // }
 
-    const productTitle = await page.$('#productTitle')
-
-    if (productTitle) {
-      title = (
-        (await page.evaluate(
-          (el: HTMLSpanElement) => el.textContent,
-          productTitle
-        )) ||
-        (await page.title()) ||
-        ''
-      ).trim()
-    }
-
-    const productDescription = await page.$('#productDescription')
-
-    if (productDescription) {
-      description = (
-        (await page.evaluate(
-          (el: HTMLSpanElement) => el.textContent,
-          productDescription
-        )) ||
-        (await page.evaluate(
-          () =>
-            (
-              document.querySelector('meta[name="description"]') as
-                | HTMLMetaElement
-                | undefined
-            )?.content
-        )) ||
-        ''
-      ).trim()
-    }
-
-    const imageElements = await page.$$('#imgTagWrapperId')
-    console.log(imageElements.length, 'elements')
-    images = []
-    for (const imageElement of imageElements) {
-      images.push(
-        await page.evaluate(
-          (element) => ({
-            src: element.querySelector('img').getAttribute('src'),
-            alt:
-              element.querySelector('img').getAttribute('alt') || 'Link image',
-          }),
-          imageElement
-        )
-      )
-    }
+    // const imageElements = await page.$$('#imgTagWrapperId')
+    // images = []
+    // for (const imageElement of imageElements) {
+    //   images.push(
+    //     await page.evaluate(
+    //       (element) => ({
+    //         src: element.querySelector('img').getAttribute('src'),
+    //         alt:
+    //           element.querySelector('img').getAttribute('alt') || 'Link image',
+    //       }),
+    //       imageElement
+    //     )
+    //   )
+    // }
   } catch (error) {
     console.error(error)
-  } finally {
-    browser?.close?.()
   }
 
   return {
