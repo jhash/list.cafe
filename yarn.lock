@@ -7104,9 +7104,10 @@ __metadata:
     "@redwoodjs/graphql-server": 6.1.0
     "@simplewebauthn/server": ^7
     "@types/puppeteer": ^7.0.4
-    chrome-aws-lambda: ^10.1.0
+    chrome-aws-lambda: 6.0.0
     prisma: latest
     puppeteer: ^21.1.0
+    puppeteer-core: 6.0.0
     resend: ^1.0.0
   languageName: unknown
   linkType: soft
@@ -8750,14 +8751,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chrome-aws-lambda@npm:^10.1.0":
-  version: 10.1.0
-  resolution: "chrome-aws-lambda@npm:10.1.0"
+"chrome-aws-lambda@npm:6.0.0":
+  version: 6.0.0
+  resolution: "chrome-aws-lambda@npm:6.0.0"
   dependencies:
-    lambdafs: ^2.0.3
+    lambdafs: ^2.0.2
   peerDependencies:
-    puppeteer-core: ^10.1.0
-  checksum: 968efb72640a99c0648cdf96f31260f07fcb3a6231ad8dec45bcd61f4e07e6f7f47cdbbc7fd91e34cd35632549eeec61e91845b47ee31ba9a0a1b4e2057b2b50
+    puppeteer-core: 6.0.x
+  checksum: d27f3b051862f92395241b787343466f04e63d8406b05462e8cc4e31d441e56fc0aad0a47c21f2b69c32fc55810c65c2531c045de20e37399489932c892bfbe4
   languageName: node
   linkType: hard
 
@@ -10269,6 +10270,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"devtools-protocol@npm:0.0.842839":
+  version: 0.0.842839
+  resolution: "devtools-protocol@npm:0.0.842839"
+  checksum: 02fe7b936ba153d88e0ef97b09b4f51da49b13b7b555e65a397193234b1716ec1dbb94e1a99ab9d07c9a093fb83579640c20b94d0a98c7f0d07b49be1956e96e
+  languageName: node
+  linkType: hard
+
 "didyoumean@npm:^1.2.2":
   version: 1.2.2
   resolution: "didyoumean@npm:1.2.2"
@@ -11580,7 +11588,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"extract-zip@npm:2.0.1":
+"extract-zip@npm:2.0.1, extract-zip@npm:^2.0.0":
   version: 2.0.1
   resolution: "extract-zip@npm:2.0.1"
   dependencies:
@@ -14999,7 +15007,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lambdafs@npm:^2.0.3":
+"lambdafs@npm:^2.0.2":
   version: 2.1.1
   resolution: "lambdafs@npm:2.1.1"
   dependencies:
@@ -18089,7 +18097,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"progress@npm:2.0.3":
+"progress@npm:2.0.3, progress@npm:^2.0.1":
   version: 2.0.3
   resolution: "progress@npm:2.0.3"
   checksum: 1697e07cb1068055dbe9fe858d242368ff5d2073639e652b75a7eb1f2a1a8d4afd404d719de23c7b48481a6aa0040686310e2dac2f53d776daa2176d3f96369c
@@ -18176,7 +18184,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proxy-from-env@npm:^1.1.0":
+"proxy-from-env@npm:^1.0.0, proxy-from-env@npm:^1.1.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: fe7dd8b1bdbbbea18d1459107729c3e4a2243ca870d26d34c2c1bcd3e4425b7bcc5112362df2d93cc7fb9746f6142b5e272fd1cc5c86ddf8580175186f6ad42b
@@ -18285,6 +18293,26 @@ __metadata:
     devtools-protocol: 0.0.1159816
     ws: 8.13.0
   checksum: b48c17fa107b52d6242a3bd07e58708e3f6f5844536693c8b5a5bc7c5fbab672b799c4f4c27891f59850bef23e060d27f2643a25db6fd3f71cbcab0e7d934ab9
+  languageName: node
+  linkType: hard
+
+"puppeteer-core@npm:6.0.0":
+  version: 6.0.0
+  resolution: "puppeteer-core@npm:6.0.0"
+  dependencies:
+    debug: ^4.1.0
+    devtools-protocol: 0.0.842839
+    extract-zip: ^2.0.0
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.1
+    pkg-dir: ^4.2.0
+    progress: ^2.0.1
+    proxy-from-env: ^1.0.0
+    rimraf: ^3.0.2
+    tar-fs: ^2.0.0
+    unbzip2-stream: ^1.3.3
+    ws: ^7.2.3
+  checksum: e3cd69bf54c415a8f6a02254dc7b264097b80399b45d1d4ef7631b5fe6e085cbfe5e32800c900654dccea933699dd3850450af4d35dfb9f1d44c7c1ef22d45bc
   languageName: node
   linkType: hard
 
@@ -20607,7 +20635,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar-stream@npm:^2.2.0":
+"tar-fs@npm:^2.0.0":
+  version: 2.1.1
+  resolution: "tar-fs@npm:2.1.1"
+  dependencies:
+    chownr: ^1.1.1
+    mkdirp-classic: ^0.5.2
+    pump: ^3.0.0
+    tar-stream: ^2.1.4
+  checksum: 871d26a934bfb7beeae4c4d8a09689f530b565f79bd0cf489823ff0efa3705da01278160da10bb006d1a793fa0425cf316cec029b32a9159eacbeaff4965fb6d
+  languageName: node
+  linkType: hard
+
+"tar-stream@npm:^2.1.4, tar-stream@npm:^2.2.0":
   version: 2.2.0
   resolution: "tar-stream@npm:2.2.0"
   dependencies:
@@ -21334,7 +21374,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unbzip2-stream@npm:1.4.3":
+"unbzip2-stream@npm:1.4.3, unbzip2-stream@npm:^1.3.3":
   version: 1.4.3
   resolution: "unbzip2-stream@npm:1.4.3"
   dependencies:
@@ -22481,7 +22521,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.3.1":
+"ws@npm:^7.2.3, ws@npm:^7.3.1":
   version: 7.5.9
   resolution: "ws@npm:7.5.9"
   peerDependencies:
