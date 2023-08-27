@@ -5,6 +5,7 @@ import { Set, Router, Route } from '@redwoodjs/router'
 
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
 import HomePage from './pages/HomePage/HomePage'
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 
 const Routes = lazy(() => import('./Routes'))
 
@@ -17,7 +18,7 @@ const RoutesWrapper = () => {
       <Router>
         <Set wrap={HomeLayout}>
           <Route path="/" page={HomePage} name="home" prerender />
-          {/* <Route notfound page={NotFoundPage} /> */}
+          <Route notfound page={NotFoundPage} />
         </Set>
       </Router>
     )

@@ -1,4 +1,3 @@
-import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
 import { Set, Router, Route } from '@redwoodjs/router'
 
 import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
@@ -14,20 +13,9 @@ import HomePage from './pages/HomePage/HomePage'
 import LoginPage from './pages/LoginPage/LoginPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import SignupPage from './pages/SignupPage/SignupPage'
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 
 const Routes = () => {
-  const browser = useIsBrowser()
-  if (!browser) {
-    return (
-      <Router>
-        <Set wrap={HomeLayout}>
-          <Route path="/" page={HomePage} name="home" prerender />
-          {/* <Route notfound page={NotFoundPage} /> */}
-        </Set>
-      </Router>
-    )
-  }
-
   return (
     <Router useAuth={useAuth}>
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
@@ -126,8 +114,8 @@ const Routes = () => {
         {/* TODO: prerender? */}
         <Route path="/{identifier}" page={IdentifierPage} name="identifier" />
         {/* TODO: prerender */}
-        <Route path="/" page={HomePage} name="home" />
-        {/* <Route notfound page={NotFoundPage} /> */}
+        <Route path="/" page={HomePage} name="home" prerender />
+        <Route notfound page={NotFoundPage} />
       </Set>
     </Router>
   )
