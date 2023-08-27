@@ -71,7 +71,7 @@ export const fetchAmazonProductLink: DigestHandler = async (
     images = [
       ...dom.window.document.querySelectorAll('#imgTagWrapperId img'),
     ].map((element) => ({
-      src: element.getAttribute('src'),
+      url: element.getAttribute('src'),
       alt: element.getAttribute('alt'),
     }))
 
