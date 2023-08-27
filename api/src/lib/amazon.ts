@@ -51,8 +51,8 @@ const insertAmazonTags = (link: string, regex: RegExp) => {
   }`
 }
 
-console.log('AMAZON_PRODUCT_REGEX', AMAZON_PRODUCT_REGEX)
-console.log('AMAZON_WISHLIST_REGEX', AMAZON_WISHLIST_REGEX)
+// console.log('AMAZON_PRODUCT_REGEX', AMAZON_PRODUCT_REGEX)
+// console.log('AMAZON_WISHLIST_REGEX', AMAZON_WISHLIST_REGEX)
 
 export const fetchAmazonProductLink: DigestHandler = async (
   originalLink: string
@@ -97,15 +97,14 @@ export const fetchAmazonProductLink: DigestHandler = async (
 export const fetchAmazonWishlistLink: DigestHandler = async (
   originalLink: string
 ) => {
-  console.log('fetch amazon wishlist link')
-  // let link = originalLink
+  let link = originalLink
   let listItems: DigestedItem[] = []
   let name = ''
   // const groupName = ''
   // const description = ''
 
   try {
-    // link = insertAmazonTags(originalLink, AMAZON_WISHLIST_REGEX)
+    link = insertAmazonTags(originalLink, AMAZON_WISHLIST_REGEX)
 
     const { body } = await gotScraping.get(
       `${originalLink.replace(/\?.*/, '')}?viewType=list`
@@ -155,6 +154,7 @@ export const fetchAmazonWishlistLink: DigestHandler = async (
   }
 
   return {
+    link,
     name,
     listItems,
     type: 'WISHLIST',

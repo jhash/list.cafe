@@ -30,6 +30,7 @@ import {
 export type DigestedItem = Omit<CreateListItemInput, 'listId'>
 export type DigestedList = CreateListInput & {
   listItems: DigestedItem[]
+  link?: string
 }
 export type DigestHandler = (link: string) => Promise<DigestedList>
 const digest: DigestHandler = async (link: string) => {
