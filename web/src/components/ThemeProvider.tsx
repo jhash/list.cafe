@@ -2,15 +2,20 @@ import { createContext, useContext, useEffect, useState } from 'react'
 
 import { Moon, Sun } from 'lucide-react'
 
+import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
+
 export const ThemeContext = createContext(null)
 
 export const ThemeProvider = ({ children }) => {
+  const browser = useIsBrowser()
+
   const [darkMode, setDarkMode] = useState<boolean>(
-    localStorage?.getItem('theme') === 'dracula'
+    browser && localStorage?.getItem('theme') === 'dracula'
   )
 
   useEffect(() => {
     if (
+      browser &&
       !localStorage?.getItem('theme') &&
       !!window.matchMedia?.('(prefers-color-scheme: dark)').matches
     ) {
@@ -20,6 +25,10 @@ export const ThemeProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
+    if (browser) {
+      return
+    }
+
     if (darkMode) {
       document?.documentElement?.setAttribute('data-theme', 'dracula')
       localStorage?.setItem('theme', 'dracula')
@@ -29,6 +38,7 @@ export const ThemeProvider = ({ children }) => {
       localStorage?.setItem('theme', 'cupcake')
       document?.documentElement?.classList?.remove('dark')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [darkMode])
 
   return (

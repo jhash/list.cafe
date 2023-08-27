@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@prisma/client": "latest",
+    "@prisma/client": "^5.2.0",
     "@redwoodjs/api": "6.1.0",
     "@redwoodjs/auth-dbauth-api": "6.1.0",
     "@redwoodjs/graphql-server": "6.1.0",
@@ -13,6 +13,6 @@
     "resend": "^1.0.0"
   },
   "devDependencies": {
-    "prisma": "latest"
+    "prisma": "^5.2.0"
   }
 }

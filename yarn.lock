@@ -96,7 +96,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.7.17":
+"@apollo/client@npm:^3.8.1":
   version: 3.8.1
   resolution: "@apollo/client@npm:3.8.1"
   dependencies:
@@ -4244,7 +4244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:5.1.1, @prisma/client@npm:latest":
+"@prisma/client@npm:5.1.1":
   version: 5.1.1
   resolution: "@prisma/client@npm:5.1.1"
   dependencies:
@@ -4255,6 +4255,20 @@ __metadata:
     prisma:
       optional: true
   checksum: 106da755fbecccf124b0d1f25ddd6ef574ba98dbf34e03be74fe54a0ce6daee61d0282c439fd567e96e7108e775fe87dc53dbfe762f1e97855e8c48da27e7c64
+  languageName: node
+  linkType: hard
+
+"@prisma/client@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "@prisma/client@npm:5.2.0"
+  dependencies:
+    "@prisma/engines-version": 5.2.0-25.2804dc98259d2ea960602aca6b8e7fdc03c1758f
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: 2b6a6db72c1f17eaff4217e2f98e5d9e179755e57d2b92dbe8c5040fa88529ebf9f9cac03b367589577fbbb3bcbac9d53c07b3a35b2acc47210697a747d01a7f
   languageName: node
   linkType: hard
 
@@ -4276,10 +4290,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/engines-version@npm:5.2.0-25.2804dc98259d2ea960602aca6b8e7fdc03c1758f":
+  version: 5.2.0-25.2804dc98259d2ea960602aca6b8e7fdc03c1758f
+  resolution: "@prisma/engines-version@npm:5.2.0-25.2804dc98259d2ea960602aca6b8e7fdc03c1758f"
+  checksum: 4b941762ccce9234bb4bf00e77c09252dcf2362779fc40fe3c9f1415a36616c85ffb4345ea0e4684d4faa0274b564a4f5728c3368cb45a4f5820fbfcbf2b4474
+  languageName: node
+  linkType: hard
+
 "@prisma/engines@npm:5.1.1":
   version: 5.1.1
   resolution: "@prisma/engines@npm:5.1.1"
   checksum: cceb42fd98aa86f680ac9cfc2d4e0f749a59d41f4959c7811b78489567ae62beec1c83a7ee4b597ee251264c0b2a6475a1d0d85509110bd33418e2aa8946a18c
+  languageName: node
+  linkType: hard
+
+"@prisma/engines@npm:5.2.0":
+  version: 5.2.0
+  resolution: "@prisma/engines@npm:5.2.0"
+  checksum: 6140199d7588a58bb8ea0cd954b0c56fc2e649b420f41f4fe1b2771b20134edacf4a4870629716e9b66257a0cf8d90cd5c2871ed3a7c6453d8827cffcfdf946b
   languageName: node
   linkType: hard
 
@@ -5828,9 +5856,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^18.11.9":
-  version: 18.17.5
-  resolution: "@types/node@npm:18.17.5"
-  checksum: 763c753351d3ceaedb5888a03b10f0925c5be6e80b3fa5755f47f4c6ba401999becaf7317105554a07dbba43467f2890285cfb7252c34e1b1afed3ef56acdf55
+  version: 18.17.11
+  resolution: "@types/node@npm:18.17.11"
+  checksum: 77e2d7c597f2746d120a97b46423f4b27aab996e55b934e15dd2ea3fd1f79df7bc45963129c73aa217cdff4e570ca8ee0f68ad16129cc20e42246e498f90f703
   languageName: node
   linkType: hard
 
@@ -6005,6 +6033,15 @@ __metadata:
   version: 2.0.1
   resolution: "@types/stack-utils@npm:2.0.1"
   checksum: 3327ee919a840ffe907bbd5c1d07dfd79137dd9732d2d466cf717ceec5bb21f66296173c53bb56cff95fae4185b9cd6770df3e9745fe4ba528bbc4975f54d13f
+  languageName: node
+  linkType: hard
+
+"@types/tailwindcss@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@types/tailwindcss@npm:3.1.0"
+  dependencies:
+    tailwindcss: "*"
+  checksum: 7a258e7ce46060fd598669605dabbeef16cf5d13f36bcb1764255837e7b889a4fa6b39a9ffd1c70eed55e0892c5dac079574371cbc343515a2850a088717ab68
   languageName: node
   linkType: hard
 
@@ -7079,14 +7116,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "api@workspace:api"
   dependencies:
-    "@prisma/client": latest
+    "@prisma/client": ^5.2.0
     "@redwoodjs/api": 6.1.0
     "@redwoodjs/auth-dbauth-api": 6.1.0
     "@redwoodjs/graphql-server": 6.1.0
     "@simplewebauthn/server": ^7
     got-scraping: ^3.2.15
     jsdom: ^22.1.0
-    prisma: latest
+    prisma: ^5.2.0
     resend: ^1.0.0
   languageName: unknown
   linkType: soft
@@ -7535,14 +7572,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "axios@npm:1.4.0"
+"axios@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "axios@npm:1.5.0"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: a925a07590b0ec1d4daf28cd27890f930daab980371558deb3b883af174b881da09e5ba2cb8393a648fda5859e39934982d0b8b092fe89fc84cb6c80a70a1910
+  checksum: a3e11e53ff10fa02defb17c82672599a5ef31f8a6f2b0ea1564a61271226a924baef3a899a03c6850bddb0e9a614acdf615e07b30f382403b5e1fc7ec2eef464
   languageName: node
   linkType: hard
 
@@ -9801,16 +9838,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"daisyui@npm:^3.5.1":
-  version: 3.5.1
-  resolution: "daisyui@npm:3.5.1"
+"daisyui@npm:^3.6.3":
+  version: 3.6.3
+  resolution: "daisyui@npm:3.6.3"
   dependencies:
     colord: ^2.9
     css-selector-tokenizer: ^0.8
     postcss: ^8
     postcss-js: ^4
     tailwindcss: ^3
-  checksum: e2a240ee87c37dbfe8091270306dbed50368e7e76e7a068260cca04520844ad48e01973ca4d268e8f7c4c1bffbf34f8215cf30f70fbe3399315d70009808ee60
+  checksum: 16a5eda6d9ebf2402d2575ad3cd0abd1b483f0fbbd49c294605e10127cce32bb6427ff367c3ec50b3aa7153a036f2a14c4865dfd4fb16c2239225038e5962a1c
   languageName: node
   linkType: hard
 
@@ -15488,12 +15525,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.268.0":
-  version: 0.268.0
-  resolution: "lucide-react@npm:0.268.0"
+"lucide-react@npm:^0.269.0":
+  version: 0.269.0
+  resolution: "lucide-react@npm:0.269.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: e6ac1666069a2a77ef744ec2a0e81fcda4a1e392be8394cfe41770732fc0f3d5d53c8624d9f516fe658d61c63c875ba53ce459174aae5a2b1911066383e9985f
+  checksum: 9ed69c26cd773ad1ed66488da15a8fd590bca7538d5e243cdf6cc330f792174d7b563a68e08af138826005d159bdc38f9d03221039d4bc3fc53f691f302db082
   languageName: node
   linkType: hard
 
@@ -17919,26 +17956,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-tailwindcss@npm:^0.4":
-  version: 0.4.1
-  resolution: "prettier-plugin-tailwindcss@npm:0.4.1"
+"prettier-plugin-tailwindcss@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "prettier-plugin-tailwindcss@npm:0.5.3"
   peerDependencies:
     "@ianvs/prettier-plugin-sort-imports": "*"
     "@prettier/plugin-pug": "*"
     "@shopify/prettier-plugin-liquid": "*"
     "@shufo/prettier-plugin-blade": "*"
     "@trivago/prettier-plugin-sort-imports": "*"
-    prettier: ^2.2 || ^3.0
+    prettier: ^3.0
     prettier-plugin-astro: "*"
     prettier-plugin-css-order: "*"
     prettier-plugin-import-sort: "*"
     prettier-plugin-jsdoc: "*"
-    prettier-plugin-marko: "*"
     prettier-plugin-organize-attributes: "*"
     prettier-plugin-organize-imports: "*"
     prettier-plugin-style-order: "*"
     prettier-plugin-svelte: "*"
-    prettier-plugin-twig-melody: "*"
   peerDependenciesMeta:
     "@ianvs/prettier-plugin-sort-imports":
       optional: true
@@ -17970,11 +18005,11 @@ __metadata:
       optional: true
     prettier-plugin-twig-melody:
       optional: true
-  checksum: da9dc4c8c80b5510d51e671de61bc230e2b076bd4c14ddd3e8bd4fa5395373800d10473718bbf22e1cabe09167e8d2eb1bedaa06587ee905d6e6106003b69d11
+  checksum: b0d57aca64eb6608c8606fac2f607be9cb4fa89c313ce71ebaaea7834425525eff4f09f0890152a441deccba9f58e280d7e17c503fb241c42764062223689b93
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.8, prettier@npm:^2.6.2, prettier@npm:^2.8":
+"prettier@npm:2.8.8, prettier@npm:^2.6.2":
   version: 2.8.8
   resolution: "prettier@npm:2.8.8"
   bin:
@@ -17983,7 +18018,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:latest":
+"prettier@npm:^3.0.2":
   version: 3.0.2
   resolution: "prettier@npm:3.0.2"
   bin:
@@ -18058,7 +18093,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:5.1.1, prisma@npm:latest":
+"prisma@npm:5.1.1":
   version: 5.1.1
   resolution: "prisma@npm:5.1.1"
   dependencies:
@@ -18066,6 +18101,17 @@ __metadata:
   bin:
     prisma: build/index.js
   checksum: 0d000bd08dc2591894ac73986475f36379c84a8fdfa365b2c29035cf51e8ab8ddfb4606f70f6b2f4ba10b7a41068d53120858801cb236cb1225d0e4e6414aa49
+  languageName: node
+  linkType: hard
+
+"prisma@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "prisma@npm:5.2.0"
+  dependencies:
+    "@prisma/engines": 5.2.0
+  bin:
+    prisma: build/index.js
+  checksum: 213f222ef30dfb3f74a5be095087c6a2dd3cdaf4a66f887be38636541499bd5b5fe2400d0746bd90017ac0845fe352bea695bae9f12c11add87d336bbe0377fc
   languageName: node
   linkType: hard
 
@@ -19146,8 +19192,8 @@ __metadata:
   dependencies:
     "@redwoodjs/auth-dbauth-setup": 6.1.0
     "@redwoodjs/core": 6.1.0
-    prettier: ^2.8
-    prettier-plugin-tailwindcss: ^0.4
+    prettier: ^3.0.2
+    prettier-plugin-tailwindcss: ^0.5.3
   languageName: unknown
   linkType: soft
 
@@ -19294,16 +19340,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:^1.66.0":
-  version: 1.66.0
-  resolution: "sass@npm:1.66.0"
+"sass@npm:^1.66.1":
+  version: 1.66.1
+  resolution: "sass@npm:1.66.1"
   dependencies:
     chokidar: ">=3.0.0 <4.0.0"
     immutable: ^4.0.0
     source-map-js: ">=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: bca8dba1748ba158f2e0921516178683d3927ed6a07561cbe465ad230296bf4a78bb67996d22015badde8e1969c56ad7e3f8a3913a12e73435da1bda45b48e37
+  checksum: 2fd9510088c8754010479132b9708b2c7178fe158bba1cb84aba4f22d333919d5e9561b5aa33fee3e635ae2d33e3835d6aad132705200d66e5773ce50842c8a1
   languageName: node
   linkType: hard
 
@@ -20511,7 +20557,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3, tailwindcss@npm:^3.3.3":
+"tailwindcss@npm:*, tailwindcss@npm:^3, tailwindcss@npm:^3.3.3":
   version: 3.3.3
   resolution: "tailwindcss@npm:3.3.3"
   dependencies:
@@ -21878,7 +21924,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web@workspace:web"
   dependencies:
-    "@apollo/client": ^3.7.17
+    "@apollo/client": ^3.8.1
     "@redwoodjs/auth-dbauth-web": 6.1.0
     "@redwoodjs/forms": 6.1.0
     "@redwoodjs/router": 6.1.0
@@ -21887,23 +21933,24 @@ __metadata:
     "@simplewebauthn/browser": ^7
     "@types/fontfaceobserver": ^2.1.0
     "@types/setimmediate": ^1.0.2
+    "@types/tailwindcss": ^3.1.0
     "@uidotdev/usehooks": ^2.1.1
     autoprefixer: ^10.4.15
-    axios: ^1.4.0
+    axios: ^1.5.0
     classnames: ^2.3.2
-    daisyui: ^3.5.1
+    daisyui: ^3.6.3
     eslint-plugin-prettier: ^5.0.0
     fontfaceobserver: ^2.3.0
     humanize-string: 2.1.0
     lodash: ^4.17.21
-    lucide-react: ^0.268.0
+    lucide-react: ^0.269.0
     postcss: ^8.4.28
     postcss-loader: ^7.3.3
-    prettier: latest
+    prettier: ^3.0.2
     prop-types: 15.8.1
     react: 18.2.0
     react-dom: 18.2.0
-    sass: ^1.66.0
+    sass: ^1.66.1
     sass-loader: ^13.3.2
     setimmediate: ^1.0.5
     tailwindcss: ^3.3.3

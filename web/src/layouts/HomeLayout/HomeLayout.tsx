@@ -1,6 +1,10 @@
+import { lazy } from 'react'
+
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 
-import HomeAuthLinks from 'src/components/HomeAuthLinks/HomeAuthLinks'
+const HomeAuthLinks = lazy(
+  () => import('src/components/HomeAuthLinks/HomeAuthLinks')
+)
 import HomeLink from 'src/components/HomeLink/HomeLink'
 import { DarkModeToggle } from 'src/components/ThemeProvider'
 

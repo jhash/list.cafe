@@ -71,7 +71,7 @@ model UserInvite {
   id                String           @id @default(cuid())
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @default(now())
-  expiresAt         DateTime         @default(dbgenerated("now() + interval '3 days'"))
+  expiresAt         DateTime         @default(dbgenerated("(now() + '3 days'::interval)"))
   user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId            Int
   status            InviteStatus     @default(PENDING)
