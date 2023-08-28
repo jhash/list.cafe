@@ -11,6 +11,8 @@ import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
 import { MetaTags } from '@redwoodjs/web'
 
+import Loading from 'src/components/Loading'
+
 import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import RotatingText from 'src/components/RotatingText/RotatingText'
@@ -96,7 +98,7 @@ const HomePage = () => {
             onSubmit={onSubmit}
           >
             {digestingLink ? (
-              <div>Loading...</div>
+              <Loading />
             ) : digestedList ? (
               <div className="flex flex-col gap-y-3">
                 {!!digestedList.name && (

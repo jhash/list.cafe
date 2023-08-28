@@ -15,6 +15,8 @@ import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import Loading from 'src/components/Loading'
+
 import { useAuth } from 'src/auth'
 
 export const QUERY = gql`
@@ -91,7 +93,7 @@ const SignupPage = ({ userInviteId }) => {
         <div className="flex w-full max-w-sm flex-col gap-12">
           <h1 className="text-6xl font-bold">Sign up</h1>
           {loading ? (
-            <div>Loading...</div>
+            <Loading />
           ) : (
             <div className="flex flex-col gap-6">
               <Form onSubmit={onSubmit} className="flex flex-col gap-6">

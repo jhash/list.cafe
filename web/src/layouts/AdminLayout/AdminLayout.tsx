@@ -5,14 +5,14 @@ import { Redirect, routes } from '@redwoodjs/router'
 import { useAuth } from 'src/auth'
 import AdminSidebar from 'src/components/AdminSidebar/AdminSidebar'
 
-import MainLayout from '../MainLayout/MainLayout'
 import SidebarLayout from '../SidebarLayout/SidebarLayout'
+import LoadingLayout from '../LoadingLayout/LoadingLayout';
 
 const AdminLayout = ({ children }) => {
   const { loading, isAuthenticated, hasRole } = useAuth()
 
   if (loading) {
-    return <MainLayout>Loading...</MainLayout>
+    return <LoadingLayout />
   }
 
   if (!loading && (!isAuthenticated || !hasRole(['ADMIN', 'SUPPORT']))) {

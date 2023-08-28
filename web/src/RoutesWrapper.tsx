@@ -1,4 +1,4 @@
-import { lazy } from 'react'
+import { Suspense, lazy } from 'react'
 
 import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
 import { Set, Router, Route } from '@redwoodjs/router'
@@ -6,6 +6,8 @@ import { Set, Router, Route } from '@redwoodjs/router'
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
 import HomePage from './pages/HomePage/HomePage'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
+
+import Loading from './components/Loading'
 
 const Routes = lazy(() => import('./Routes'))
 
@@ -24,7 +26,11 @@ const RoutesWrapper = () => {
     )
   }
 
-  return <Routes />
+  return (
+    <Suspense fallback={<Loading />}>
+      <Routes />
+    </Suspense>
+  )
 }
 
 export default RoutesWrapper

@@ -15,7 +15,8 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+import Spinner from 'src/components/Loading'
+export const Loading = () => <Spinner />
 
 export const Empty = () => <div>Identifier not found</div>
 

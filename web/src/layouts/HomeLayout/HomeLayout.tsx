@@ -1,4 +1,4 @@
-import { lazy } from 'react'
+import { Suspense, lazy } from 'react'
 
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 
@@ -7,6 +7,8 @@ const HomeAuthLinks = lazy(
 )
 import HomeLink from 'src/components/HomeLink/HomeLink'
 import { DarkModeToggle } from 'src/components/ThemeProvider'
+
+import Loading from 'src/components/Loading'
 
 import MainLayout from '../MainLayout/MainLayout'
 
@@ -17,7 +19,9 @@ const HomeLayout = ({ children }) => {
         <HomeLink />
         <div className="flex flex-shrink select-none flex-wrap items-center justify-end gap-x-3 sm:flex-nowrap">
           <BrowserOnly>
-            <HomeAuthLinks />
+            <Suspense fallback={<Loading />}>
+              <HomeAuthLinks />
+            </Suspense>
           </BrowserOnly>
         </div>
       </nav>

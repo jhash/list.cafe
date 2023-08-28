@@ -35,7 +35,8 @@ export const UPDATE_LIST_MUTATION = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+import Spinner from 'src/components/Loading'
+export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error?.message}</div>
