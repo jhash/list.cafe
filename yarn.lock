@@ -5551,6 +5551,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/canvas-confetti@npm:1.6.0":
+  version: 1.6.0
+  resolution: "@types/canvas-confetti@npm:1.6.0"
+  checksum: 54e43781be2928233b6babfc0962fe30c625011cb91bd0826bceb7ddc2a3eb2c2333e4cc7e08c3bd52641e7fc2df5e1cc104ae905ff221625273375a7ae5e36d
+  languageName: node
+  linkType: hard
+
 "@types/connect-history-api-fallback@npm:^1.3.5":
   version: 1.5.0
   resolution: "@types/connect-history-api-fallback@npm:1.5.0"
@@ -8425,6 +8432,13 @@ __metadata:
   version: 1.0.30001521
   resolution: "caniuse-lite@npm:1.0.30001521"
   checksum: a3bbd379b96a2f6512fecbabbdf12eb79e076271ab23aeb77b8f66b7ba49cec41db3c2163ca70000d457e5bf78385a5b8a712a03f7a3734c8a9cb71636bc9daf
+  languageName: node
+  linkType: hard
+
+"canvas-confetti@npm:1.6.0":
+  version: 1.6.0
+  resolution: "canvas-confetti@npm:1.6.0"
+  checksum: aac924eef354af1436a270a2f914eb2e127cf4afef908f3204e94016714043743305755207dfb8cd07bfb191f0684e1d1cd53a8bb20846f896d0a7b4270e534f
   languageName: node
   linkType: hard
 
@@ -18256,6 +18270,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-canvas-confetti@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "react-canvas-confetti@npm:1.4.0"
+  dependencies:
+    "@types/canvas-confetti": 1.6.0
+    canvas-confetti: 1.6.0
+  peerDependencies:
+    react: "*"
+  checksum: 4fe9691a9912bcd8e46675f4b5f44d40bf1b409570043dbff8abed11e4b0dee66ac28507bd139c9f311305815c23d4528b2caf4bb959ade9e50fe51b527a30ec
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
@@ -21720,6 +21746,7 @@ __metadata:
     prettier: ^2.8.8
     prop-types: 15.8.1
     react: 18.2.0
+    react-canvas-confetti: ^1.4.0
     react-dom: 18.2.0
     sass: ^1.66.1
     sass-loader: ^13.3.2

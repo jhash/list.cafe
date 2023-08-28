@@ -6,15 +6,16 @@ import {
   useState,
 } from 'react'
 
+import { useWindowSize } from '@uidotdev/usehooks'
 import { Heart } from 'lucide-react'
+import ReactCanvasConfetti from 'react-canvas-confetti'
 import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
 import { MetaTags } from '@redwoodjs/web'
 
-import Loading from 'src/components/Loading'
-
 import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
+import Loading from 'src/components/Loading'
 import RotatingText from 'src/components/RotatingText/RotatingText'
 import SectionTitle from 'src/components/SectionTitle/SectionTitle'
 import { api } from 'src/lib/api'
@@ -28,6 +29,8 @@ const HomePage = () => {
   const [digestingLink, setDigestingLink] = useState<boolean>(false)
   const [digestedList, setDigestedList] = useState<DigestedList>()
   const firstListItemRef = useRef<HTMLInputElement>(null)
+
+  const { height, width } = useWindowSize()
 
   const onSubmit = async (event?: FormEvent, text?: string) => {
     setDigestingLink(true)
@@ -65,6 +68,14 @@ const HomePage = () => {
   return (
     <>
       <MetaTags title="Home" description="List all of the things" />
+      <div className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-center justify-center">
+        <ReactCanvasConfetti
+          fire={digestingLink}
+          height={height}
+          width={width}
+          className="sm:-translate-x-8"
+        />
+      </div>
       <div className="flex flex-grow select-none flex-col items-center justify-center">
         <div className="flex max-w-2xl flex-col gap-8">
           <div
