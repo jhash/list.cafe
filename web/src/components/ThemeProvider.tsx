@@ -25,7 +25,7 @@ export const ThemeProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (browser) {
+    if (!browser) {
       return
     }
 
