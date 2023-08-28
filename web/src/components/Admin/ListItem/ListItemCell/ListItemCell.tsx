@@ -3,6 +3,7 @@ import type { FindListItemById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import ListItem from 'src/components/Admin/ListItem/ListItem'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindListItemById($id: Int!) {
@@ -23,7 +24,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>ListItem not found</div>

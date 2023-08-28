@@ -3,6 +3,7 @@ import type { FindPartnershipContactById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import PartnershipContact from 'src/components/Admin/PartnershipContact/PartnershipContact'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindPartnershipContactById($id: Int!) {
@@ -17,7 +18,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>PartnershipContact not found</div>

@@ -6,6 +6,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import PersonForm from 'src/components/Admin/Person/PersonForm'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query EditPersonById($id: Int!) {
@@ -34,7 +35,6 @@ const UPDATE_PERSON_MUTATION = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => (

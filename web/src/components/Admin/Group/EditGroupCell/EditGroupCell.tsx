@@ -6,6 +6,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import GroupForm from 'src/components/Admin/Group/GroupForm'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query EditGroupById($id: Int!) {
@@ -35,7 +36,6 @@ export const UPDATE_GROUP_MUTATION = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => (

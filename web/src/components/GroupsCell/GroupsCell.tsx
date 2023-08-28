@@ -3,6 +3,8 @@ import type { GroupType, GroupsQuery } from 'types/graphql'
 import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import Spinner from 'src/components/Loading'
+
 import { Badge } from '../Badge/Badge'
 import { matchGroupTypeOption } from '../DashboardGroup/DashboardGroup'
 
@@ -19,7 +21,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>Empty</div>

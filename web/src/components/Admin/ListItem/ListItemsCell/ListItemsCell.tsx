@@ -4,6 +4,7 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import ListItems from 'src/components/Admin/ListItem/ListItems'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindListItems($listId: Int!) {
@@ -27,7 +28,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => {

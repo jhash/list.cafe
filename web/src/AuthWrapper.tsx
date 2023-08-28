@@ -2,7 +2,8 @@ import { Suspense, lazy } from 'react'
 
 import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
 import { RedwoodApolloProvider } from '@redwoodjs/web/dist/apollo'
-import Loading from './components/Loading';
+
+import Loading from './components/Loading'
 
 const BrowserAuthWrapper = lazy(() => import('./BrowserAuthWrapper'))
 

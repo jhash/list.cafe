@@ -4,6 +4,7 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Users from 'src/components/Admin/User/Users'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindUsers {
@@ -17,7 +18,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => {

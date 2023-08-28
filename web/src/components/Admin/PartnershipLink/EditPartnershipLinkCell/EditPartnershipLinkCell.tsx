@@ -9,6 +9,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import PartnershipLinkForm from 'src/components/Admin/PartnershipLink/PartnershipLinkForm'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query EditPartnershipLinkById($id: String!) {
@@ -42,7 +43,6 @@ const UPDATE_PARTNERSHIP_LINK_MUTATION = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => (

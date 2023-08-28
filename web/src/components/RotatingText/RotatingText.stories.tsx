@@ -10,16 +10,16 @@
 //
 // See https://storybook.js.org/docs/react/writing-stories/args.
 
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react'
 
-import RotatingText from "./RotatingText";
+import RotatingText from './RotatingText'
 
 const meta: Meta<typeof RotatingText> = {
   component: RotatingText,
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof RotatingText>;
+type Story = StoryObj<typeof RotatingText>
 
-export const Primary: Story = {};
+export const Primary: Story = {}

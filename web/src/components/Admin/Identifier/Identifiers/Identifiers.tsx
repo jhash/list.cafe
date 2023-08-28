@@ -1,14 +1,14 @@
+import type {
+  DeleteIdentifierMutationVariables,
+  FindIdentifiers,
+} from 'types/graphql'
+
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Admin/Identifier/IdentifiersCell'
 import { truncate } from 'src/lib/formatters'
-
-import type {
-  DeleteIdentifierMutationVariables,
-  FindIdentifiers,
-} from 'types/graphql'
 
 const DELETE_IDENTIFIER_MUTATION = gql`
   mutation DeleteIdentifierMutation($id: String!) {

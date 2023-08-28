@@ -3,6 +3,7 @@ import type { FindListGroupMembershipById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import ListGroupMembership from 'src/components/Admin/ListGroupMembership/ListGroupMembership'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindListGroupMembershipById($id: Int!) {
@@ -17,7 +18,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>ListGroupMembership not found</div>

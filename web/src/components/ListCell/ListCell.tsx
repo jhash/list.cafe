@@ -8,6 +8,7 @@ import {
 } from '@redwoodjs/web'
 
 import ListItemsCell from 'src/components/ListItemsCell'
+import Spinner from 'src/components/Loading'
 
 import DashboardList from '../DashboardList/DashboardList'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
@@ -34,7 +35,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = ({ dashboard }: ListCellProps) => (

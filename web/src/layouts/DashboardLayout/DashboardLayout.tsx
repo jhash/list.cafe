@@ -5,8 +5,8 @@ import { Redirect, routes } from '@redwoodjs/router'
 import { useAuth } from 'src/auth'
 import DashboardSidebar from 'src/components/DashboardSidebar/DashboardSidebar'
 
+import LoadingLayout from '../LoadingLayout/LoadingLayout'
 import SidebarLayout from '../SidebarLayout/SidebarLayout'
-import LoadingLayout from '../LoadingLayout/LoadingLayout';
 
 const DashboardLayout = ({ children }) => {
   const { loading, isAuthenticated } = useAuth()

@@ -6,6 +6,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import UserForm from 'src/components/Admin/User/UserForm'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query EditUserById($id: Int!) {
@@ -30,7 +31,6 @@ const UPDATE_USER_MUTATION = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => (

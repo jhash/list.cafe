@@ -1,14 +1,14 @@
+import type {
+  DeletePartnershipLinkMutationVariables,
+  FindPartnershipLinks,
+} from 'types/graphql'
+
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Admin/PartnershipLink/PartnershipLinksCell'
 import { formatEnum, timeTag, truncate } from 'src/lib/formatters'
-
-import type {
-  DeletePartnershipLinkMutationVariables,
-  FindPartnershipLinks,
-} from 'types/graphql'
 
 const DELETE_PARTNERSHIP_LINK_MUTATION = gql`
   mutation DeletePartnershipLinkMutation($id: String!) {

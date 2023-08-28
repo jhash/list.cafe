@@ -5,8 +5,8 @@ import { Redirect, routes } from '@redwoodjs/router'
 import { useAuth } from 'src/auth'
 import AdminSidebar from 'src/components/AdminSidebar/AdminSidebar'
 
+import LoadingLayout from '../LoadingLayout/LoadingLayout'
 import SidebarLayout from '../SidebarLayout/SidebarLayout'
-import LoadingLayout from '../LoadingLayout/LoadingLayout';
 
 const AdminLayout = ({ children }) => {
   const { loading, isAuthenticated, hasRole } = useAuth()

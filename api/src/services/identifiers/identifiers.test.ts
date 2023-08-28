@@ -1,12 +1,6 @@
 import type { Identifier } from '@prisma/client'
 
-import {
-  identifiers,
-  identifier,
-  createIdentifier,
-  updateIdentifier,
-  deleteIdentifier,
-} from './identifiers'
+import { identifiers, identifier, deleteIdentifier } from './identifiers'
 import type { StandardScenario } from './identifiers.scenarios'
 
 // Generated boilerplate tests do not account for all circumstances

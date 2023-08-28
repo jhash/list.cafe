@@ -1,11 +1,11 @@
+import type { DeletePersonMutationVariables, FindPeople } from 'types/graphql'
+
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Admin/Person/PeopleCell'
 import { timeTag, truncate } from 'src/lib/formatters'
-
-import type { DeletePersonMutationVariables, FindPeople } from 'types/graphql'
 
 const DELETE_PERSON_MUTATION = gql`
   mutation DeletePersonMutation($id: Int!) {

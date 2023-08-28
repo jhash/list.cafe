@@ -9,6 +9,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import ListMembershipForm from 'src/components/Admin/ListMembership/ListMembershipForm'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query EditListMembershipById($id: Int!) {
@@ -38,7 +39,6 @@ export const UPDATE_LIST_MEMBERSHIP_MUTATION = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => (

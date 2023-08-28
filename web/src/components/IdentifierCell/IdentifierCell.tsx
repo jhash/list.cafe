@@ -6,6 +6,8 @@ import type {
 import { Redirect, routes } from '@redwoodjs/router'
 import type { CellSuccessProps } from '@redwoodjs/web'
 
+import Spinner from 'src/components/Loading'
+
 import ListPage from '../../pages/ListPage/ListPage'
 
 export const QUERY = gql`
@@ -19,7 +21,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <Redirect to={routes.home()} />

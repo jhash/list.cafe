@@ -1,3 +1,8 @@
+import type {
+  EditPartnershipContactById,
+  UpdatePartnershipContactInput,
+} from 'types/graphql'
+
 import {
   Form,
   FormError,
@@ -6,11 +11,6 @@ import {
   NumberField,
   Submit,
 } from '@redwoodjs/forms'
-
-import type {
-  EditPartnershipContactById,
-  UpdatePartnershipContactInput,
-} from 'types/graphql'
 import type { RWGqlError } from '@redwoodjs/forms'
 
 type FormPartnershipContact = NonNullable<

@@ -3,6 +3,7 @@ import type { FindPartnershipLinkById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import PartnershipLink from 'src/components/Admin/PartnershipLink/PartnershipLink'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindPartnershipLinkById($id: String!) {
@@ -19,7 +20,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>PartnershipLink not found</div>

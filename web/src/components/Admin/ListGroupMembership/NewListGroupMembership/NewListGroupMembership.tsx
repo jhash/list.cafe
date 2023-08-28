@@ -1,10 +1,10 @@
+import type { CreateListGroupMembershipInput } from 'types/graphql'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import ListGroupMembershipForm from 'src/components/Admin/ListGroupMembership/ListGroupMembershipForm'
-
-import type { CreateListGroupMembershipInput } from 'types/graphql'
 
 const CREATE_LIST_GROUP_MEMBERSHIP_MUTATION = gql`
   mutation CreateListGroupMembershipMutation(

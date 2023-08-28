@@ -3,11 +3,10 @@ import { Suspense, lazy } from 'react'
 import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
 import { Set, Router, Route } from '@redwoodjs/router'
 
+import Loading from './components/Loading'
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
 import HomePage from './pages/HomePage/HomePage'
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
-
-import Loading from './components/Loading'
 
 const Routes = lazy(() => import('./Routes'))
 

@@ -2,6 +2,8 @@ import type { ListMembershipsQuery } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import Spinner from 'src/components/Loading'
+
 import DashboardListMemberships from '../DashboardListMemberships/DashboardListMemberships'
 
 export const QUERY = gql`
@@ -21,7 +23,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>Empty</div>

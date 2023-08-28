@@ -4,6 +4,7 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Identifiers from 'src/components/Admin/Identifier/Identifiers'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindIdentifiers {
@@ -16,7 +17,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => {

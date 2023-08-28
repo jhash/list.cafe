@@ -1,10 +1,10 @@
+import type { CreatePartnershipInput } from 'types/graphql'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import PartnershipForm from 'src/components/Admin/Partnership/PartnershipForm'
-
-import type { CreatePartnershipInput } from 'types/graphql'
 
 const CREATE_PARTNERSHIP_MUTATION = gql`
   mutation CreatePartnershipMutation($input: CreatePartnershipInput!) {

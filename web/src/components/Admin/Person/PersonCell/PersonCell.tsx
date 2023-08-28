@@ -3,6 +3,7 @@ import type { FindPersonById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Person from 'src/components/Admin/Person/Person'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindPersonById($id: Int!) {
@@ -18,7 +19,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>Person not found</div>

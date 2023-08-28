@@ -3,6 +3,7 @@ import type { FindIdentifierById } from 'types/graphql'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Identifier from 'src/components/Admin/Identifier/Identifier'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindIdentifierById($id: String!) {
@@ -15,7 +16,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>Identifier not found</div>

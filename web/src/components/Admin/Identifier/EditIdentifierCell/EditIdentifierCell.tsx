@@ -6,6 +6,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import IdentifierForm from 'src/components/Admin/Identifier/IdentifierForm'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query EditIdentifierById($id: String!) {
@@ -31,7 +32,6 @@ const UPDATE_IDENTIFIER_MUTATION = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => (

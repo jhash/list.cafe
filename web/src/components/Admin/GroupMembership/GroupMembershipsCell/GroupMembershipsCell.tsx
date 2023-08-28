@@ -4,6 +4,7 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import GroupMemberships from 'src/components/Admin/GroupMembership/GroupMemberships'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindGroupMemberships {
@@ -18,7 +19,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => {

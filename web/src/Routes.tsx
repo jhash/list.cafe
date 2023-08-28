@@ -11,9 +11,9 @@ import DashboardListPage from './pages/DashboardListPage/DashboardListPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 import HomePage from './pages/HomePage/HomePage'
 import LoginPage from './pages/LoginPage/LoginPage'
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import SignupPage from './pages/SignupPage/SignupPage'
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 
 const Routes = () => {
   return (

@@ -15,9 +15,8 @@ import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import Loading from 'src/components/Loading'
-
 import { useAuth } from 'src/auth'
+import Loading from 'src/components/Loading'
 
 export const QUERY = gql`
   query UserInviteQuery($id: String!) {

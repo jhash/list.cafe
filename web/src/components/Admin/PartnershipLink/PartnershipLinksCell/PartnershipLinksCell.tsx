@@ -4,6 +4,7 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import PartnershipLinks from 'src/components/Admin/PartnershipLink/PartnershipLinks'
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindPartnershipLinks {
@@ -20,7 +21,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => {

@@ -1,10 +1,10 @@
+import type { CreateIdentifierInput } from 'types/graphql'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import IdentifierForm from 'src/components/Admin/Identifier/IdentifierForm'
-
-import type { CreateIdentifierInput } from 'types/graphql'
 
 const CREATE_IDENTIFIER_MUTATION = gql`
   mutation CreateIdentifierMutation($input: CreateIdentifierInput!) {

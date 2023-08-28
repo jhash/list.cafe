@@ -2,7 +2,10 @@ import type {
   FindListItemQuery,
   FindListItemQueryVariables,
 } from 'types/graphql'
+
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
+
+import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindListItemQuery($id: Int!) {
@@ -12,7 +15,6 @@ export const QUERY = gql`
   }
 `
 
-import Spinner from 'src/components/Loading'
 export const Loading = () => <Spinner />
 
 export const Empty = () => <div>Empty</div>

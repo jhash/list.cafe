@@ -6,9 +6,8 @@ const HomeAuthLinks = lazy(
   () => import('src/components/HomeAuthLinks/HomeAuthLinks')
 )
 import HomeLink from 'src/components/HomeLink/HomeLink'
-import { DarkModeToggle } from 'src/components/ThemeProvider'
-
 import Loading from 'src/components/Loading'
+import { DarkModeToggle } from 'src/components/ThemeProvider'
 
 import MainLayout from '../MainLayout/MainLayout'
 
