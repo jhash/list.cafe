@@ -33,25 +33,38 @@ const HomePage = () => {
   const { height, width } = useWindowSize()
 
   const onSubmit = async (event?: FormEvent, text?: string) => {
-    setDigestingLink(true)
     event?.preventDefault()
     event?.stopPropagation()
 
-    const link = text || firstListItemRef.current.value
+    let url = (text || firstListItemRef.current.value || '').trim()
 
-    if (!link?.trim()) {
+    if (!url) {
       return
     }
 
-    const { data } = await api.get('/digestLink', {
-      params: {
-        link,
-      },
-    })
-
-    if (data) {
-      setDigestedList(data)
+    if (!url.match('https')) {
+      url = `https://${url}`
     }
+
+    setDigestingLink(true)
+
+    try {
+      // This should fail if not valid
+      const link = new URL(url)
+
+      const { data } = await api.get('/digestLink', {
+        params: {
+          link,
+        },
+      })
+
+      if (data) {
+        setDigestedList(data)
+      }
+    } catch (error) {
+      //
+    }
+
     setDigestingLink(false)
   }
 
@@ -77,9 +90,9 @@ const HomePage = () => {
         />
       </div>
       <div className="flex flex-grow select-none flex-col items-center justify-center">
-        <div className="flex max-w-2xl flex-col gap-8">
+        <div className="flex w-full max-w-2xl flex-col gap-8">
           <div
-            className="hidden items-center gap-x-6 font-bricolageGrotesque text-9xl tall:flex"
+            className="hidden flex-wrap items-center gap-x-6 whitespace-normal font-bricolageGrotesque text-9xl sm:whitespace-nowrap tall:flex"
             // style={{ textShadow: '3px 5px 5px rgb(0,0,0,0.2)' }}
           >
             We{' '}
