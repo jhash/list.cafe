@@ -129,11 +129,11 @@ const PROMPT = `Can you create a list with a name, description, a header image, 
   CATEGORY_PROMPT_KEY_MAP
 ).join(', ')}], formatted like this example: \`\`\`json${JSON.stringify(
   {}
-)}\`\`\`, with a list of listItems that each include a title, description, url, price, quantity, and an image, all in a consistent JSON data structure, from the following text? `
+)}\`\`\`, with a list of listItems that each include a title, description, url, price, quantity, and an image, all in a consistent JSON data structure, from the following text? Please don't include any urls that might be invalid, it's preferred that you return undefined in those cases. Here is the text:  `
 
 const NUMBER_OF_CHARACTERS = 100
 const popCharactersUntilValid = (original: string) => {
-  let text = original
+  let text = original.replace(/(\t|\n|\r)+/g, '').replace(/\s\s+/g, '')
   for (let i = 0; i < NUMBER_OF_CHARACTERS; i++) {
     try {
       text = jsonrepair(text)
@@ -151,6 +151,116 @@ const popCharactersUntilValid = (original: string) => {
 }
 
 const PROMPT_MAX_SIZE = 500
+
+const httpsEverywhere = (text?: string) => {
+  const url = (text || '').trim()
+
+  if (url.match(/\s/g)) {
+    return url
+  }
+
+  if (!url.match(/https?/g)) {
+    return `https://${url}`
+  }
+
+  return url
+}
+
+const validateImageUrl = async (url: string) => {
+  const httpsUrl = new URL(httpsEverywhere(url))
+  const result = await gotScraping.get(httpsUrl)
+  console.log(url, JSON.stringify(result, null, 2))
+  if (!result.body) {
+    throw new Error('Nothing returned for image url. Deleting image')
+  }
+  if (result.redirectUrls?.length) {
+    throw new Error('Image returned redirect urls (first?)')
+  }
+  return true
+}
+
+const convertPotentialJSONToList = async (original: string) => {
+  console.log('\ntext before filtering: ', original)
+
+  let text = original.replace('\\n', '').replace('\n', ' ')
+
+  if (text.match('```')) {
+    text = text.replace(/[^\{]*\`\`\`[^\{]*/gim, '').trim()
+    console.log('\ntext after replacing: ', text)
+
+    try {
+      text = popCharactersUntilValid(text)
+    } catch (error) {
+      console.log('Failed to repair json: ', text)
+      throw error
+    }
+
+    let unfiltered: UnfilteredList | undefined
+    try {
+      unfiltered = JSON.parse(text)
+    } catch (error) {
+      throw new Error('Failed to parse json from text')
+    }
+
+    const type = CATEGORY_PROMPT_KEY_MAP[unfiltered.type] || 'WISHLIST'
+
+    if (unfiltered.headerImage) {
+      try {
+        await validateImageUrl(unfiltered.headerImage)
+      } catch (error) {
+        console.log('Failed to validate header image')
+        unfiltered.headerImage = undefined
+      }
+    }
+
+    console.log('header image validated')
+
+    unfiltered.listItems = (
+      await Promise.all(
+        (unfiltered.listItems || []).map(async (listItem) => {
+          if (listItem.image) {
+            try {
+              await validateImageUrl(listItem.image)
+            } catch (error) {
+              listItem.image = undefined
+            }
+          }
+
+          return listItem
+        })
+      )
+    ).filter(
+      (listItem) =>
+        listItem.title || listItem.description || listItem.image || listItem.url
+    )
+
+    console.log('list items images validated')
+
+    const list: DigestedList = {
+      name: unfiltered.name || type,
+      type,
+      headerImage: unfiltered.headerImage,
+      description: unfiltered.description,
+      listItems: (unfiltered.listItems || []).map((listItem, index) => ({
+        url: listItem.url,
+        title: listItem.title || `Item ${index + 1}`,
+        description: listItem.description,
+        price: listItem.price ? +listItem.price : undefined,
+        quantity: listItem.quantity ? +listItem.quantity : undefined,
+        images: (listItem.image ? [listItem.image] : []).map((image) => ({
+          url: image,
+          alt: listItem.title || image,
+        })),
+      })),
+    }
+
+    console.log('list', JSON.stringify(list))
+
+    return list
+  }
+
+  throw new Error('We failed to create a list from this link')
+}
 
 export const convertLinkToList = async (link: string) => {
   const { body } = await gotScraping.get(link)
@@ -237,47 +347,17 @@ export const convertLinkToList = async (link: string) => {
 
   text = await getListFromHTML(text)
 
-  text = text.replace('\\n', '').replace('\n', ' ')
+  const list = await convertPotentialJSONToList(text)
 
-  // console.log('\ntext before filtering: ', text)
-
-  if (text.match('```')) {
-    text = text.replace(/[^\{]*\`\`\`[^\{]*/gim, '').trim()
-    // console.log('\ntext after replacing: ', text)
-
-    try {
-      text = popCharactersUntilValid(text)
-      const unfiltered: UnfilteredList = JSON.parse(text)
-
-      const type = CATEGORY_PROMPT_KEY_MAP[unfiltered.type] || 'WISHLIST'
-
-      const list: DigestedList = {
-        // TODO: tag insertion
-        link,
-        name: unfiltered.name || type,
-        type,
-        headerImage: unfiltered.headerImage,
-        description: unfiltered.description,
-        listItems: (unfiltered.listItems || []).map((listItem, index) => ({
-          url: listItem.url,
-          title: listItem.title || `Item ${index + 1}`,
-          description: listItem.description,
-          price: listItem.price ? +listItem.price : undefined,
-          quantity: listItem.quantity ? +listItem.quantity : undefined,
-          images: (listItem.image ? [listItem.image] : []).map((image) => ({
-            url: image,
-            alt: listItem.title || image,
-          })),
-        })),
-      }
-
-      return list
-    } catch (error) {
-      console.log('Failed to parse json from text: ', text)
-    }
-  } else {
-    console.log('Text does not contain json: ', text)
+  return {
+    // TODO: tag insertion
+    link,
+    ...list,
   }
+}
 
-  throw new Error('We failed to fetch a list or item from this link')
+export const convertPromptToList = async (prompt: string) => {
+  const text = await getListFromHTML(`${PROMPT}${prompt}`)
+
+  return convertPotentialJSONToList(text)
 }

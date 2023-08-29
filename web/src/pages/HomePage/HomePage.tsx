@@ -30,6 +30,10 @@ export type DigestedList = CreateListInput & {
 const httpsEverywhere = (text?: string) => {
   const url = (text || '').trim()
 
+  if (url.match(/\s/g)) {
+    return url
+  }
+
   if (!url.match(/https?/g)) {
     return `https://${url}`
   }
@@ -46,7 +50,9 @@ const HomePage = () => {
     event?.preventDefault()
     event?.stopPropagation()
 
-    const url = httpsEverywhere(text || firstListItemRef.current.value)
+    const prompt = text || firstListItemRef.current.value
+
+    const url = httpsEverywhere(prompt)
 
     setDigestingLink(true)
 
@@ -64,7 +70,19 @@ const HomePage = () => {
         setDigestedList(data)
       }
     } catch (error) {
-      toast.error('We failed to extract a list. Please try another link')
+      try {
+        const { data } = await api.get('/digestPrompt', {
+          params: {
+            prompt,
+          },
+        })
+
+        if (data) {
+          setDigestedList(data)
+        }
+      } catch (error) {
+        toast.error('We failed to create a list')
+      }
     }
 
     setDigestingLink(false)
@@ -215,12 +233,15 @@ const HomePage = () => {
                   htmlFor="list-item-1"
                   className="label px-0.5 font-medium opacity-90"
                 >
-                  <span className="label-text text-lg">Paste a link here:</span>
+                  <span className="label-text text-lg">
+                    Ask a question or paste a link here:
+                  </span>
                 </label>
                 <input
                   type="text"
                   className="input input-ghost input-lg flex flex-grow animate-pulse rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-0.5 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
-                  placeholder="Ex. astonmartin.com/models/vantage"
+                  // TODO: run through a list of these
+                  placeholder="Can you make me a housewarming wishlist?"
                   ref={firstListItemRef}
                   name="list-item-1"
                   id="list-item-1"

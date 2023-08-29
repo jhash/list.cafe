@@ -68,14 +68,14 @@ export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
   },
   { value: 'FAVORITES', name: 'Favorites' },
   { value: 'JOBS', name: 'Jobs', disabled: true },
-  // { value: 'AWESOME', name: 'Awesome' },
-  // { value: 'BOOKMARKS', name: 'Bookmarks' },
-  // { value: 'FORUM', name: 'Forum' },
-  // { value: 'INVENTORY', name: 'Inventory' },
-  // { value: 'LINKTREE', name: 'Linktree' },
-  // { value: 'SOCIAL', name: 'Social' },
-  // { value: 'TABLE', name: 'Table' },
-  // { value: 'TODO', name: 'Todo' },
+  { value: 'AWESOME', name: 'Awesome', disabled: true },
+  { value: 'BOOKMARKS', name: 'Bookmarks', disabled: true },
+  { value: 'FORUM', name: 'Forum', disabled: true },
+  { value: 'INVENTORY', name: 'Inventory', disabled: true },
+  { value: 'LINKTREE', name: 'Linktree', disabled: true },
+  { value: 'SOCIAL', name: 'Social', disabled: true },
+  { value: 'TABLE', name: 'Table', disabled: true },
+  { value: 'TODO', name: 'To-do', disabled: true },
 ]
 
 export const matchListTypeOption = (value?: ListType) =>
