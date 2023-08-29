@@ -37,18 +37,18 @@ interface UnfilteredList {
 // const UNFILTERED_LIST_TEMPLATE = {
 //   name: 'string',
 //   description: 'string',
-//   headerImage: 'url',
-//   type: 'list type',
-//   listItems: [
-//     {
-//       description: 'string',
-//       title: 'string',
-//       image: 'url',
-//       quantity: 'number',
-//       price: 'number',
-//       url: 'url',
-//     },
-//   ],
+//   headerImage: 'string',
+//   type: 'string',
+//   listItems: [],
+//   //   {
+//   //     description: '',
+//   //     title: '',
+//   //     image: '',
+//   //     quantity: '',
+//   //     price: '',
+//   //     url: '',
+//   //   },
+//   // ],
 // }
 
 const client = new TextServiceClient({
@@ -65,7 +65,7 @@ export const generateText = (text: string) =>
     },
     // temperature: 0.8,
     // candidates: 2,
-    safetySettings: [],
+    // safetySettings: [],
   })
 
 const getListFromHTML = async (text: string) => {
@@ -125,14 +125,11 @@ const CATEGORY_PROMPT_KEY_MAP: { [prompt: string]: ListType } = {
   'back to school': 'SCHOOL',
 }
 
-const PROMPT = `Can you extract a list with a name, description, a header image, and a type from the following options: [${Object.keys(
+const PROMPT = `Can you create a list with a name, description, a header image, and a type from the following options: [${Object.keys(
   CATEGORY_PROMPT_KEY_MAP
-).join(
-  ', '
-)}], with a list of listItems that each include a title, description, url, price, quantity, and an image, all in a consistent JSON data structure, from the following text? `
-//  formatted like this example: \`\`\`json${JSON.stringify(
-//   UNFILTERED_LIST_TEMPLATE
-// )}\`\`\`
+).join(', ')}], formatted like this example: \`\`\`json${JSON.stringify(
+  {}
+)}\`\`\`, with a list of listItems that each include a title, description, url, price, quantity, and an image, all in a consistent JSON data structure, from the following text? `
 
 const NUMBER_OF_CHARACTERS = 100
 const popCharactersUntilValid = (original: string) => {
@@ -140,9 +137,7 @@ const popCharactersUntilValid = (original: string) => {
   for (let i = 0; i < NUMBER_OF_CHARACTERS; i++) {
     try {
       text = jsonrepair(text)
-      console.log('repaired')
       JSON.parse(text)
-      console.log('parsed')
 
       console.log(`\nStripped off ${i} characters\n`)
       return text
@@ -155,7 +150,7 @@ const popCharactersUntilValid = (original: string) => {
   throw new Error(`Failed to parse after popping off ${NUMBER_OF_CHARACTERS}`)
 }
 
-const PROMPT_MAX_SIZE = 1000
+const PROMPT_MAX_SIZE = 500
 
 export const convertLinkToList = async (link: string) => {
   const { body } = await gotScraping.get(link)
@@ -171,19 +166,22 @@ export const convertLinkToList = async (link: string) => {
     dom.window.document.body.innerHTML.replace(/<\!--.*?-->/gim, '')
 
   const html = [
-    ...[
+    [
       ...dom.window.document.querySelectorAll(
         'h1,h2,h3,h4,h5,h6,b,strong,em,hgroup'
       ),
-    ].map((element) => element.textContent),
-    ...[...dom.window.document.querySelectorAll('a')]
+    ]
+      .map((element) => element.textContent)
+      .join(' ')
+      .slice(0, PROMPT_MAX_SIZE),
+    [...dom.window.document.querySelectorAll('a')]
       .filter((element) => {
         const href = element.getAttribute('href')
         return !!href && !!href.match('http')
       })
       .map(
         (element) =>
-          [element.textContent] // , element.getAttribute('href')]
+          [element.textContent, element.getAttribute('href')]
             .filter(Boolean)
             .join(' ')
         // `[${
@@ -192,29 +190,37 @@ export const convertLinkToList = async (link: string) => {
         //   element.getAttribute('title') ||
         //   element.getAttribute('href')
         // }](${element.getAttribute('href')})`
-      ),
-    ...[...dom.window.document.querySelectorAll('img')]
-      .filter(
-        (element) => element.getAttribute('src') && element.getAttribute('alt')
       )
+      .join(' ')
+      .slice(0, PROMPT_MAX_SIZE),
+    [...dom.window.document.querySelectorAll('img')]
+      .filter((element) => element.getAttribute('src'))
       .map(
-        (element) => element.getAttribute('alt')
+        (element) =>
+          [element.getAttribute('alt'), element.getAttribute('src')]
+            .filter(Boolean)
+            .join(' ')
         // `![${
         //   element.getAttribute('alt') ||
         //   element.getAttribute('aria-label') ||
         //   ''
         // }](${element.getAttribute('src')})`
-      ),
-    ...[
+      )
+      .join(' ')
+      .slice(0, PROMPT_MAX_SIZE),
+    [
       ...dom.window.document.querySelectorAll(
         'div,span,p,q,blockquote,code,li,details,summary,small,article'
       ),
-    ].map((element) => element.textContent),
+    ]
+      .map((element) => element.textContent)
+      .join(' ')
+      .slice(0, PROMPT_MAX_SIZE),
   ]
     .join(' ')
     .replace(/\s\s+/g, ' ')
     .replace(/\s+/g, ' ')
-    .slice(0, PROMPT_MAX_SIZE)
+  // .slice(0, PROMPT_MAX_SIZE)
 
   let text = `${PROMPT}${html}`
   console.log('Prompt:', text)
@@ -254,7 +260,7 @@ export const convertLinkToList = async (link: string) => {
         description: unfiltered.description,
         listItems: (unfiltered.listItems || []).map((listItem, index) => ({
           url: listItem.url,
-          title: listItem.title || `Item ${index}`,
+          title: listItem.title || `Item ${index + 1}`,
           description: listItem.description,
           price: listItem.price ? +listItem.price : undefined,
           quantity: listItem.quantity ? +listItem.quantity : undefined,
