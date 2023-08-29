@@ -224,6 +224,7 @@ enum ListType {
   TABLE
   LINKTREE
   JOBS
+  SCHOOL
 }
 
 enum ListVisibility {

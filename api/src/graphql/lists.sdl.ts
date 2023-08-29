@@ -37,6 +37,7 @@ export const schema = gql`
     TABLE
     LINKTREE
     JOBS
+    SCHOOL
   }
 
   type Query {

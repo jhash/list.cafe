@@ -52,6 +52,7 @@ export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
   },
   { value: 'WEDDING', name: 'Wedding Registry', reservations: true },
   { value: 'BABY_SHOWER', name: 'Baby Shower', reservations: true },
+  { value: 'SCHOOL', name: 'Back to School', reservations: true },
   {
     value: 'GIFTS',
     name: 'Gift Registry',

@@ -11,7 +11,9 @@ import ReactCanvasConfetti from 'react-canvas-confetti'
 import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
 import { MetaTags } from '@redwoodjs/web'
+import { toast } from '@redwoodjs/web/dist/toast'
 
+import { matchListTypeOption } from 'src/components/DashboardList/DashboardList'
 import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import Loading from 'src/components/Loading'
@@ -22,6 +24,17 @@ import { api } from 'src/lib/api'
 export type DigestedItem = Omit<CreateListItemInput, 'listId'>
 export type DigestedList = CreateListInput & {
   listItems: DigestedItem[]
+  headerImage?: string
+}
+
+const httpsEverywhere = (text?: string) => {
+  const url = (text || '').trim()
+
+  if (!url.match(/https?/g)) {
+    return `https://${url}`
+  }
+
+  return url
 }
 
 const HomePage = () => {
@@ -33,15 +46,7 @@ const HomePage = () => {
     event?.preventDefault()
     event?.stopPropagation()
 
-    let url = (text || firstListItemRef.current.value || '').trim()
-
-    if (!url) {
-      return
-    }
-
-    if (!url.match('https')) {
-      url = `https://${url}`
-    }
+    const url = httpsEverywhere(text || firstListItemRef.current.value)
 
     setDigestingLink(true)
 
@@ -59,7 +64,7 @@ const HomePage = () => {
         setDigestedList(data)
       }
     } catch (error) {
-      //
+      toast.error('We failed to extract a list. Please try another link')
     }
 
     setDigestingLink(false)
@@ -124,57 +129,82 @@ const HomePage = () => {
               <div className="flex flex-col gap-y-3">
                 {!!digestedList.name && (
                   <div className="flex flex-col gap-y-2">
-                    <SectionTitle>List Name</SectionTitle>
+                    <SectionTitle>Name</SectionTitle>
                     {digestedList.name}
                   </div>
                 )}
                 {!!digestedList.description && (
                   <div className="flex flex-col gap-y-2">
-                    <SectionTitle>List Description</SectionTitle>
+                    <SectionTitle>Description</SectionTitle>
                     {digestedList.description}
                   </div>
                 )}
                 {!!digestedList.type && (
                   <div className="flex flex-col gap-y-2">
-                    <SectionTitle>List Type</SectionTitle>
-                    {digestedList.type}
+                    <SectionTitle>Type</SectionTitle>
+                    {matchListTypeOption(digestedList.type)?.name ||
+                      digestedList.type}
+                  </div>
+                )}
+                {!!digestedList.headerImage && (
+                  <div className="flex flex-col gap-y-2">
+                    <SectionTitle>Image</SectionTitle>
+                    <img
+                      style={{ maxWidth: 150 }}
+                      src={digestedList.headerImage}
+                      alt={digestedList.name}
+                    />
                   </div>
                 )}
                 {!!digestedList.listItems?.length && (
                   <div className="flex flex-col gap-y-3 divide-y">
                     <SectionTitle>Items</SectionTitle>
                     {digestedList.listItems.map(
-                      ({ url, title, description, images }, index) => (
-                        <ExternalLink
-                          href={url}
-                          className="flex flex-col gap-y-3 py-3"
-                          key={index}
-                        >
-                          {!!title && (
-                            <div className="flex flex-col gap-y-2">
-                              <SectionTitle>Title</SectionTitle>
-                              {title}
-                            </div>
-                          )}
-                          {!!description && (
-                            <div className="flex flex-col gap-y-2">
-                              <SectionTitle>Description</SectionTitle>
-                              {description}
-                            </div>
-                          )}
-                          {!!images?.length && (
-                            <div
-                              className="flex flex-col gap-y-2"
-                              style={{ maxWidth: 150 }}
-                            >
-                              <SectionTitle>Images</SectionTitle>
-                              {images?.map(({ url, alt }, index) => (
-                                <img key={index} src={url} alt={alt} />
-                              ))}
-                            </div>
-                          )}
-                        </ExternalLink>
-                      )
+                      ({ url, title, description, images }, index) => {
+                        const inner = (
+                          <>
+                            {!!title && (
+                              <div className="flex flex-col gap-y-2">
+                                <SectionTitle>Title</SectionTitle>
+                                {title}
+                              </div>
+                            )}
+                            {!!description && (
+                              <div className="flex flex-col gap-y-2">
+                                <SectionTitle>Description</SectionTitle>
+                                {description}
+                              </div>
+                            )}
+                            {!!images?.length && (
+                              <div
+                                className="flex flex-col gap-y-2"
+                                style={{ maxWidth: 150 }}
+                              >
+                                <SectionTitle>Images</SectionTitle>
+                                {images?.map(({ url, alt }, index) => (
+                                  <img key={index} src={url} alt={alt} />
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        )
+                        return url ? (
+                          <ExternalLink
+                            href={httpsEverywhere(url)}
+                            className="flex flex-col gap-y-3 py-3"
+                            key={index}
+                          >
+                            {inner}
+                          </ExternalLink>
+                        ) : (
+                          <div
+                            className="flex flex-col gap-y-3 py-3"
+                            key={index}
+                          >
+                            {inner}
+                          </div>
+                        )
+                      }
                     )}
                   </div>
                 )}

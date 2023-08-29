@@ -32,6 +32,7 @@ export type DigestedItem = Omit<CreateListItemInput, 'listId'>
 export type DigestedList = CreateListInput & {
   listItems: DigestedItem[]
   link?: string
+  headerImage?: string
 }
 export type DigestHandler = (link: string) => Promise<DigestedList>
 const digest: DigestHandler = async (link: string) => {
@@ -42,18 +43,7 @@ const digest: DigestHandler = async (link: string) => {
   //   return await fetchAmazonWishlistLink(link)
   // }
 
-  const listItems: DigestedItem[] = []
-
-  const text = await convertLinkToList(link)
-
-  const list: DigestedList = {
-    listItems,
-    name: "Bard's list",
-    type: 'WISHLIST',
-    link: text,
-  }
-
-  return list
+  return await convertLinkToList(link)
 }
 export const handler = async (event: APIGatewayEvent, _context: Context) => {
   logger.info(`${event.httpMethod} ${event.path}: digestLink function`)

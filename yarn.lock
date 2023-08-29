@@ -7155,6 +7155,7 @@ __metadata:
     google-auth-library: ^9.0.0
     got-scraping: ^3.2.15
     jsdom: ^22.1.0
+    jsonrepair: ^3.2.0
     prisma: ^5.2.0
     resend: ^1.0.0
   languageName: unknown
@@ -14982,6 +14983,15 @@ __metadata:
   version: 0.0.1
   resolution: "jsonify@npm:0.0.1"
   checksum: 7f5499cdd59a0967ed35bda48b7cec43d850bbc8fb955cdd3a1717bb0efadbe300724d5646de765bb7a99fc1c3ab06eb80d93503c6faaf99b4ff50a3326692f6
+  languageName: node
+  linkType: hard
+
+"jsonrepair@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "jsonrepair@npm:3.2.0"
+  bin:
+    jsonrepair: bin/cli.js
+  checksum: 4d45c27c5fb57e7ad07bf99c7d431d5045b70d9699a9f580d554f31ebd1b955c8e737b4ed4cc6f60db6b7994985d71f47edd3d27ea0d580a351343ebb76dfe65
   languageName: node
   linkType: hard
 
