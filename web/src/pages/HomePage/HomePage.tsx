@@ -27,7 +27,7 @@ export type DigestedList = CreateListInput & {
 
 const HomePage = () => {
   const [digestingLink, setDigestingLink] = useState<boolean>(false)
-  const [digestedList, setDigestedList] = useState<DigestedList>()
+  const [digestedList, setDigestedList] = useState<DigestedList | undefined>()
   const firstListItemRef = useRef<HTMLInputElement>(null)
 
   const { height, width } = useWindowSize()
@@ -143,7 +143,7 @@ const HomePage = () => {
                     {digestedList.type}
                   </div>
                 )}
-                {!!digestedList.listItems.length && (
+                {!!digestedList.listItems?.length && (
                   <div className="flex flex-col gap-y-3 divide-y">
                     <SectionTitle>Items</SectionTitle>
                     {digestedList.listItems.map(

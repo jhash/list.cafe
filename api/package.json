@@ -3,11 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@google-ai/generativelanguage": "^1.0.0",
     "@prisma/client": "^5.2.0",
     "@redwoodjs/api": "6.1.0",
     "@redwoodjs/auth-dbauth-api": "6.1.0",
     "@redwoodjs/graphql-server": "6.1.0",
     "@simplewebauthn/server": "^7.4.0",
+    "google-auth-library": "^9.0.0",
     "got-scraping": "^3.2.15",
     "jsdom": "^22.1.0",
     "resend": "^1.0.0"

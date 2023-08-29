@@ -1,14 +1,15 @@
 import type { APIGatewayEvent, Context } from 'aws-lambda'
 import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
+import { convertLinkToList } from 'src/lib/bard'
 import { logger } from 'src/lib/logger'
 
-import {
-  AMAZON_PRODUCT_REGEX,
-  AMAZON_WISHLIST_REGEX,
-  fetchAmazonProductLink,
-  fetchAmazonWishlistLink,
-} from '../../lib/amazon'
+// import {
+//   AMAZON_PRODUCT_REGEX,
+//   AMAZON_WISHLIST_REGEX,
+//   fetchAmazonProductLink,
+//   fetchAmazonWishlistLink,
+// } from '../../lib/amazon'
 
 /**
  * The handler function is your code that processes http request events.
@@ -34,12 +35,25 @@ export type DigestedList = CreateListInput & {
 }
 export type DigestHandler = (link: string) => Promise<DigestedList>
 const digest: DigestHandler = async (link: string) => {
-  if (link.match(AMAZON_PRODUCT_REGEX)) {
-    return await fetchAmazonProductLink(link)
+  // if (link.match(AMAZON_PRODUCT_REGEX)) {
+  //   return await fetchAmazonProductLink(link)
+  // }
+  // if (link.match(AMAZON_WISHLIST_REGEX)) {
+  //   return await fetchAmazonWishlistLink(link)
+  // }
+
+  const listItems: DigestedItem[] = []
+
+  const text = await convertLinkToList(link)
+
+  const list: DigestedList = {
+    listItems,
+    name: "Bard's list",
+    type: 'WISHLIST',
+    link: text,
   }
-  if (link.match(AMAZON_WISHLIST_REGEX)) {
-    return await fetchAmazonWishlistLink(link)
-  }
+
+  return list
 }
 export const handler = async (event: APIGatewayEvent, _context: Context) => {
   logger.info(`${event.httpMethod} ${event.path}: digestLink function`)

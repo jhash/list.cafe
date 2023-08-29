@@ -13,13 +13,14 @@
     "DEVELOPER_EMAIL",
     "RESEND_API_KEY",
     "AMAZON_ASSOCIATE_ID",
-    "NODE_ENV"
+    "NODE_ENV",
+    "GOOGLE_MAKERSUITE_API_KEY"
     # Add any ENV vars that should be available to the web side to this array
     # See https://redwoodjs.com/docs/environment-variables#web
   ]
 [api]
   port = 8913
 [browser]
-  open = true
+  open = false
 [notifications]
   versionUpdates = ["latest"]
