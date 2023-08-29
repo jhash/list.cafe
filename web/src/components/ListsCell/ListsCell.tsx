@@ -4,9 +4,9 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Spinner from 'src/components/Loading'
+import { matchListTypeOption } from 'src/lib/lists'
 
 import { Badge } from '../Badge/Badge'
-import { matchListTypeOption } from '../DashboardList/DashboardList'
 
 export const QUERY = gql`
   query ListsQuery {

@@ -10,16 +10,17 @@ import { Heart } from 'lucide-react'
 import ReactCanvasConfetti from 'react-canvas-confetti'
 import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
+import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 import { MetaTags } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
-import { matchListTypeOption } from 'src/components/DashboardList/DashboardList'
 import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import Loading from 'src/components/Loading'
 import RotatingText from 'src/components/RotatingText/RotatingText'
 import SectionTitle from 'src/components/SectionTitle/SectionTitle'
 import { api } from 'src/lib/api'
+import { matchListTypeOption } from 'src/lib/lists'
 
 export type DigestedItem = Omit<CreateListItemInput, 'listId'>
 export type DigestedList = CreateListInput & {
@@ -101,14 +102,16 @@ const HomePage = () => {
   return (
     <>
       <MetaTags title="Home" description="List all of the things" />
-      <div className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-center justify-center">
-        <ReactCanvasConfetti
-          fire={digestingLink}
-          height={window.innerHeight}
-          width={window.innerWidth}
-          className="sm:-translate-x-8"
-        />
-      </div>
+      <BrowserOnly>
+        <div className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-center justify-center">
+          <ReactCanvasConfetti
+            fire={digestingLink}
+            height={window.innerHeight}
+            width={window.innerWidth}
+            className="sm:-translate-x-8"
+          />
+        </div>
+      </BrowserOnly>
       <div className="flex flex-grow select-none flex-col items-center justify-center">
         <div className="flex w-full max-w-2xl flex-col gap-8">
           <div

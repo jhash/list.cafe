@@ -16,8 +16,8 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
 import { useAuth } from 'src/auth'
+import { reservationsEnabled } from 'src/lib/lists'
 
-import { reservationsEnabled } from '../DashboardList/DashboardList'
 import ExternalLink from '../ExternalLink/ExternalLink'
 import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from '../ListItemsCell'
