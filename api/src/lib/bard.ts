@@ -125,11 +125,11 @@ const CATEGORY_PROMPT_KEY_MAP: { [prompt: string]: ListType } = {
   'back to school': 'SCHOOL',
 }
 
-const PROMPT = `Can you create a list with a name, description, a header image, and a type from the following options: [${Object.keys(
+const PROMPT = `Can you create a list with a name, description, and a type from the following options: [${Object.keys(
   CATEGORY_PROMPT_KEY_MAP
 ).join(', ')}], formatted like this example: \`\`\`json${JSON.stringify(
   {}
-)}\`\`\`, with a list of listItems that each include a title, description, url, price, quantity, and an image, all in a consistent JSON data structure, from the following text? Please don't include any urls that might be invalid, it's preferred that you return undefined in those cases. Here is the text:  `
+)}\`\`\`, with a list of listItems that each include a title, description, url, price, and quantity, all in a consistent JSON data structure, from the following text? `
 
 const NUMBER_OF_CHARACTERS = 100
 const popCharactersUntilValid = (original: string) => {
@@ -166,7 +166,7 @@ const httpsEverywhere = (text?: string) => {
   return url
 }
 
-const validateImageUrl = async (url: string) => {
+const validateUrl = async (url: string) => {
   const httpsUrl = new URL(httpsEverywhere(url))
   const result = await gotScraping.get(httpsUrl)
   console.log(url, JSON.stringify(result, null, 2))
@@ -174,7 +174,7 @@ const validateImageUrl = async (url: string) => {
     throw new Error('Nothing returned for image url. Deleting image')
   }
   if (result.redirectUrls?.length) {
-    throw new Error('Image returned redirect urls (first?)')
+    throw new Error('URL get returned redirect urls (first?)')
   }
   return true
 }
@@ -206,7 +206,7 @@ const convertPotentialJSONToList = async (original: string) => {
 
     if (unfiltered.headerImage) {
       try {
-        await validateImageUrl(unfiltered.headerImage)
+        await validateUrl(unfiltered.headerImage)
       } catch (error) {
         console.log('Failed to validate header image')
         unfiltered.headerImage = undefined
@@ -220,9 +220,17 @@ const convertPotentialJSONToList = async (original: string) => {
         (unfiltered.listItems || []).map(async (listItem) => {
           if (listItem.image) {
             try {
-              await validateImageUrl(listItem.image)
+              await validateUrl(listItem.image)
             } catch (error) {
               listItem.image = undefined
+            }
+          }
+
+          if (listItem.url) {
+            try {
+              await validateUrl(listItem.url)
+            } catch (error) {
+              listItem.url = undefined
             }
           }
 
@@ -303,21 +311,21 @@ export const convertLinkToList = async (link: string) => {
       )
       .join(' ')
       .slice(0, PROMPT_MAX_SIZE),
-    [...dom.window.document.querySelectorAll('img')]
-      .filter((element) => element.getAttribute('src'))
-      .map(
-        (element) =>
-          [element.getAttribute('alt'), element.getAttribute('src')]
-            .filter(Boolean)
-            .join(' ')
-        // `![${
-        //   element.getAttribute('alt') ||
-        //   element.getAttribute('aria-label') ||
-        //   ''
-        // }](${element.getAttribute('src')})`
-      )
-      .join(' ')
-      .slice(0, PROMPT_MAX_SIZE),
+    // [...dom.window.document.querySelectorAll('img')]
+    //   .filter((element) => element.getAttribute('src'))
+    //   .map(
+    //     (element) =>
+    //       [element.getAttribute('alt'), element.getAttribute('src')]
+    //         .filter(Boolean)
+    //         .join(' ')
+    //     // `![${
+    //     //   element.getAttribute('alt') ||
+    //     //   element.getAttribute('aria-label') ||
+    //     //   ''
+    //     // }](${element.getAttribute('src')})`
+    //   )
+    //   .join(' ')
+    //   .slice(0, PROMPT_MAX_SIZE),
     [
       ...dom.window.document.querySelectorAll(
         'div,span,p,q,blockquote,code,li,details,summary,small,article'
