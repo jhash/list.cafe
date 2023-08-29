@@ -2,7 +2,6 @@ import './SidebarLayout.scss'
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-import { useWindowSize } from '@uidotdev/usehooks'
 import classNames from 'classnames'
 import { PanelLeft, PanelLeftClose } from 'lucide-react'
 
@@ -24,7 +23,6 @@ type SidebarLayoutProps = React.HTMLProps<HTMLDivElement> & {
   Sidebar: SidebarType
 }
 const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
-  const { width } = useWindowSize()
   const { pathname } = useLocation()
 
   const [state, setState] = useState<{ open: boolean; closing: boolean }>({
@@ -63,14 +61,14 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
   }
 
   useEffect(() => {
-    if (!width || !open || width >= 768) {
+    if (!window.innerWidth || !open || window.innerWidth >= 768) {
       return
     }
 
     close()
     setHovering(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [width, pathname])
+  }, [window.innerWidth, pathname])
 
   useEffect(() => {
     setHovering(false)
