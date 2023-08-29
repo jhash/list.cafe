@@ -6,13 +6,13 @@ import {
   useState,
 } from 'react'
 
-import { Heart } from 'lucide-react'
+import { Heart, Wand2 } from 'lucide-react'
 import ReactCanvasConfetti from 'react-canvas-confetti'
 import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 import { MetaTags } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/dist/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
@@ -31,8 +31,8 @@ export type DigestedList = CreateListInput & {
 const httpsEverywhere = (text?: string) => {
   const url = (text || '').trim()
 
-  if (url.match(/\s/g)) {
-    return url
+  if (url.match(/\s/g) || !url.match(/\./g)) {
+    throw new Error('Not a url')
   }
 
   if (!url.match(/https?/g)) {
@@ -47,17 +47,19 @@ const HomePage = () => {
   const [digestedList, setDigestedList] = useState<DigestedList | undefined>()
   const firstListItemRef = useRef<HTMLInputElement>(null)
 
+  const listType = matchListTypeOption(digestedList?.type)
+
   const onSubmit = async (event?: FormEvent, text?: string) => {
     event?.preventDefault()
     event?.stopPropagation()
 
     const prompt = text || firstListItemRef.current.value
 
-    const url = httpsEverywhere(prompt)
-
     setDigestingLink(true)
 
     try {
+      const url = httpsEverywhere(prompt)
+
       // This should fail if not valid
       const link = new URL(url)
 
@@ -68,6 +70,7 @@ const HomePage = () => {
       })
 
       if (data) {
+        window.localStorage.setItem('listDraft', JSON.stringify(data))
         setDigestedList(data)
       }
     } catch (error) {
@@ -79,6 +82,7 @@ const HomePage = () => {
         })
 
         if (data) {
+          window.localStorage.setItem('listDraft', JSON.stringify(data))
           setDigestedList(data)
         }
       } catch (error) {
@@ -114,39 +118,42 @@ const HomePage = () => {
       </BrowserOnly>
       <div className="flex flex-grow select-none flex-col items-center justify-center">
         <div className="flex w-full max-w-2xl flex-col gap-8">
-          <div
-            className="hidden flex-wrap items-center gap-x-6 whitespace-normal font-bricolageGrotesque text-9xl sm:whitespace-nowrap tall:flex"
-            // style={{ textShadow: '3px 5px 5px rgb(0,0,0,0.2)' }}
-          >
-            We{' '}
-            <Heart
-              // filter={'drop-shadow(3px 5px 5px rgb(0 0 0 / 0.2))'}
-              className="fill-purple-600"
-              strokeOpacity={0.05}
-              strokeWidth={0.75}
-              size="6rem"
-            />{' '}
-            {/* <Heart className="fill-purple-700 stroke-purple-700" size="6rem" />{' '} */}
-            Lists
-          </div>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-normal font-serif text-5xl leading-tight">
-            Share your
-            <RotatingText>
-              <span className="text-purple-600">Wishlist</span>
-              <span className="text-orange-500">Gift Registry</span>
-              <span className="text-lime-400">Top 10 List</span>
-              <span className="text-yellow-500">Job List</span>
-              <span className="text-pink-500">Favorites</span>
-            </RotatingText>
-            with the world
-          </div>
+          {!digestingLink && (
+            <>
+              <div
+                className="hidden flex-wrap items-center gap-x-6 whitespace-normal font-bricolageGrotesque text-9xl sm:whitespace-nowrap tall:flex"
+                // style={{ textShadow: '3px 5px 5px rgb(0,0,0,0.2)' }}
+              >
+                We{' '}
+                <Heart
+                  // filter={'drop-shadow(3px 5px 5px rgb(0 0 0 / 0.2))'}
+                  className="fill-purple-600"
+                  strokeOpacity={0.05}
+                  strokeWidth={0.75}
+                  size="6rem"
+                />{' '}
+                {/* <Heart className="fill-purple-700 stroke-purple-700" size="6rem" />{' '} */}
+                Lists
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-normal font-serif text-5xl leading-tight">
+                Share your
+                <RotatingText>
+                  <span className="text-purple-600">Wishlist</span>
+                  <span className="text-orange-500">Gift Registry</span>
+                  <span className="text-lime-400">Top 10 List</span>
+                  <span className="text-yellow-500">Job List</span>
+                  <span className="text-pink-500">Favorites</span>
+                </RotatingText>
+                with the world
+              </div>
+            </>
+          )}
           <form
-            className="flex flex-grow flex-col gap-7 p-1"
+            className="flex flex-grow select-text flex-col gap-7 p-1"
             onSubmit={onSubmit}
           >
-            {digestingLink ? (
-              <Loading />
-            ) : digestedList ? (
+            {digestingLink && <Loading />}
+            {digestedList ? (
               <div className="flex flex-col gap-y-3">
                 {!!digestedList.name && (
                   <div className="flex flex-col gap-y-2">
@@ -163,8 +170,7 @@ const HomePage = () => {
                 {!!digestedList.type && (
                   <div className="flex flex-col gap-y-2">
                     <SectionTitle>Type</SectionTitle>
-                    {matchListTypeOption(digestedList.type)?.name ||
-                      digestedList.type}
+                    {listType?.name || digestedList.type}
                   </div>
                 )}
                 {!!digestedList.headerImage && (
@@ -181,7 +187,10 @@ const HomePage = () => {
                   <div className="flex flex-col gap-y-3 divide-y">
                     <SectionTitle>Items</SectionTitle>
                     {digestedList.listItems.map(
-                      ({ url, title, description, images }, index) => {
+                      (
+                        { url, title, description, images, quantity, price },
+                        index
+                      ) => {
                         const inner = (
                           <>
                             {!!title && (
@@ -194,6 +203,17 @@ const HomePage = () => {
                               <div className="flex flex-col gap-y-2">
                                 <SectionTitle>Description</SectionTitle>
                                 {description}
+                              </div>
+                            )}
+                            {!!listType?.reservations && !!quantity && (
+                              <div className="flex flex-col gap-y-2">
+                                <SectionTitle>Quantity</SectionTitle>
+                                {quantity}
+                              </div>
+                            )}
+                            {!!price && (
+                              <div className="flex flex-col gap-y-2">
+                                <SectionTitle>Price</SectionTitle>${price}
                               </div>
                             )}
                             {!!images?.length && (
@@ -234,22 +254,26 @@ const HomePage = () => {
               <div className="flex flex-grow flex-col">
                 <label
                   htmlFor="list-item-1"
-                  className="label px-0.5 font-medium opacity-90"
+                  className="label px-1.5 font-medium opacity-90"
                 >
                   <span className="label-text text-lg">
-                    Ask a question or paste a link here:
+                    Ask a question, enter a prompt, or paste a link here:
                   </span>
                 </label>
-                <input
-                  type="text"
-                  className="input input-ghost input-lg flex flex-grow animate-pulse rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-0.5 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
-                  // TODO: run through a list of these
-                  placeholder="Can you make me a housewarming wishlist?"
-                  ref={firstListItemRef}
-                  name="list-item-1"
-                  id="list-item-1"
-                  onPaste={onPaste}
-                />
+                <div className="relative flex animate-pulse items-center">
+                  <input
+                    type="text"
+                    className="input input-ghost input-lg flex flex-grow rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-1.5 pr-12 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
+                    // TODO: run through a list of these
+                    placeholder="Start my wedding registry"
+                    ref={firstListItemRef}
+                    name="list-item-1"
+                    id="list-item-1"
+                    onPaste={onPaste}
+                    disabled={digestingLink}
+                  />
+                  <Wand2 className="absolute right-3 animate-bounce text-gray-400" />
+                </div>
               </div>
             )}
             <ListFadeOut />

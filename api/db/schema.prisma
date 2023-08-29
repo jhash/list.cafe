@@ -225,6 +225,8 @@ enum ListType {
   LINKTREE
   JOBS
   SCHOOL
+  SHOPPING
+  GROCERIES
 }
 
 enum ListVisibility {

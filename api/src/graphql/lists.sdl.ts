@@ -38,6 +38,8 @@ export const schema = gql`
     LINKTREE
     JOBS
     SCHOOL
+    SHOPPING
+    GROCERIES
   }
 
   type Query {

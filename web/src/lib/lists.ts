@@ -1,7 +1,7 @@
 import { ListType } from 'types/graphql'
 
 export interface ListTypeOption {
-  value: string
+  value: ListType
   name: string
   description?: string
   reservations?: boolean
@@ -18,6 +18,8 @@ export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
   { value: 'WEDDING', name: 'Wedding Registry', reservations: true },
   { value: 'BABY_SHOWER', name: 'Baby Shower', reservations: true },
   { value: 'SCHOOL', name: 'Back to School', reservations: true },
+  { value: 'SHOPPING', name: 'Shopping', reservations: true },
+  { value: 'GROCERIES', name: 'Groceries', reservations: true },
   {
     value: 'GIFTS',
     name: 'Gift Registry',

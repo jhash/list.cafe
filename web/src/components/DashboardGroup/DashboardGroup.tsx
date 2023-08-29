@@ -8,7 +8,7 @@ import { FindGroupQuery, GroupRole, GroupType } from 'types/graphql'
 import { Controller, Form } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/dist/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
 

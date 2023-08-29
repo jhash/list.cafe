@@ -68,11 +68,11 @@ export const generateText = (text: string) =>
     // safetySettings: [],
   })
 
-const getListFromHTML = async (text: string) => {
+const getListFromPrompt = async (text: string) => {
   const result = ((await generateText(text)) || [{ candidates: [] }]) as [
     { candidates: GoogleTextMatchCandidate[] }
   ]
-  // console.log(JSON.stringify(result, null, 2))
+  console.log(JSON.stringify(result, null, 2))
 
   const [first] = result
 
@@ -100,7 +100,7 @@ const GOOGLE_BYTE_LIMIT = 48000
 
 //         console.log(slice)
 
-//         return getListFromHTML(slice)
+//         return getListFromPrompt(slice)
 //       })
 //     )
 //   ).join('\n')
@@ -123,6 +123,8 @@ const CATEGORY_PROMPT_KEY_MAP: { [prompt: string]: ListType } = {
   'wedding registry': 'WEDDING',
   wishlist: 'WISHLIST',
   'back to school': 'SCHOOL',
+  groceries: 'GROCERIES',
+  shopping: 'SHOPPING',
 }
 
 const PROMPT = `Can you create a list with a name, description, and a type from the following options: [${Object.keys(
@@ -353,7 +355,7 @@ export const convertLinkToList = async (link: string) => {
   }
   // text = await splitAndGetListFromHTML(size, html)
 
-  text = await getListFromHTML(text)
+  text = await getListFromPrompt(text)
 
   const list = await convertPotentialJSONToList(text)
 
@@ -365,7 +367,7 @@ export const convertLinkToList = async (link: string) => {
 }
 
 export const convertPromptToList = async (prompt: string) => {
-  const text = await getListFromHTML(`${PROMPT}${prompt}`)
+  const text = await getListFromPrompt(`${PROMPT}${prompt}`)
 
   return convertPotentialJSONToList(text)
 }
