@@ -155,6 +155,7 @@ export const createListMembership: MutationResolvers['createListMembership'] =
 
       const invite = invites.find((invite) => invite.status === 'PENDING')
 
+      // TODO: include a verification link
       sendEmail({
         to: email,
         subject: `${

@@ -1,8 +1,15 @@
 import type { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import { isStrongPassword } from 'validator'
 
-import { DbAuthHandler, DbAuthHandlerOptions } from '@redwoodjs/auth-dbauth-api'
+import {
+  DbAuthHandler,
+  DbAuthHandlerOptions,
+  PasswordValidationError,
+} from '@redwoodjs/auth-dbauth-api'
 
 import { db } from 'src/lib/db'
+import { sendEmail } from 'src/lib/email'
+import { LIST_CAFE_URL } from 'src/lib/url'
 import { createUser } from 'src/services/users/users'
 
 export const handler = async (
@@ -110,7 +117,7 @@ export const handler = async (
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
     handler: async ({ username, hashedPassword, salt, userAttributes }) => {
-      return await createUser({
+      const user = await createUser({
         input: {
           email: username,
           hashedPassword,
@@ -118,12 +125,36 @@ export const handler = async (
           person: { name: userAttributes.name, email: username },
         },
       })
+
+      // TODO: move to a job
+      const name = user.person?.name || userAttributes.name
+      const email = user.person?.email || username
+
+      // TODO: include a verification link
+      sendEmail({
+        to: email,
+        subject: `Welcome to list.cafe!`,
+        html: `${
+          name ? `<p>Hi ${name},</p>` : ''
+        }<h1><strong>Welcome to list.cafe!<strong></h1>
+        <h2>We are sincerely happy to have you on board.</h2>
+        <p><a href="${LIST_CAFE_URL}/dashboard">Get back to your lists here</a></p>`,
+      })
+
+      return user
     },
 
-    // Include any format checks for password here. Return `true` if the
-    // password is valid, otherwise throw a `PasswordValidationError`.
-    // Import the error along with `DbAuthHandler` from `@redwoodjs/api` above.
-    passwordValidation: (_password) => {
+    passwordValidation: (password) => {
+      try {
+        if (!isStrongPassword(password)) {
+          throw new Error('Password is not strong')
+        }
+      } catch (error) {
+        throw new PasswordValidationError(
+          'Password must be at least 8 characters long, with at least 1 lowercase, uppercase, number, and special character'
+        )
+      }
+
       return true
     },
 

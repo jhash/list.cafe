@@ -312,7 +312,12 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
               name="user.person.email"
               type="email"
               label="Email"
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'Email is required',
+                },
+              }}
             />
             <FormItem name="user.person.name" type="text" label="Name" />
           </div>

@@ -1,8 +1,8 @@
 export const schema = gql`
   type List {
     id: Int!
-    createdAt: DateTime!
-    updatedAt: DateTime!
+    createdAt: DateTime
+    updatedAt: DateTime
     name: String!
     description: String
     type: ListType!

@@ -240,7 +240,12 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
               defaultValue={name}
               editing={editing}
               label={<SectionTitle>Name</SectionTitle>}
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'Name is required',
+                },
+              }}
             />
             <FormItem
               disabled={loading}
@@ -248,7 +253,12 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
               defaultValue={identifier?.id}
               editing={editing}
               label={<SectionTitle>ID</SectionTitle>}
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'An ID is required',
+                },
+              }}
             >
               <Controller
                 name="identifier"

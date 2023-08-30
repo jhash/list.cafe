@@ -78,6 +78,7 @@ export const createReservation: MutationResolvers['createReservation'] =
 
       const invite = invites?.[0]
 
+      // TODO: include a verification link
       sendEmail({
         to: email,
         subject: `You reserved ${reservation.listItem.title} from the list ${reservation.listItem.list.name} on list.cafe`,

@@ -13,7 +13,8 @@
     "got-scraping": "^3.2.15",
     "jsdom": "^22.1.0",
     "jsonrepair": "^3.2.0",
-    "resend": "^1.0.0"
+    "resend": "^1.0.0",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "prisma": "^5.2.0"

@@ -94,8 +94,13 @@ const FormInput = forwardRef<FormInputElement, FormInputProps>(
             defaultValue,
             ...props,
             className: classNames(
-              'input input-sm rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500 leading-normal',
-              type === 'textarea' && 'py-1'
+              'rounded-md border border-gray-300 border-opacity-100 focus:outline-primary dark:border-gray-500 leading-normal',
+              type === 'textarea' && 'py-1',
+              type === 'textarea'
+                ? 'textarea textarea-sm'
+                : type === 'select'
+                ? 'select select-sm'
+                : 'input input-sm'
             ),
             errorClassName: 'input input-sm input-error rounded-md',
             ...controllerProps,

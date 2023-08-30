@@ -37,6 +37,9 @@ export const createUser: MutationResolvers['createUser'] = ({ input }) => {
         },
       },
     },
+    include: {
+      person: true,
+    },
   })
 }
 

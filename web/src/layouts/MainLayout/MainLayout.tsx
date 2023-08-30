@@ -20,7 +20,7 @@ const MainLayout = ({ children }) => {
         containerClassName="min-w-screen max-w-screen sm:min-w-auto sm:max-w-auto z-50"
         toastOptions={{
           className:
-            'min-w-[12rem] text-left justify-start h-11 py-0 flex items-center pr-2 z-50',
+            'min-w-[12rem] text-left justify-start min-h-12 py-0 flex items-center pr-2 z-50',
           duration: 3000,
           position: 'top-left',
         }}

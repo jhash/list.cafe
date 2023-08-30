@@ -9,7 +9,6 @@ import {
   CreateListItemInput,
   CreateListMembershipMutation,
   FindListQuery,
-  ListItem,
   ListItemsQuery,
   ListMembership,
   ListRole,
@@ -103,6 +102,7 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
   const { name, description, identifier, type, visibility } = list ||
     draftList || {
       type: 'WISHLIST',
+      visibility: 'PRIVATE',
     }
 
   useEffect(() => {
@@ -150,7 +150,9 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
 
   const [editing, setEditing] = useState<boolean>(!id)
 
-  const [listItem, setListItem] = useState<Partial<ListItem> | undefined>()
+  const [listItem, setListItem] = useState<
+    Partial<ListItemsQuery['listItems'][number]> | undefined
+  >()
   const resetListItem = () => {
     setListItem(undefined)
   }
@@ -161,6 +163,10 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
       listId: id,
       url: '',
       quantity: 1,
+      list: {
+        // TODO: this should be the current value ? or separate screens
+        type: list?.type,
+      },
       __typename: 'ListItem',
     })
   }
@@ -218,7 +224,7 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
         toast.success('List created')
         setEditing(false)
         if (data?.createList) {
-          navigate(routes.list({ id: data?.createList.id }))
+          setImmediate(() => navigate(routes.list({ id: data?.createList.id })))
         }
       },
       onError: (error) => {
@@ -384,7 +390,12 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               name="username"
               type="email"
               label="Email"
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'Email is required',
+                },
+              }}
               ref={emailRef}
             />
             <FormItem name="name" type="text" label="Name" />
@@ -392,7 +403,12 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               name="password"
               type="password"
               label="Password"
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'Name is required',
+                },
+              }}
             />
             <button
               className="btn btn-secondary mt-4 flex min-h-0 w-full flex-grow items-center justify-center self-start rounded p-0 px-4"
@@ -424,7 +440,12 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               type="email"
               label="Email"
               editing
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'Email is required',
+                },
+              }}
               ref={emailRef}
             />
             <FormItem name="name" type="text" label="Name" editing />
@@ -434,7 +455,12 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               label="Access"
               defaultValue={listMembership.listRole}
               editing
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'Access level is required',
+                },
+              }}
               options={LIST_ROLE_TYPES}
             />
             {!!createListMembershipError && (
@@ -512,7 +538,12 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               defaultValue={name}
               editing={editing}
               label={<SectionTitle>Name</SectionTitle>}
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'Name is required',
+                },
+              }}
             />
             <FormItem
               disabled={loading}
@@ -520,7 +551,12 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               defaultValue={identifier?.id}
               editing={editing}
               label={<SectionTitle>ID</SectionTitle>}
-              validation={{ required: true }}
+              validation={{
+                required: {
+                  value: true,
+                  message: 'An ID is required',
+                },
+              }}
             >
               <Controller
                 name="identifier"
@@ -536,6 +572,7 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               />
             </FormItem>
             <FormItem
+              type="textarea"
               disabled={loading}
               name="description"
               defaultValue={description}

@@ -15,13 +15,10 @@ import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import Loading from 'src/components/Loading'
 import RotatingText from 'src/components/RotatingText/RotatingText'
-import SectionTitle from 'src/components/SectionTitle/SectionTitle'
 import { api } from 'src/lib/api'
-import { matchListTypeOption } from 'src/lib/lists'
 
 export type DigestedItem = Omit<CreateListItemInput, 'listId'>
 export type DigestedList = CreateListInput & {
@@ -45,10 +42,7 @@ const httpsEverywhere = (text?: string) => {
 
 const HomePage = () => {
   const [digestingLink, setDigestingLink] = useState<boolean>(false)
-  const [digestedList, setDigestedList] = useState<DigestedList | undefined>()
   const firstListItemRef = useRef<HTMLInputElement>(null)
-
-  const listType = matchListTypeOption(digestedList?.type)
 
   const onSubmit = async (event?: FormEvent, text?: string) => {
     event?.preventDefault()
@@ -72,7 +66,8 @@ const HomePage = () => {
 
       if (data) {
         window?.localStorage?.setItem('listDraft', JSON.stringify(data))
-        setDigestedList(data)
+        navigate(routes.listDraft())
+        return
       }
     } catch (error) {
       try {
@@ -86,7 +81,6 @@ const HomePage = () => {
           window?.localStorage?.setItem('listDraft', JSON.stringify(data))
           navigate(routes.listDraft())
           return
-          // setDigestedList(data)
         }
       } catch (error) {
         toast.error('We failed to create a list')
@@ -124,7 +118,7 @@ const HomePage = () => {
           {!digestingLink && (
             <>
               <div
-                className="hidden flex-wrap items-center gap-x-6 whitespace-normal font-bricolageGrotesque text-9xl sm:whitespace-nowrap tall:flex"
+                className="hidden flex-wrap items-center gap-x-6 whitespace-normal font-bricolageGrotesque text-8xl sm:whitespace-nowrap sm:text-9xl tall:flex"
                 // style={{ textShadow: '3px 5px 5px rgb(0,0,0,0.2)' }}
               >
                 We{' '}
@@ -156,131 +150,32 @@ const HomePage = () => {
             onSubmit={onSubmit}
           >
             {digestingLink && <Loading />}
-            {digestedList ? (
-              <div className="flex flex-col gap-y-3">
-                {!!digestedList.name && (
-                  <div className="flex flex-col gap-y-2">
-                    <SectionTitle>Name</SectionTitle>
-                    {digestedList.name}
-                  </div>
-                )}
-                {!!digestedList.description && (
-                  <div className="flex flex-col gap-y-2">
-                    <SectionTitle>Description</SectionTitle>
-                    {digestedList.description}
-                  </div>
-                )}
-                {!!digestedList.type && (
-                  <div className="flex flex-col gap-y-2">
-                    <SectionTitle>Type</SectionTitle>
-                    {listType?.name || digestedList.type}
-                  </div>
-                )}
-                {!!digestedList.headerImage && (
-                  <div className="flex flex-col gap-y-2">
-                    <SectionTitle>Image</SectionTitle>
-                    <img
-                      style={{ maxWidth: 150 }}
-                      src={digestedList.headerImage}
-                      alt={digestedList.name}
-                    />
-                  </div>
-                )}
-                {!!digestedList.listItems?.length && (
-                  <div className="flex flex-col gap-y-3 divide-y">
-                    <SectionTitle>Items</SectionTitle>
-                    {digestedList.listItems.map(
-                      (
-                        { url, title, description, images, quantity, price },
-                        index
-                      ) => {
-                        const inner = (
-                          <>
-                            {!!title && (
-                              <div className="flex flex-col gap-y-2">
-                                <SectionTitle>Title</SectionTitle>
-                                {title}
-                              </div>
-                            )}
-                            {!!description && (
-                              <div className="flex flex-col gap-y-2">
-                                <SectionTitle>Description</SectionTitle>
-                                {description}
-                              </div>
-                            )}
-                            {!!listType?.reservations && !!quantity && (
-                              <div className="flex flex-col gap-y-2">
-                                <SectionTitle>Quantity</SectionTitle>
-                                {quantity}
-                              </div>
-                            )}
-                            {!!price && (
-                              <div className="flex flex-col gap-y-2">
-                                <SectionTitle>Price</SectionTitle>${price}
-                              </div>
-                            )}
-                            {!!images?.length && (
-                              <div
-                                className="flex flex-col gap-y-2"
-                                style={{ maxWidth: 150 }}
-                              >
-                                <SectionTitle>Images</SectionTitle>
-                                {images?.map(({ url, alt }, index) => (
-                                  <img key={index} src={url} alt={alt} />
-                                ))}
-                              </div>
-                            )}
-                          </>
-                        )
-                        return url ? (
-                          <ExternalLink
-                            href={httpsEverywhere(url)}
-                            className="flex flex-col gap-y-3 py-3"
-                            key={index}
-                          >
-                            {inner}
-                          </ExternalLink>
-                        ) : (
-                          <div
-                            className="flex flex-col gap-y-3 py-3"
-                            key={index}
-                          >
-                            {inner}
-                          </div>
-                        )
-                      }
-                    )}
-                  </div>
-                )}
+            <div className="flex flex-grow flex-col">
+              {!digestingLink && (
+                <label
+                  htmlFor="list-item-1"
+                  className="label px-1.5 font-medium opacity-90"
+                >
+                  <span className="label-text text-lg">
+                    Ask a question, enter a prompt, or paste a link here:
+                  </span>
+                </label>
+              )}
+              <div className="relative flex animate-pulse items-center">
+                <input
+                  type="text"
+                  className="input input-ghost input-lg flex flex-grow rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-1.5 pr-12 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
+                  // TODO: run through a list of these
+                  placeholder="Help me start my wedding registry"
+                  ref={firstListItemRef}
+                  name="list-item-1"
+                  id="list-item-1"
+                  onPaste={onPaste}
+                  disabled={digestingLink}
+                />
+                <Wand2 className="pointer-events-none absolute right-3 animate-bounce text-gray-400" />
               </div>
-            ) : (
-              <div className="flex flex-grow flex-col">
-                {!digestingLink && (
-                  <label
-                    htmlFor="list-item-1"
-                    className="label px-1.5 font-medium opacity-90"
-                  >
-                    <span className="label-text text-lg">
-                      Ask a question, enter a prompt, or paste a link here:
-                    </span>
-                  </label>
-                )}
-                <div className="relative flex animate-pulse items-center">
-                  <input
-                    type="text"
-                    className="input input-ghost input-lg flex flex-grow rounded-none border-l-0 border-r-0 border-t-0 border-b-gray-400 px-1.5 pr-12 outline-transparent focus:outline-transparent active:outline-transparent sm:text-3xl"
-                    // TODO: run through a list of these
-                    placeholder="Start my wedding registry"
-                    ref={firstListItemRef}
-                    name="list-item-1"
-                    id="list-item-1"
-                    onPaste={onPaste}
-                    disabled={digestingLink}
-                  />
-                  <Wand2 className="pointer-events-none absolute right-3 animate-bounce text-gray-400" />
-                </div>
-              </div>
-            )}
+            </div>
             <ListFadeOut />
           </form>
         </div>

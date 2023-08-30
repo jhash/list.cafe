@@ -13,6 +13,8 @@ import { Form, NumberField } from '@redwoodjs/forms'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import { matchListTypeOption } from 'src/lib/lists'
+
 import { UPDATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/EditListItemCell'
 import { DELETE_LIST_ITEM_MUTATION } from '../Admin/ListItem/ListItem'
 import { CREATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/NewListItem'
@@ -43,8 +45,17 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
 }) => {
   const linkRef = useRef<HTMLInputElement>()
 
-  const { id, title, description, url, quantity, price, listId, listRoles } =
-    listItem
+  const {
+    id,
+    title,
+    description,
+    url,
+    quantity,
+    price,
+    listId,
+    listRoles,
+    list,
+  } = listItem
 
   const [editing, setEditing] = useState<boolean>(!id)
 
@@ -259,25 +270,12 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           defaultValue={title}
           className="text-base"
           label="Title"
-          validation={{ required: true }}
-        />
-        <FormItem
-          disabled={loading}
-          editing={editing}
-          name="description"
-          defaultValue={description}
-          className="text-base"
-          label="Description"
-        />
-        <FormItem
-          disabled={loading}
-          type="number"
-          editing={editing}
-          name="quantity"
-          defaultValue={quantity ? quantity : undefined}
-          className="text-base"
-          label="Quantity"
-          validation={{ required: true }}
+          validation={{
+            required: {
+              value: true,
+              message: 'Title is required',
+            },
+          }}
         />
         <FormItem
           disabled={loading}
@@ -288,6 +286,26 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           defaultValue={price ? price : undefined}
           className="text-base"
           label="Price"
+        />
+        {!!matchListTypeOption(list?.type)?.reservations && (
+          <FormItem
+            disabled={loading}
+            type="number"
+            editing={editing}
+            name="quantity"
+            defaultValue={quantity ? quantity : undefined}
+            className="text-base"
+            label="Quantity"
+          />
+        )}
+        <FormItem
+          type="textarea"
+          disabled={loading}
+          editing={editing}
+          name="description"
+          defaultValue={description}
+          className="text-base"
+          label="Description"
         />
         {!!error?.message && (
           <p className="label-error label font-medium">{error?.message}</p>

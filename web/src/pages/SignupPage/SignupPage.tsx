@@ -116,7 +116,7 @@ const SignupPage = ({ userInviteId }) => {
                       },
                     }}
                   />
-                  <FieldError name="email" className="text-error" />
+                  <FieldError name="name" className="text-error" />
                 </div>
 
                 <div className="flex flex-col gap-1">
