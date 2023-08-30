@@ -70,6 +70,9 @@ export default async () => {
       {
         id: 'dashboard',
       },
+      {
+        id: 'draft',
+      },
       // TODO: sublinks? or disallow slashes
     ]
 

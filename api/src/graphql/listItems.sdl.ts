@@ -5,10 +5,10 @@ export const schema = gql`
     updatedAt: DateTime!
     title: String!
     description: String
-    url: String!
+    url: String
     list: List
     listId: Int!
-    quantity: Int!
+    quantity: Int
     voting: Boolean
     reservations: [Reservation]!
     # purchases: [Purchase]!
@@ -29,11 +29,11 @@ export const schema = gql`
   input CreateListItemInput {
     title: String!
     description: String
-    url: String!
-    listId: Int!
-    quantity: Int!
+    url: String
+    listId: Int
+    quantity: Int
     voting: Boolean
-    parentId: Int
+    # parentId: Int
     order: Int
     price: Float
     images: [CreateImageInput]

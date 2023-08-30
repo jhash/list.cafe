@@ -43,26 +43,15 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 interface ListItemsCellProps {
   dashboard?: boolean
-  editing?: boolean
-  onListItemsUpdate?: () => void
-  toggleEditing?: () => void
+  deleteItem?: (index: number) => void
 }
 export const Success = ({
   listItems,
   dashboard = false,
-  editing = false,
-  onListItemsUpdate,
-  toggleEditing,
+  deleteItem,
 }: CellSuccessProps<ListItemsQuery & ListItemsCellProps>) => {
   if (dashboard) {
-    return (
-      <DashboardListItems
-        listItems={listItems}
-        editing={editing}
-        onListItemsUpdate={onListItemsUpdate}
-        toggleEditing={toggleEditing}
-      />
-    )
+    return <DashboardListItems listItems={listItems} deleteItem={deleteItem} />
   }
 
   return <ListItems listItems={listItems} />

@@ -27,7 +27,19 @@ export const createListItem: MutationResolvers['createListItem'] = ({
   input,
 }) => {
   return db.listItem.create({
-    data: input,
+    data: {
+      ...input,
+      list: {
+        connect: {
+          id: input.listId,
+        },
+      },
+      images: {
+        createMany: {
+          data: input.images,
+        },
+      },
+    },
   })
 }
 

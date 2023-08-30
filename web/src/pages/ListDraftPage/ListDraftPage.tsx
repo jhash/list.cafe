@@ -1,20 +1,25 @@
-import { Link, routes } from '@redwoodjs/router'
-import { MetaTags } from '@redwoodjs/web'
+import { Redirect, routes } from '@redwoodjs/router'
+
+import { useAuth } from 'src/auth'
+import DashboardList from 'src/components/DashboardList/DashboardList'
 
 const ListDraftPage = () => {
-  return (
-    <>
-      <MetaTags title="ListDraft" description="ListDraft page" />
+  const { isAuthenticated } = useAuth()
 
-      <h1>ListDraftPage</h1>
-      <p>
-        Find me in <code>./web/src/pages/ListDraftPage/ListDraftPage.tsx</code>
-      </p>
-      <p>
-        My default route is named <code>listDraft</code>, link to me with `
-        <Link to={routes.listDraft()}>ListDraft</Link>`
-      </p>
-    </>
+  if (!window.localStorage.getItem('listDraft')) {
+    return <Redirect to={routes.home()} />
+  }
+
+  if (isAuthenticated) {
+    return <Redirect to={routes.newList()} />
+  }
+
+  return (
+    <div className="flex w-full max-w-full flex-grow flex-col items-center">
+      <div className="container flex w-full flex-grow flex-col">
+        <DashboardList />
+      </div>
+    </div>
   )
 }
 

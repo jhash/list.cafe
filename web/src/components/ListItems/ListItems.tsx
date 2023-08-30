@@ -333,7 +333,6 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
           onClose={() => setReservation(undefined)}
           title={reservedByUser ? 'Change reservation' : 'Reserve item'}
           open={!!reservation}
-          id="reserveItem"
         >
           {!!reservedByOthers && (
             <p

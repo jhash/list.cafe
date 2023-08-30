@@ -3,15 +3,11 @@ import { ListItemsQuery } from 'types/graphql'
 import DashboardListItem from '../DashboardListItem/DashboardListItem'
 
 type DashboardListItemsProps = ListItemsQuery & {
-  editing?: boolean
-  onListItemsUpdate?: () => void
-  toggleEditing: () => void
+  deleteItem?: (index: number) => void
 }
 const DashboardListItems: React.FC<DashboardListItemsProps> = ({
   listItems,
-  editing = false,
-  onListItemsUpdate,
-  toggleEditing,
+  deleteItem,
 }) => {
   return listItems.map((listItem, index) => {
     return (
@@ -21,9 +17,9 @@ const DashboardListItems: React.FC<DashboardListItemsProps> = ({
       >
         <DashboardListItem
           {...listItem}
-          editing={editing}
-          onListItemsUpdate={onListItemsUpdate}
-          toggleEditing={toggleEditing}
+          modal={false}
+          index={index}
+          deleteItem={deleteItem}
         />
       </li>
     )

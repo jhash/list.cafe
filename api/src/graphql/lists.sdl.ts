@@ -53,6 +53,7 @@ export const schema = gql`
     type: ListType!
     identifier: CreateIdentifierInput
     visibility: ListVisibility
+    listItems: [CreateListItemInput]
   }
 
   input UpdateListInput {

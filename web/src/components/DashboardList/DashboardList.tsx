@@ -1,23 +1,31 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import intersection from 'lodash/intersection'
+import isUndefined from 'lodash/isUndefined'
 import kebabCase from 'lodash/kebabCase'
 import { Eye, Pencil, PlusCircle, Save, Trash2 } from 'lucide-react'
 import {
+  CreateListInput,
+  CreateListItemInput,
   CreateListMembershipMutation,
   FindListQuery,
   ListItem,
+  ListItemsQuery,
   ListMembership,
   ListRole,
+  UpdateListInput,
 } from 'types/graphql'
 
+import { SignupAttributes } from '@redwoodjs/auth-dbauth-web'
 import { Controller, Form, NumberField } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import { useAuth } from 'src/auth'
 import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
 import { LIST_TYPE_OPTIONS, LIST_VISIBILITY_OPTIONS } from 'src/lib/lists'
+import { DigestedList } from 'src/pages/HomePage/HomePage'
 
 import { UPDATE_LIST_MUTATION } from '../Admin/List/EditListCell'
 import { DELETE_LIST_MUTATION } from '../Admin/List/List'
@@ -44,6 +52,8 @@ type CreateListMembershipForm = NonNullable<
   CreateListMembershipMutation['createListMembership']
 >
 
+type CreateUserForm = NonNullable<SignupAttributes>
+
 type ButtonProps = Omit<React.HTMLProps<HTMLButtonElement>, 'type'> & {
   type?: 'submit' | 'reset' | 'submit'
 }
@@ -55,13 +65,63 @@ const AddItemButton: React.FC<ButtonProps> = ({ ...props }) => (
     <PlusCircle />
   </button>
 )
-const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
-  list,
-}) => {
-  const { id, name, description, identifier, type, visibility, listRoles } =
-    list || {
+interface DashboardListProps {
+  list?: FindListQuery['list']
+  items?: ListItemsQuery['listItems']
+}
+const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
+  const { isAuthenticated, signUp } = useAuth()
+
+  const draftList: DigestedList | undefined = useMemo(() => {
+    if (list?.id) {
+      window.localStorage.removeItem('listDraft')
+      return
+    }
+
+    try {
+      const draftString = window.localStorage.getItem('listDraft')
+
+      if (!draftString) {
+        throw new Error('listDraft is not available on localStorage')
+      }
+
+      const draft: DigestedList = JSON.parse(draftString)
+
+      return draft
+    } catch (error) {
+      //
+    }
+  }, [list?.id])
+
+  const emailRef = useRef<HTMLInputElement>()
+
+  const [listItems, setListItems] = useState<CreateListItemInput[]>([])
+
+  const id = list?.id
+  const listRoles = list?.listRoles
+
+  const { name, description, identifier, type, visibility } = list ||
+    draftList || {
       type: 'WISHLIST',
     }
+
+  useEffect(() => {
+    resetListItem()
+  }, [items])
+
+  useEffect(() => {
+    if (listItems.length || !draftList) {
+      return
+    }
+
+    setListItems(
+      (draftList.listItems || []).map((digestedItem) => ({
+        ...digestedItem,
+      }))
+    )
+
+    window.localStorage.removeItem('listDraft')
+  }, [draftList, listItems])
 
   // TODO: remove admin?
   const canDelete = useMemo(
@@ -78,8 +138,9 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
 
   const canAdd = useMemo(
     () =>
+      !id ||
       listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN', 'CONTRIBUTE']),
-    [listRoles]
+    [listRoles, id]
   )
 
   const canAddMembers = useMemo(
@@ -183,17 +244,61 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     awaitRefetchQueries: true,
   })
 
+  const [pendingList, setPendingList] = useState<CreateListInput | undefined>()
+  const [signingUp, setSigningUp] = useState<boolean>(false)
+  const resetPendingList = () => {
+    setPendingList(undefined)
+  }
+  const updateListPending = (input: CreateListInput) => {
+    setPendingList(input)
+  }
+
+  const signUpAndCreateList = async (input: SignupAttributes) => {
+    try {
+      setSigningUp(true)
+      await signUp(input)
+      setSigningUp(false)
+      toast.success('Successfully signed up!')
+      onSave(pendingList)
+      resetPendingList()
+    } catch (error) {
+      toast.error(error.messages)
+    }
+  }
+
   const loading = id
     ? updateLoading || deleteLoading || createListMembershipLoading
-    : createLoading
+    : createLoading || signingUp
+
+  const onAddItem = (input: CreateListItemInput) => {
+    setListItems([...listItems, input])
+    resetListItem()
+  }
+
+  const onDeleteItem = (index?: number) => {
+    if (isUndefined(index)) {
+      return
+    }
+    const copy = [...listItems]
+    copy.splice(index, 1)
+    setListItems(copy)
+  }
 
   const onDelete = () => deleteListMutation({ variables: { id } })
 
-  const onSave = (input, event) => {
+  const onSave = (
+    input: CreateListInput | UpdateListInput,
+    event?: React.BaseSyntheticEvent
+  ) => {
     event?.stopPropagation?.()
     event?.preventDefault?.()
 
     if (!editing || loading) {
+      return
+    }
+
+    if (!isAuthenticated && !pendingList) {
+      updateListPending(input as CreateListInput)
       return
     }
 
@@ -218,13 +323,14 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
             identifier: {
               id: kebabCase(input.identifier),
             },
+            listItems,
           },
         },
       })
     }
-  }
 
-  const emailRef = useRef<HTMLInputElement>()
+    window.localStorage.removeItem('listDraft')
+  }
 
   useEffect(() => {
     if (!listMembership) {
@@ -236,6 +342,12 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
     )
   }, [emailRef, listMembership])
 
+  useEffect(() => {
+    return () => {
+      window.localStorage.removeItem('listDraft')
+    }
+  }, [])
+
   return (
     <>
       <MetaTags
@@ -243,30 +355,59 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
         description={description || 'Create a new list'}
       />
       {!!listItem && (
-        <Modal
-          id="newListItem"
-          title="Add a new item"
-          className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
-          onClose={resetListItem}
-          open={!!listItem}
-        >
+        <Modal title="Add a new item" onClose={resetListItem} open={!!listItem}>
           <DashboardListItem
             url=""
             quantity={1}
             title=""
             listId={id}
-            reservations={[]}
+            reservations={undefined}
             {...listItem}
-            editing
-            onListItemsUpdate={resetListItem}
+            addItem={onAddItem}
+            deleteItem={onDeleteItem}
+            modal
           />
+        </Modal>
+      )}
+      {!!pendingList && (
+        <Modal title="Welcome!" onClose={resetPendingList} open={!!pendingList}>
+          <Form<CreateUserForm>
+            className="flex w-full max-w-full flex-grow flex-col gap-3"
+            name="userForm"
+            onSubmit={signUpAndCreateList}
+          >
+            <p className="text-lg font-medium text-info">
+              {'Sign up now to save your new list'}
+            </p>
+            <p className="text-sm font-medium">{`Don't worry, list.cafe is free, forever.`}</p>
+            <FormItem
+              name="username"
+              type="email"
+              label="Email"
+              validation={{ required: true }}
+              ref={emailRef}
+            />
+            <FormItem name="name" type="text" label="Name" />
+            <FormItem
+              name="password"
+              type="password"
+              label="Password"
+              validation={{ required: true }}
+            />
+            <button
+              className="btn btn-secondary mt-4 flex min-h-0 w-full flex-grow items-center justify-center self-start rounded p-0 px-4"
+              type="submit"
+              disabled={loading}
+            >
+              <Save />
+              Save
+            </button>
+          </Form>
         </Modal>
       )}
       {!!listMembership && (
         <Modal
           title="Add a new member"
-          id="newListMembership"
-          className="modal modal-bottom p-0 sm:modal-middle sm:p-4"
           onClose={resetListMembership}
           open={!!listMembership}
         >
@@ -422,53 +563,52 @@ const DashboardList: React.FC<FindListQuery | { list: undefined }> = ({
           </div>
         </Form>
 
-        {!!id && (
-          <>
-            <div className="flex w-full max-w-full flex-col gap-3">
-              <div className="flex w-full max-w-full items-center gap-3">
-                <SectionTitle>Items</SectionTitle>
-                {/* TODO: support without having saved? */}
-                {!!id && canAdd && (
-                  <div className="flex items-center gap-3">
-                    <AddItemButton
-                      onClick={createNewListItem}
-                      disabled={loading}
-                    />
-                  </div>
-                )}
+        <div className="flex w-full max-w-full flex-col gap-3">
+          <div className="flex w-full max-w-full items-center gap-3">
+            <SectionTitle>Items</SectionTitle>
+            {/* TODO: support without having saved? */}
+            {canAdd && (
+              <div className="flex items-center gap-3">
+                <AddItemButton onClick={createNewListItem} disabled={loading} />
               </div>
-              {!!id && (
-                <ul className="flex w-full max-w-full flex-col gap-2">
-                  <ListItemsCell
-                    listId={id}
-                    dashboard
-                    editing={editing}
-                    onListItemsUpdate={resetListItem}
-                    toggleEditing={() => setEditing(!editing)}
+            )}
+          </div>
+          <ul className="flex w-full max-w-full flex-col gap-2">
+            {id ? (
+              <ListItemsCell listId={id} dashboard deleteItem={onDeleteItem} />
+            ) : (
+              (listItems || []).map((listItem, index) => (
+                <li key={index} className="flex w-full max-w-full items-center">
+                  <DashboardListItem
+                    {...listItem}
+                    reservations={undefined}
+                    modal={false}
+                    index={index}
+                    deleteItem={onDeleteItem}
                   />
-                </ul>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+        {!!id && (
+          <div className="flex w-full max-w-full flex-col gap-3">
+            <div className="flex w-full max-w-full items-center gap-3">
+              <SectionTitle>Members</SectionTitle>
+              {/* TODO: support without having saved? */}
+              {canAddMembers && (
+                <div className="flex items-center gap-3">
+                  <AddItemButton
+                    onClick={createNewListMembership}
+                    disabled={loading}
+                  />
+                </div>
               )}
             </div>
-            <div className="flex w-full max-w-full flex-col gap-3">
-              <div className="flex w-full max-w-full items-center gap-3">
-                <SectionTitle>Members</SectionTitle>
-                {/* TODO: support without having saved? */}
-                {!!id && canAddMembers && (
-                  <div className="flex items-center gap-3">
-                    <AddItemButton
-                      onClick={createNewListMembership}
-                      disabled={loading}
-                    />
-                  </div>
-                )}
-              </div>
-              {!!id && (
-                <ul className="flex w-full max-w-full flex-col gap-2">
-                  <ListMembershipsCell listId={id} />
-                </ul>
-              )}
-            </div>
-          </>
+            <ul className="flex w-full max-w-full flex-col gap-2">
+              <ListMembershipsCell listId={id} />
+            </ul>
+          </div>
         )}
         <ListFadeOut />
       </div>

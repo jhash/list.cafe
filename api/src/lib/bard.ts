@@ -184,92 +184,86 @@ const validateUrl = async (url: string) => {
 const convertPotentialJSONToList = async (original: string) => {
   console.log('\ntext before filtering: ', original)
 
-  let text = original.replace('\\n', '').replace('\n', ' ')
+  let text = original // .replace('\\n', '').replace('\n', ' ')
 
-  if (text.match('```')) {
-    text = text.replace(/[^\{]*\`\`\`[^\{]*/gim, '').trim()
-    console.log('\ntext after replacing: ', text)
+  text = text.replace(/[^\{\}]*\`\`\`(json)?[^\{]*/gim, '').trim()
 
-    try {
-      text = popCharactersUntilValid(text)
-    } catch (error) {
-      console.log('Failed to repair json: ', text)
-      throw error
-    }
+  console.log('\ntext after filtering: ', original)
 
-    let unfiltered: UnfilteredList | undefined
-    try {
-      unfiltered = JSON.parse(text)
-    } catch (error) {
-      throw new Error('Failed to parse json from text')
-    }
-
-    const type = CATEGORY_PROMPT_KEY_MAP[unfiltered.type] || 'WISHLIST'
-
-    if (unfiltered.headerImage) {
-      try {
-        await validateUrl(unfiltered.headerImage)
-      } catch (error) {
-        console.log('Failed to validate header image')
-        unfiltered.headerImage = undefined
-      }
-    }
-
-    console.log('header image validated')
-
-    unfiltered.listItems = (
-      await Promise.all(
-        (unfiltered.listItems || []).map(async (listItem) => {
-          if (listItem.image) {
-            try {
-              await validateUrl(listItem.image)
-            } catch (error) {
-              listItem.image = undefined
-            }
-          }
-
-          if (listItem.url) {
-            try {
-              await validateUrl(listItem.url)
-            } catch (error) {
-              listItem.url = undefined
-            }
-          }
-
-          return listItem
-        })
-      )
-    ).filter(
-      (listItem) =>
-        listItem.title || listItem.description || listItem.image || listItem.url
-    )
-
-    console.log('list items images validated')
-
-    const list: DigestedList = {
-      name: unfiltered.name || type,
-      type,
-      headerImage: unfiltered.headerImage,
-      description: unfiltered.description,
-      listItems: (unfiltered.listItems || []).map((listItem, index) => ({
-        url: listItem.url,
-        title: listItem.title || `Item ${index + 1}`,
-        description: listItem.description,
-        price: listItem.price ? +listItem.price : undefined,
-        quantity: listItem.quantity ? +listItem.quantity : undefined,
-        images: (listItem.image ? [listItem.image] : []).map((image) => ({
-          url: image,
-          alt: listItem.title || image,
-        })),
-      })),
-    }
-
-    console.log('list', JSON.stringify(list))
-
-    return list
+  try {
+    text = popCharactersUntilValid(text)
+  } catch (error) {
+    console.log('Failed to repair json: ', text)
+    throw error
   }
 
-  throw new Error('We failed to create a list from this link')
+  let unfiltered: UnfilteredList | undefined
+  try {
+    unfiltered = JSON.parse(text)
+  } catch (error) {
+    throw new Error('Failed to parse json from text')
+  }
+
+  const type = CATEGORY_PROMPT_KEY_MAP[unfiltered.type] || 'WISHLIST'
+
+  if (unfiltered.headerImage) {
+    try {
+      await validateUrl(unfiltered.headerImage)
+    } catch (error) {
+      console.log('Failed to validate header image')
+      unfiltered.headerImage = undefined
+    }
+  }
+
+  unfiltered.listItems = (
+    await Promise.all(
+      (unfiltered.listItems || []).map(async (listItem) => {
+        if (listItem.image) {
+          try {
+            await validateUrl(listItem.image)
+          } catch (error) {
+            listItem.image = undefined
+          }
+        }
+
+        if (listItem.url) {
+          try {
+            await validateUrl(listItem.url)
+          } catch (error) {
+            listItem.url = undefined
+          }
+        }
+
+        return listItem
+      })
+    )
+  ).filter(
+    (listItem) =>
+      listItem.title || listItem.description || listItem.image || listItem.url
+  )
+
+  const list: DigestedList = {
+    name: unfiltered.name || type,
+    type,
+    headerImage: unfiltered.headerImage,
+    description: unfiltered.description,
+    visibility: 'PUBLIC',
+    listItems: (unfiltered.listItems || []).map((listItem, index) => ({
+      url: listItem.url,
+      title: listItem.title || `Item ${index + 1}`,
+      description: listItem.description,
+      price: listItem.price ? +listItem.price : undefined,
+      quantity: listItem.quantity ? +listItem.quantity : undefined,
+      images: (listItem.image ? [listItem.image] : undefined)?.map((image) => ({
+        url: image,
+        alt: listItem.title || image,
+      })),
+    })),
+  }
+
+  console.log('list', JSON.stringify(list))
+
+  return list
 }
 
 export const convertLinkToList = async (link: string) => {

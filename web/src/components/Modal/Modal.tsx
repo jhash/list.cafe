@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { X } from 'lucide-react'
 
@@ -8,16 +8,12 @@ type ModalProps = React.HTMLProps<HTMLDialogElement> & {
   onClose: () => void
   title: string
   open: boolean
-  id: string
 }
-const Modal = ({
-  open,
-  title,
-  onClose,
-  children,
-  id,
-  ...props
-}: ModalProps) => {
+const Modal = ({ open, title, onClose, children, ...props }: ModalProps) => {
+  const id = useMemo(() => {
+    return `${Date.now()}-${Math.floor(Math.random() * 100)}`
+  }, [])
+
   useEffect(() => {
     if (open) {
       window?.[id]?.showModal()

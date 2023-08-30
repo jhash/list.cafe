@@ -5,9 +5,11 @@ import {
   type CellSuccessProps,
   // type CellFailureProps,
   MetaTags,
+  useQuery,
 } from '@redwoodjs/web'
 
 import ListItemsCell from 'src/components/ListItemsCell'
+import { QUERY as LIST_ITEMS_CELL_QUERY } from 'src/components/ListItemsCell'
 import Spinner from 'src/components/Loading'
 
 import DashboardList from '../DashboardList/DashboardList'
@@ -55,14 +57,18 @@ export const Success = ({
   list,
   dashboard = false,
 }: CellSuccessProps<FindListQuery & ListCellProps, FindListQueryVariables>) => {
+  const { id, name, description } = list
+
+  const { data } = useQuery(LIST_ITEMS_CELL_QUERY, {
+    variables: { listId: id },
+  })
+
   if (dashboard) {
     if (!list.listRoles.length) {
       return <Redirect to={routes.lists()} />
     }
-    return <DashboardList list={list} />
+    return <DashboardList list={list} items={data?.listItems} />
   }
-
-  const { id, name, description } = list
 
   return (
     <>
@@ -80,14 +86,8 @@ export const Success = ({
             <ListItemsCell
               listId={id}
               dashboard={dashboard}
-              editing={false}
               // TODO: why does the cell make these required?
-              onListItemsUpdate={() => {
-                //
-              }}
-              toggleEditing={() => {
-                //
-              }}
+              deleteItem={undefined}
             />
           </ul>
           <ListFadeOut noHeight />

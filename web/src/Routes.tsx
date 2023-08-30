@@ -18,7 +18,6 @@ import SignupPage from './pages/SignupPage/SignupPage'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/list-draft" page={ListDraftPage} name="listDraft" />
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
         <Set wrap={ScaffoldLayout} title="ListGroupMemberships" titleTo="adminListGroupMemberships" buttonLabel="New ListGroupMembership" buttonTo="adminNewListGroupMembership">
           <Route path="/admin/list-group-memberships/new" page={AdminListGroupMembershipNewListGroupMembershipPage} name="adminNewListGroupMembership" />
@@ -112,6 +111,7 @@ const Routes = () => {
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+        <Route path="/draft" page={ListDraftPage} name="listDraft" />
         {/* TODO: prerender? */}
         <Route path="/{identifier}" page={IdentifierPage} name="identifier" />
         {/* TODO: prerender */}

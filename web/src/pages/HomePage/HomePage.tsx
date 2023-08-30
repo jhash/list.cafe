@@ -11,6 +11,7 @@ import ReactCanvasConfetti from 'react-canvas-confetti'
 import { CreateListInput, CreateListItemInput } from 'types/graphql'
 
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
+import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -70,7 +71,7 @@ const HomePage = () => {
       })
 
       if (data) {
-        window.localStorage.setItem('listDraft', JSON.stringify(data))
+        window?.localStorage?.setItem('listDraft', JSON.stringify(data))
         setDigestedList(data)
       }
     } catch (error) {
@@ -82,8 +83,10 @@ const HomePage = () => {
         })
 
         if (data) {
-          window.localStorage.setItem('listDraft', JSON.stringify(data))
-          setDigestedList(data)
+          window?.localStorage?.setItem('listDraft', JSON.stringify(data))
+          navigate(routes.listDraft())
+          return
+          // setDigestedList(data)
         }
       } catch (error) {
         toast.error('We failed to create a list')
@@ -252,14 +255,16 @@ const HomePage = () => {
               </div>
             ) : (
               <div className="flex flex-grow flex-col">
-                <label
-                  htmlFor="list-item-1"
-                  className="label px-1.5 font-medium opacity-90"
-                >
-                  <span className="label-text text-lg">
-                    Ask a question, enter a prompt, or paste a link here:
-                  </span>
-                </label>
+                {!digestingLink && (
+                  <label
+                    htmlFor="list-item-1"
+                    className="label px-1.5 font-medium opacity-90"
+                  >
+                    <span className="label-text text-lg">
+                      Ask a question, enter a prompt, or paste a link here:
+                    </span>
+                  </label>
+                )}
                 <div className="relative flex animate-pulse items-center">
                   <input
                     type="text"
@@ -272,7 +277,7 @@ const HomePage = () => {
                     onPaste={onPaste}
                     disabled={digestingLink}
                   />
-                  <Wand2 className="absolute right-3 animate-bounce text-gray-400" />
+                  <Wand2 className="pointer-events-none absolute right-3 animate-bounce text-gray-400" />
                 </div>
               </div>
             )}

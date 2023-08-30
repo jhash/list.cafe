@@ -116,6 +116,18 @@ export const createList: MutationResolvers['createList'] = ({ input }) => {
           listRole: 'OWNER',
         },
       },
+      listItems: {
+        createMany: {
+          data: (input.listItems || []).map((createListItemInput) => ({
+            ...createListItemInput,
+            images: createListItemInput.images
+              ? {
+                  createMany: createListItemInput.images,
+                }
+              : undefined,
+          })),
+        },
+      },
     },
   })
 }

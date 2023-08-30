@@ -245,7 +245,7 @@ model ListItem {
   url             String?
   list            List             @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId          Int
-  quantity        Int              @default(1)
+  quantity        Int?             @default(1)
   voting          Boolean          @default(false)
   reservations    Reservation[]
   parent          ListItem?        @relation(name: "listItemInheritance", fields: [parentId], references: [id])

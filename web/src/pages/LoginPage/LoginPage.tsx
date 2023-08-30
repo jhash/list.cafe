@@ -17,7 +17,7 @@ import { useAuth } from 'src/auth'
 
 const LoginPage = ({ type }) => {
   const WELCOME_MESSAGE = 'Welcome back!'
-  const REDIRECT = routes.home()
+  const REDIRECT = routes.dashboard()
 
   const {
     isAuthenticated,

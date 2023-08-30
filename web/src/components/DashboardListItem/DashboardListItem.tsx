@@ -25,17 +25,20 @@ type CreateListItemForm = NonNullable<CreateListItemMutation['createListItem']>
 
 type DashboardListItemProps = Omit<
   ListItemsQuery['listItems'][number],
-  'id'
+  'id' | 'listId'
 > & {
   id?: number
-  editing: boolean
-  toggleEditing?: () => void
-  onListItemsUpdate?: () => void
+  addItem?: (item: CreateListItemInput) => void
+  deleteItem?: (index: number) => void
+  listId?: number
+  modal: boolean
+  index?: number
 }
 const DashboardListItem: React.FC<DashboardListItemProps> = ({
-  editing = false,
-  onListItemsUpdate,
-  toggleEditing,
+  addItem,
+  deleteItem,
+  modal,
+  index,
   ...listItem
 }) => {
   const linkRef = useRef<HTMLInputElement>()
@@ -43,7 +46,9 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   const { id, title, description, url, quantity, price, listId, listRoles } =
     listItem
 
-  const [open, setOpen] = useState<boolean>(!id && editing)
+  const [editing, setEditing] = useState<boolean>(!id)
+
+  const [open, setOpen] = useState<boolean>(modal && editing)
 
   const canEdit = useMemo(
     () =>
@@ -53,16 +58,17 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
 
   const canDelete = useMemo(
     () =>
+      !id ||
       listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']),
-    [listRoles]
+    [listRoles, id]
   )
 
   const [createListItem, { loading: createLoading, error: createError }] =
     useMutation(CREATE_LIST_ITEM_MUTATION, {
       onCompleted: () => {
         toast.success('List item created')
-        onListItemsUpdate?.()
         setOpen(false)
+        setEditing(false)
       },
       onError: (error) => {
         toast.error(error.message)
@@ -79,6 +85,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       onCompleted: () => {
         toast.success('List item updated')
         setOpen(false)
+        setEditing(false)
       },
       onError: (error) => {
         toast.error(error.message)
@@ -109,10 +116,21 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
   const error = id ? createError : updateError || deleteError
 
   const onSave = (input: CreateListItemInput | UpdateListItemInput, event) => {
+    if (!id && !listId && !modal) {
+      setOpen(false)
+      return
+    }
+
     event?.stopPropagation?.()
     event?.preventDefault?.()
 
     if (loading) {
+      return
+    }
+
+    if (!listId) {
+      addItem(input as CreateListItemInput)
+      toast.success('List item created')
       return
     }
 
@@ -123,14 +141,13 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     }
   }
 
-  const onDelete = () => deleteListItem({ variables: { id } })
-
-  useEffect(() => {
-    if (!id && !open) {
-      setOpen(true)
+  const onDelete = () => {
+    if (!id) {
+      deleteItem?.(index)
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+    deleteListItem({ variables: { id } })
+  }
 
   useEffect(() => {
     setImmediate(() => linkRef?.current?.focus())
@@ -140,24 +157,23 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     <Form<CreateListItemForm>
       className={classNames(
         'w-full max-w-full flex-grow',
-        !!id && 'collapse-arrow collapse rounded-lg border shadow-sm'
+        !modal && 'collapse-arrow collapse rounded-lg border shadow-sm'
       )}
       name="list-item-form"
       onSubmit={(input, event) => onSave(input, event)}
     >
-      {!!id && (
+      {!modal && (
         <input
           type="radio"
           checked={open}
           onChange={() => {
             //
           }}
-          disabled={!id}
           onClick={() => setOpen(!open)}
           className="min-h-12 cursor-pointer leading-none"
         />
       )}
-      {!!id && (
+      {!modal && (
         <div
           className={classNames(
             'collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 px-4 py-0 pr-12 leading-none',
@@ -168,19 +184,27 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             {title}
             {!!url && <Link2 size="1rem" className="flex-shrink-0" />}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex max-h-full items-center justify-end gap-3 overflow-hidden overflow-ellipsis">
+            {!!description && (
+              <span className="flex-shrink whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
+                {description}
+              </span>
+            )}
             {!editing && !!canEdit && (
               <button
                 // TODO: don't use z
                 className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
                 type="button"
-                onClick={toggleEditing}
+                onClick={() => {
+                  setEditing(true)
+                  setOpen(true)
+                }}
                 disabled={loading}
               >
                 <Pencil size="1.25rem" />
               </button>
             )}
-            {!!open && !!editing && (
+            {!!open && !!editing && !!id && (
               <button
                 // TODO: don't use z
                 className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
@@ -190,7 +214,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
                 <Save size="1.25rem" />
               </button>
             )}
-            {!!id && canDelete && (
+            {canDelete && (
               <button
                 // TODO: don't use z
                 className="btn btn-error z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
@@ -198,11 +222,11 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
                 onClick={(event) => {
                   event.preventDefault()
                   event.stopPropagation()
-                  return (
-                    window.confirm(
-                      'Are you sure you want to delete this item?'
-                    ) && onDelete()
-                  )
+                  return id
+                    ? window.confirm(
+                        'Are you sure you want to delete this item?'
+                      ) && onDelete()
+                    : onDelete()
                 }}
               >
                 <Trash2 size="1.25rem" />
@@ -214,11 +238,11 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       <div
         className={classNames(
           'flex w-full max-w-full flex-shrink-0 flex-wrap gap-x-5 gap-y-2',
-          !!id && 'collapse-content overflow-x-visible',
-          !!open && !!id && 'py-4'
+          !modal && 'collapse-content overflow-x-visible',
+          !!open && !modal && 'py-4'
         )}
       >
-        <NumberField hidden name="listId" defaultValue={listId} />
+        {!!listId && <NumberField hidden name="listId" defaultValue={listId} />}
         <FormItem
           disabled={loading}
           editing={editing}
@@ -250,7 +274,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           type="number"
           editing={editing}
           name="quantity"
-          defaultValue={quantity}
+          defaultValue={quantity ? quantity : undefined}
           className="text-base"
           label="Quantity"
           validation={{ required: true }}
@@ -261,7 +285,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           step="0.01"
           editing={editing}
           name="price"
-          defaultValue={price}
+          defaultValue={price ? price : undefined}
           className="text-base"
           label="Price"
         />
@@ -271,7 +295,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         {!id && !!open && !!editing && (
           <button
             // TODO: don't use z
-            className="btn btn-secondary z-10 mt-4 flex min-h-0 flex-grow items-center justify-center self-start rounded p-0 px-4"
+            className="btn btn-secondary z-10 mt-4 flex min-h-0 w-full max-w-xl flex-grow items-center justify-center self-end rounded p-0 px-4"
             type="submit"
             disabled={loading}
           >
