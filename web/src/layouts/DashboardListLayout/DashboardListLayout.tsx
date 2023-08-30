@@ -27,6 +27,7 @@ import {
 } from 'src/components/ListCell'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from 'src/components/ListItemsCell'
+import { ListTypeBadge } from 'src/components/ListsCell'
 import PageTitle from 'src/components/PageTitle/PageTitle'
 import Tabs from 'src/components/Tabs/Tabs'
 import { DigestedList } from 'src/pages/HomePage/HomePage'
@@ -66,7 +67,7 @@ type ListPageTitleProps = ListCellChildProps & {
   onDelete?: () => void
 }
 export const ListPageTitle: React.FC<ListPageTitleProps> = ({
-  list: { name, id, identifier },
+  list: { name, id, identifier, type },
   canDelete,
   canSave,
   onDelete,
@@ -76,46 +77,53 @@ export const ListPageTitle: React.FC<ListPageTitleProps> = ({
   const { handleSubmit } = useFormContext()
 
   return (
-    <PageTitle title={name || 'Create a new list'}>
-      {!!id && !!identifier?.id && (
-        <Link
-          to={routes.identifier({ identifier: identifier?.id })}
-          className="btn btn-primary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
-          title="Preview"
-        >
-          <Eye />
-        </Link>
-      )}
-      {!!id && canDelete && onDelete && (
-        <button
-          className="btn btn-error flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
-          title="Delete"
-          type="button"
-          onClick={(event) => {
-            event.preventDefault()
-            event.stopPropagation()
+    <PageTitle>
+      <div className="flex flex-shrink flex-grow items-center gap-6">
+        {name || 'Create a new list'}
+        {!!id && <ListTypeBadge type={type} />}
+      </div>
+      <div className="flex min-w-0 flex-shrink-0 flex-grow-0 items-center gap-2 text-ellipsis">
+        {!!id && !!identifier?.id && (
+          <Link
+            to={routes.identifier({ identifier: identifier?.id })}
+            className="btn btn-primary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
+            title="Preview"
+          >
+            <Eye />
+          </Link>
+        )}
+        {!!id && canDelete && onDelete && (
+          <button
+            className="btn btn-error flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
+            title="Delete"
+            type="button"
+            onClick={(event) => {
+              event.preventDefault()
+              event.stopPropagation()
 
-            return (
-              window.confirm('Are you sure you want to remove this member?') &&
-              onDelete()
-            )
-          }}
-          disabled={loading}
-        >
-          <Trash2 />
-        </button>
-      )}
+              return (
+                window.confirm(
+                  'Are you sure you want to remove this member?'
+                ) && onDelete()
+              )
+            }}
+            disabled={loading}
+          >
+            <Trash2 />
+          </button>
+        )}
 
-      {!!canSave && (
-        <button
-          className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
-          type="submit"
-          disabled={loading}
-          onClick={handleSubmit(onSave)}
-        >
-          <Save />
-        </button>
-      )}
+        {!!canSave && (
+          <button
+            className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
+            type="submit"
+            disabled={loading}
+            onClick={handleSubmit(onSave)}
+          >
+            <Save />
+          </button>
+        )}
+      </div>
     </PageTitle>
   )
 }

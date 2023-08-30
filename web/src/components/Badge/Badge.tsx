@@ -6,7 +6,7 @@ export const Badge: React.FC<React.HTMLProps<HTMLDivElement>> = ({
 }) => (
   <div
     className={classNames(
-      'badge flex h-6 items-center rounded px-2 text-xs font-bold uppercase',
+      'badge flex h-6 items-center rounded px-2 font-sans text-xs font-bold uppercase',
       className || 'badge-primary'
     )}
   >
