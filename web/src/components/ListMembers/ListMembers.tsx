@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Save } from 'lucide-react'
 import { CreateListMembershipMutation, ListMembership } from 'types/graphql'
 
 import { Form, NumberField } from '@redwoodjs/forms'
+import { Redirect, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
-
-import { listRolesIntersect } from 'src/layouts/DashboardListLayout/DashboardListLayout'
 
 import { AddItemButton } from '../AddItemButton/AddItemButton'
 import { CREATE_LIST_MEMBERSHIP_MUTATION } from '../Admin/ListMembership/NewListMembership'
@@ -23,18 +22,10 @@ type CreateListMembershipForm = NonNullable<
   CreateListMembershipMutation['createListMembership']
 >
 
-const ListMembers: ListCellChild = ({ list }) => {
+const ListMembers: ListCellChild = ({ list, canAddMembers }) => {
   const emailRef = useRef<HTMLInputElement>()
 
-  const id = list?.id
-  const listRoles = list?.listRoles
-
-  const { name, description } = list
-
-  const canAddMembers = useMemo(
-    () => listRolesIntersect(listRoles, ['OWNER', 'ADMIN']),
-    [listRoles]
-  )
+  const { id, name, description } = list
 
   const [listMembership, setListMembership] = useState<
     Partial<ListMembership> | undefined
@@ -79,11 +70,9 @@ const ListMembers: ListCellChild = ({ list }) => {
     )
   }, [emailRef, listMembership])
 
-  useEffect(() => {
-    return () => {
-      window.localStorage.removeItem('listDraft')
-    }
-  }, [])
+  if (!canAddMembers) {
+    return <Redirect to={routes.list({ id })} />
+  }
 
   return (
     <>

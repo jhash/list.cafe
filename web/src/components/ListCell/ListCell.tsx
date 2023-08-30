@@ -62,7 +62,9 @@ export interface ListCellChildProps {
   items?: ListItemsQuery['listItems']
   loading: boolean
   canSave: boolean
+  canEdit: boolean
   canDelete: boolean
+  canAddMembers: boolean
   onDelete: () => void
   onSave: (input: CreateListInput | UpdateListInput) => void
   deleteItem: () => void

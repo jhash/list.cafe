@@ -1,6 +1,7 @@
 import kebabCase from 'lodash/kebabCase'
 
 import { Controller, useFormContext } from '@redwoodjs/forms'
+import { Redirect, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
@@ -14,10 +15,15 @@ const ListSettings: ListCellChild = ({
   list: { id, name, identifier },
   onSave,
   loading,
+  canEdit,
 }) => {
   const { handleSubmit } = useFormContext()
 
   const onSubmit = handleSubmit(onSave)
+
+  if (!canEdit) {
+    return <Redirect to={routes.list({ id })} />
+  }
 
   return (
     <>

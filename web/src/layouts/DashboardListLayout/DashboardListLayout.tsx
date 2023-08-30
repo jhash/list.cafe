@@ -24,6 +24,7 @@ import {
   ListCellChildProps,
   ListCellType,
   QUERY as LIST_CELL_QUERY,
+  ListCellChild,
 } from 'src/components/ListCell'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from 'src/components/ListItemsCell'
@@ -34,10 +35,11 @@ import { DigestedList } from 'src/pages/HomePage/HomePage'
 
 type ListForm = NonNullable<CreateListInput>
 
-interface ListTabsProps {
-  id: number
-}
-export const ListTabs: React.FC<ListTabsProps> = ({ id }) => {
+export const ListTabs: ListCellChild = ({
+  list: { id },
+  canAddMembers,
+  canEdit,
+}) => {
   return (
     <Tabs
       links={[
@@ -46,16 +48,24 @@ export const ListTabs: React.FC<ListTabsProps> = ({ id }) => {
           path: routes.list({ id }),
           Icon: List,
         },
-        {
-          name: 'Members',
-          path: routes.listMembers({ id }),
-          Icon: Users,
-        },
-        {
-          name: 'Settings',
-          path: routes.listSettings({ id }),
-          Icon: Cog,
-        },
+        ...(canAddMembers
+          ? [
+              {
+                name: 'Members',
+                path: routes.listMembers({ id }),
+                Icon: Users,
+              },
+            ]
+          : []),
+        ...(canEdit
+          ? [
+              {
+                name: 'Settings',
+                path: routes.listSettings({ id }),
+                Icon: Cog,
+              },
+            ]
+          : []),
       ]}
     />
   )
@@ -244,6 +254,11 @@ const DashboardListLayout: ListCellType = ({
 
   const canSave = id ? canEdit : true
 
+  const canAddMembers = useMemo(
+    () => listRolesIntersect(listRoles, ['OWNER', 'ADMIN']),
+    [listRoles]
+  )
+
   const [deleteListMutation, { loading: deleteLoading }] = useMutation(
     DELETE_LIST_MUTATION,
     {
@@ -344,6 +359,8 @@ const DashboardListLayout: ListCellType = ({
     items,
     canDelete,
     canSave,
+    canEdit,
+    canAddMembers,
     onDelete,
     onSave,
     loading,
@@ -359,7 +376,7 @@ const DashboardListLayout: ListCellType = ({
             {...props}
             canSave={canSave && (!id || settingsMatch)}
           />
-          {!!id && <ListTabs id={id} />}
+          {!!id && <ListTabs {...props} />}
           <Child {...props} />
         </div>
         <ListFadeOut />
