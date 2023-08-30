@@ -144,6 +144,9 @@ const DashboardListLayout: ListCellType = ({
   list = { ...DEFAULT_LIST },
   Child,
 }) => {
+  if (!Child) {
+    throw new Error('Child is required within DashboardListLayout')
+  }
   const draftList: DigestedList | undefined = useMemo(() => {
     if (list?.id) {
       window.localStorage.removeItem('listDraft')
