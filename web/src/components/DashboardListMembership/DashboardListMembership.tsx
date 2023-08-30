@@ -94,12 +94,16 @@ const DashboardListMembership = ({
     >
       {!!user?.person && (
         <div className="flex flex-shrink flex-grow items-center gap-3 overflow-hidden overflow-ellipsis">
-          <div className="flex-shrink whitespace-normal">
-            {user?.person?.name}
-          </div>
-          <span className="flex-shrink overflow-hidden overflow-ellipsis text-sm text-gray-500">
-            {user?.person?.email}
-          </span>
+          {!!user?.person?.name && (
+            <div className="flex-shrink whitespace-normal">
+              {user?.person?.name}
+            </div>
+          )}
+          {!!user?.person?.email && (
+            <span className="flex-shrink overflow-hidden overflow-ellipsis text-sm text-gray-500">
+              {user?.person?.email}
+            </span>
+          )}
         </div>
       )}
       <div className="flex flex-shrink-0 items-center gap-3">
