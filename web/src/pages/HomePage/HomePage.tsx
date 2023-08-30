@@ -109,7 +109,7 @@ const HomePage = () => {
             fire={digestingLink}
             height={window.innerHeight}
             width={window.innerWidth}
-            className="sm:-translate-x-8"
+            className="sm:-translate-x-6"
           />
         </div>
       </BrowserOnly>

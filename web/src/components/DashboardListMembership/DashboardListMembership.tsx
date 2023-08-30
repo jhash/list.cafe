@@ -129,6 +129,7 @@ const DashboardListMembership = ({
             <FormInput
               name="listRole"
               type="select"
+              className="select-sm"
               defaultValue={listRole}
               options={LIST_ROLE_TYPES}
               disabled={loading || currentUser.id === membership.user?.id}

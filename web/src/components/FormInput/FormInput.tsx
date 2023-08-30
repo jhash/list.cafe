@@ -71,6 +71,7 @@ const FormInput = forwardRef<FormInputElement, FormInputProps>(
       onChange,
       onBlur,
       onSubmit,
+      className,
       ...props
     },
     ref
@@ -101,9 +102,13 @@ const FormInput = forwardRef<FormInputElement, FormInputProps>(
                 ? 'textarea'
                 : type === 'select'
                 ? 'select'
-                : 'input'
+                : 'input',
+              className
             ),
-            errorClassName: 'input input-error rounded-md',
+            errorClassName: classNames(
+              'input input-error rounded-md',
+              className
+            ),
             ...controllerProps,
             onChange,
             onBlur,
