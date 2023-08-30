@@ -11,10 +11,18 @@ import { LIST_CAFE_URL } from 'src/lib/url'
 
 export const listMembershipsByListId: QueryResolvers['listMembershipsByListId'] =
   ({ listId }) => {
+    if (!context.currentUser?.id) {
+      throw new Error('You must be logged in to get list memberships')
+    }
+
+    // TODO: limit to certain list roles
     return db.listMembership.findMany({ where: { listId } })
   }
 
 export const listMemberships: QueryResolvers['listMemberships'] = () => {
+  if (!context.currentUser?.id) {
+    throw new Error('You must be logged in to get list memberships')
+  }
   // TODO: add this all over
   if (!hasRole(['ADMIN', 'SUPPORT'])) {
     throw new Error('You are not authorized to access this')
@@ -23,6 +31,10 @@ export const listMemberships: QueryResolvers['listMemberships'] = () => {
 }
 
 export const listMembership: QueryResolvers['listMembership'] = ({ id }) => {
+  if (!context.currentUser?.id) {
+    throw new Error('You must be logged in to get list membership')
+  }
+  // TODO: limit to certain list roles
   return db.listMembership.findUnique({
     where: { id },
   })
@@ -142,33 +154,36 @@ export const createListMembership: MutationResolvers['createListMembership'] =
       },
     })
 
-    const invites = membership.user?.userInvites?.filter(
-      (invite) => invite.listMembershipId === membership.id
-    )
+    try {
+      const invites = membership.user?.userInvites?.filter(
+        (invite) => invite.listMembershipId === membership.id
+      )
 
-    // TODO: still send email to existing user with a pending invite
-    // TODO: move to a job
-    if (invites?.length && (input.email || membership.user?.email)) {
-      const email =
-        input.email || membership.user?.email || membership.user?.person?.email
-      const name = input.name || membership.user?.person?.name
+      // TODO: still send email to existing user with a pending invite
+      // TODO: move to a job
+      if (invites?.length && (input.email || membership.user?.email)) {
+        const email =
+          input.email ||
+          membership.user?.email ||
+          membership.user?.person?.email
+        const name = input.name || membership.user?.person?.name
 
-      const invite = invites.find((invite) => invite.status === 'PENDING')
+        const invite = invites.find((invite) => invite.status === 'PENDING')
 
-      // TODO: include a verification link
-      sendEmail({
-        to: email,
-        subject: `${
-          context.currentUser.person?.name
-            ? `${context.currentUser.person?.name} has invited you`
-            : "You've been invited"
-        } to the list ${membership.list.name} on list.cafe`,
-        // TODO: tell them what role
-        html: `${name ? `<p>Hi ${name}</p>` : ''}<p>${
-          context.currentUser?.person?.name
-            ? `${context.currentUser?.person?.name} has invited you to the list `
-            : "You've been invited to the list "
-        }<strong>${membership.list.name}</strong>!</p>
+        // TODO: include a verification link
+        sendEmail({
+          to: email,
+          subject: `${
+            context.currentUser.person?.name
+              ? `${context.currentUser.person?.name} has invited you`
+              : "You've been invited"
+          } to the list ${membership.list.name} on list.cafe`,
+          // TODO: tell them what role
+          html: `${name ? `<p>Hi ${name}</p>` : ''}<p>${
+            context.currentUser?.person?.name
+              ? `${context.currentUser?.person?.name} has invited you to the list `
+              : "You've been invited to the list "
+          }<strong>${membership.list.name}</strong>!</p>
         <p>View the list here: <a href="${
           invite
             ? membership.user?.hashedPassword
@@ -177,14 +192,33 @@ export const createListMembership: MutationResolvers['createListMembership'] =
               : `${LIST_CAFE_URL}/signup?userInviteId=${invite.id}`
             : `${LIST_CAFE_URL}/dashboard/lists/${membership.listId}`
         }">${membership.list.name}</a></p>`,
-      })
+        })
+      }
+    } catch (error) {
+      console.log('Failed to send invite email')
     }
 
     return membership
   }
 
+export const updateListMembership: MutationResolvers['updateListMembership'] =
+  ({ id, input }) => {
+    if (!context.currentUser?.id) {
+      throw new Error('You must be logged in to get list memberships')
+    }
+    // TODO: check that user has list roles
+    return db.listMembership.update({
+      data: input,
+      where: { id },
+    })
+  }
+
 export const deleteListMembership: MutationResolvers['deleteListMembership'] =
   ({ id }) => {
+    if (!context.currentUser?.id) {
+      throw new Error('You must be logged in to get list memberships')
+    }
+    // TODO: check that user has list roles
     return db.listMembership.delete({
       where: { id },
     })

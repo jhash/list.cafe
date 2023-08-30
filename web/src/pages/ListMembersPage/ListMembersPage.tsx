@@ -1,14 +1,14 @@
 import DashboardList from 'src/components/DashboardList/DashboardList'
 import ListCell from 'src/components/ListCell'
 
-interface DashboardListPage {
+interface ListMembersPage {
   id?: number
 }
-const DashboardListPage = ({ id }: DashboardListPage) => {
+const ListMembersPage = ({ id }: ListMembersPage) => {
   if (!id) {
     return <DashboardList />
   }
   return <ListCell id={id} dashboard Child={DashboardList} />
 }
 
-export default DashboardListPage
+export default ListMembersPage

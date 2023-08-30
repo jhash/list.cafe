@@ -53,7 +53,6 @@ const DashboardListMembership = ({
 
   const { currentUser } = useAuth()
 
-  // TODO: update memberships list?
   const [updateListMembership, { loading: updateLoading, error: updateError }] =
     useMutation(UPDATE_LIST_MEMBERSHIP_MUTATION, {
       onCompleted: () => {
@@ -134,11 +133,13 @@ const DashboardListMembership = ({
               options={LIST_ROLE_TYPES}
               disabled={loading || currentUser.id === membership.user?.id}
               hideDescription
-              onChange={(event) =>
+              onChange={(event) => {
+                console.log({ id, input: { listRole: event?.target?.value } })
+
                 updateListMembership({
                   variables: { id, input: { listRole: event?.target?.value } },
                 })
-              }
+              }}
             />
           </Form>
         )}

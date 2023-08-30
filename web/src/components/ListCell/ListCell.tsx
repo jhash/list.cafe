@@ -1,4 +1,10 @@
-import type { FindListQuery, FindListQueryVariables } from 'types/graphql'
+import { ComponentType } from 'react'
+
+import type {
+  FindListQuery,
+  FindListQueryVariables,
+  ListItemsQuery,
+} from 'types/graphql'
 
 import { Redirect, routes } from '@redwoodjs/router'
 import {
@@ -12,7 +18,6 @@ import ListItemsCell from 'src/components/ListItemsCell'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from 'src/components/ListItemsCell'
 import Spinner from 'src/components/Loading'
 
-import DashboardList from '../DashboardList/DashboardList'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 
 export const QUERY = gql`
@@ -52,10 +57,18 @@ export const Failure = ({ dashboard }: ListCellProps) => (
 
 interface ListCellProps {
   dashboard?: boolean
+  Child?: ListCellChild
 }
+export interface ListCellChildProps {
+  list?: FindListQuery['list']
+  items?: ListItemsQuery['listItems']
+}
+export type ListCellChild = ComponentType<ListCellChildProps>
+
 export const Success = ({
   list,
-  dashboard = false,
+  Child,
+  dashboard,
 }: CellSuccessProps<FindListQuery & ListCellProps, FindListQueryVariables>) => {
   const { id, name, description } = list
 
@@ -63,11 +76,12 @@ export const Success = ({
     variables: { listId: id },
   })
 
-  if (dashboard) {
-    if (!list.listRoles.length) {
-      return <Redirect to={routes.lists()} />
-    }
-    return <DashboardList list={list} items={data?.listItems} />
+  if (dashboard && !list.listRoles.length) {
+    return <Redirect to={routes.lists()} />
+  }
+
+  if (Child) {
+    return <Child list={list} items={data?.listItems} />
   }
 
   return (

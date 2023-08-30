@@ -99,6 +99,8 @@ const Routes = () => {
         <Route path="/dashboard/groups/{id:Int}" page={DashboardGroupPage} name="group" />
         <Route path="/dashboard/lists" page={ListsPage} name="lists" />
         <Route path="/dashboard/lists/new" page={DashboardListPage} name="newList" />
+        <Route path="/dashboard/lists/{id:Int}/settings" page={ListSettingsPage} name="listSettings" />
+        <Route path="/dashboard/lists/{id:Int}/members" page={ListMembersPage} name="listMembers" />
         <Route path="/dashboard/lists/{id:Int}" page={DashboardListPage} name="list" />
         <Route path="/dashboard/settings" page={SettingsPage} name="settings" />
         <Route path="/dashboard/profile" page={ProfilePage} name="profile" />

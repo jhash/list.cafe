@@ -3,12 +3,20 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import intersection from 'lodash/intersection'
 import isUndefined from 'lodash/isUndefined'
 import kebabCase from 'lodash/kebabCase'
-import { Eye, Pencil, PlusCircle, Save, Trash2 } from 'lucide-react'
+import {
+  Cog,
+  Eye,
+  List,
+  Pencil,
+  PlusCircle,
+  Save,
+  Trash2,
+  Users,
+} from 'lucide-react'
 import {
   CreateListInput,
   CreateListItemInput,
   CreateListMembershipMutation,
-  FindListQuery,
   ListItemsQuery,
   ListMembership,
   ListRole,
@@ -33,7 +41,7 @@ import { CREATE_LIST_MEMBERSHIP_MUTATION } from '../Admin/ListMembership/NewList
 import DashboardListItem from '../DashboardListItem/DashboardListItem'
 import { LIST_ROLE_TYPES } from '../DashboardListMembership/DashboardListMembership'
 import FormItem from '../FormItem/FormItem'
-import { QUERY as LIST_CELL_QUERY } from '../ListCell'
+import { QUERY as LIST_CELL_QUERY, ListCellChild } from '../ListCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import ListItemsCell from '../ListItemsCell'
 import ListMembershipsCell from '../ListMembershipsCell'
@@ -41,6 +49,7 @@ import { QUERY as LIST_MEMBERSHIPS_CELL_QUERY } from '../ListMembershipsCell'
 import Modal from '../Modal/Modal'
 import PageTitle from '../PageTitle/PageTitle'
 import SectionTitle from '../SectionTitle/SectionTitle'
+import Tabs from '../Tabs/Tabs'
 
 export const listRolesIntersect = (
   roles: ListRole[] | undefined,
@@ -64,11 +73,8 @@ const AddItemButton: React.FC<ButtonProps> = ({ ...props }) => (
     <PlusCircle />
   </button>
 )
-interface DashboardListProps {
-  list?: FindListQuery['list']
-  items?: ListItemsQuery['listItems']
-}
-const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
+
+const DashboardList: ListCellChild = ({ list, items }) => {
   const { isAuthenticated, signUp } = useAuth()
 
   const draftList: DigestedList | undefined = useMemo(() => {
@@ -531,6 +537,25 @@ const DashboardList: React.FC<DashboardListProps> = ({ list, items }) => {
               </button>
             )}
           </PageTitle>
+          <Tabs
+            links={[
+              {
+                name: 'List',
+                path: routes.list({ id }),
+                Icon: List,
+              },
+              {
+                name: 'Members',
+                path: routes.listMembers({ id }),
+                Icon: Users,
+              },
+              {
+                name: 'Settings',
+                path: routes.listSettings({ id }),
+                Icon: Cog,
+              },
+            ]}
+          />
           <div className="flex flex-wrap gap-x-5 gap-y-3">
             <FormItem
               disabled={loading}
