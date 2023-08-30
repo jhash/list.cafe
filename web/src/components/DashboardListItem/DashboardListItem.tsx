@@ -19,6 +19,7 @@ import { matchListTypeOption } from 'src/lib/lists'
 import { UPDATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/EditListItemCell'
 import { DELETE_LIST_ITEM_MUTATION } from '../Admin/ListItem/ListItem'
 import { CREATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/NewListItem'
+import ExternalLink from '../ExternalLink/ExternalLink'
 import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from '../ListItemsCell'
@@ -164,6 +165,18 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     setImmediate(() => linkRef?.current?.focus())
   }, [linkRef])
 
+  const linkItem = (
+    <FormItem
+      disabled={loading}
+      editing={editing}
+      name="url"
+      defaultValue={url}
+      className="text-base"
+      label="Link"
+      ref={linkRef}
+    />
+  )
+
   return (
     <Form<CreateListItemForm>
       className={classNames(
@@ -193,7 +206,16 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         >
           <div className="flex flex-grow items-center gap-3">
             {title}
-            {!!url && <Link2 size="1rem" className="flex-shrink-0" />}
+            {!!url && (
+              <ExternalLink
+                href={url}
+                // TODO: don't use z
+                className="z-10 flex flex-shrink-0 items-center"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <Link2 size="1rem" className="flex-shrink-0" />
+              </ExternalLink>
+            )}
           </div>
           <div className="flex max-h-full items-center justify-end gap-3 overflow-hidden overflow-ellipsis">
             {!!description && (
@@ -254,15 +276,18 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         )}
       >
         {!!listId && <NumberField hidden name="listId" defaultValue={listId} />}
-        <FormItem
-          disabled={loading}
-          editing={editing}
-          name="url"
-          defaultValue={url}
-          className="text-base"
-          label="Link"
-          ref={linkRef}
-        />
+        {url ? (
+          <ExternalLink
+            href={url}
+            // TODO: don't use z
+            className="link z-10 max-w-xl flex-grow"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {linkItem}
+          </ExternalLink>
+        ) : (
+          linkItem
+        )}
         <FormItem
           disabled={loading}
           editing={editing}
