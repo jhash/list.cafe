@@ -70,6 +70,7 @@ const FormInput = forwardRef<FormInputElement, FormInputProps>(
       hideDescription,
       onChange,
       onBlur,
+      onSubmit,
       ...props
     },
     ref
@@ -106,6 +107,12 @@ const FormInput = forwardRef<FormInputElement, FormInputProps>(
             ...controllerProps,
             onChange,
             onBlur,
+            onSubmit,
+            onKeyUp: (event: React.KeyboardEvent<FormInputElement>) => {
+              if (event.key === 'Enter') {
+                onSubmit?.(undefined)
+              }
+            },
             // value,
             ref,
           }

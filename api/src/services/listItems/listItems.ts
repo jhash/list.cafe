@@ -26,19 +26,43 @@ export const listItem: QueryResolvers['listItem'] = ({ id }) => {
 export const createListItem: MutationResolvers['createListItem'] = ({
   input,
 }) => {
+  if (!input.listId) {
+    throw new Error('List is required to create a list item')
+  }
+
+  const {
+    description,
+    images,
+    listId,
+    order,
+    price,
+    quantity,
+    title,
+    url,
+    voting,
+  } = input
+
   return db.listItem.create({
     data: {
-      ...input,
+      description,
+      order,
+      price,
+      quantity,
+      title,
+      url,
+      voting,
       list: {
         connect: {
-          id: input.listId,
+          id: listId,
         },
       },
-      images: {
-        createMany: {
-          data: input.images,
-        },
-      },
+      images: images
+        ? {
+            createMany: {
+              data: images,
+            },
+          }
+        : undefined,
     },
   })
 }

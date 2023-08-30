@@ -1,14 +1,16 @@
-import DashboardList from 'src/components/DashboardList/DashboardList'
+import { Redirect, routes } from '@redwoodjs/router'
+
 import ListCell from 'src/components/ListCell'
+import ListMembers from 'src/components/ListMembers/ListMembers'
 
 interface ListMembersPage {
   id?: number
 }
 const ListMembersPage = ({ id }: ListMembersPage) => {
   if (!id) {
-    return <DashboardList />
+    return <Redirect to={routes.lists()} />
   }
-  return <ListCell id={id} dashboard Child={DashboardList} />
+  return <ListCell id={id} dashboard Child={ListMembers} />
 }
 
 export default ListMembersPage

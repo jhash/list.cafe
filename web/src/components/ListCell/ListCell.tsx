@@ -1,24 +1,21 @@
 import { ComponentType } from 'react'
 
 import type {
+  CreateListInput,
+  CreateListItemInput,
   FindListQuery,
   FindListQueryVariables,
   ListItemsQuery,
+  UpdateListInput,
 } from 'types/graphql'
 
 import { Redirect, routes } from '@redwoodjs/router'
-import {
-  type CellSuccessProps,
-  // type CellFailureProps,
-  MetaTags,
-  useQuery,
-} from '@redwoodjs/web'
+import { type CellSuccessProps } from '@redwoodjs/web'
 
-import ListItemsCell from 'src/components/ListItemsCell'
-import { QUERY as LIST_ITEMS_CELL_QUERY } from 'src/components/ListItemsCell'
 import Spinner from 'src/components/Loading'
+import DashboardListLayout from 'src/layouts/DashboardListLayout/DashboardListLayout'
 
-import ListFadeOut from '../ListFadeOut/ListFadeOut'
+import PublicList from '../PublicList/PublicList'
 
 export const QUERY = gql`
   query FindListQuery($id: Int!) {
@@ -55,13 +52,21 @@ export const Failure = ({ dashboard }: ListCellProps) => (
   <Redirect to={dashboard ? routes.lists() : routes.home()} />
 )
 
-interface ListCellProps {
+export type ListCellProps = FindListQuery & {
   dashboard?: boolean
   Child?: ListCellChild
 }
+export type ListCellType = ComponentType<ListCellProps>
 export interface ListCellChildProps {
-  list?: FindListQuery['list']
+  list: FindListQuery['list']
   items?: ListItemsQuery['listItems']
+  loading: boolean
+  canSave: boolean
+  canDelete: boolean
+  onDelete: () => void
+  onSave: (input: CreateListInput | UpdateListInput) => void
+  deleteItem: () => void
+  addItem: (input: CreateListItemInput) => void
 }
 export type ListCellChild = ComponentType<ListCellChildProps>
 
@@ -69,44 +74,16 @@ export const Success = ({
   list,
   Child,
   dashboard,
-}: CellSuccessProps<FindListQuery & ListCellProps, FindListQueryVariables>) => {
-  const { id, name, description } = list
-
-  const { data } = useQuery(LIST_ITEMS_CELL_QUERY, {
-    variables: { listId: id },
-  })
-
+}: CellSuccessProps<ListCellProps, FindListQueryVariables>) => {
   if (dashboard && !list.listRoles.length) {
     return <Redirect to={routes.lists()} />
   }
 
-  if (Child) {
-    return <Child list={list} items={data?.listItems} />
+  const childProps = { list, Child }
+
+  if (dashboard) {
+    return <DashboardListLayout {...childProps} />
   }
 
-  return (
-    <>
-      <MetaTags title={name} description={description} />
-
-      <div className="flex flex-grow flex-col items-center justify-center">
-        <div className="container flex flex-col gap-12">
-          <div className="flex flex-col gap-7">
-            <div className="flex font-serif text-5xl leading-tight">{name}</div>
-            {!!description && (
-              <p className="font-sans text-xl">{description}</p>
-            )}
-          </div>
-          <ul className="flex flex-col gap-2">
-            <ListItemsCell
-              listId={id}
-              dashboard={dashboard}
-              // TODO: why does the cell make these required?
-              deleteItem={undefined}
-            />
-          </ul>
-          <ListFadeOut noHeight />
-        </div>
-      </div>
-    </>
-  )
+  return <PublicList {...childProps} />
 }

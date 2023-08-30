@@ -15,7 +15,9 @@ const HomeLayout = ({ children }) => {
   return (
     <MainLayout>
       <nav className="min-h-16 flex w-full max-w-full flex-grow-0 items-center px-4 py-2">
-        <HomeLink />
+        <div className="flex flex-grow items-center">
+          <HomeLink />
+        </div>
         <div className="flex flex-shrink select-none flex-wrap items-center justify-end gap-x-3 sm:flex-nowrap">
           <BrowserOnly>
             <Suspense fallback={<Loading />}>

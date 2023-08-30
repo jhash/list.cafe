@@ -12,14 +12,14 @@
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import DashboardList from './DashboardList'
+import ListMembers from './ListMembers'
 
-const meta: Meta<typeof DashboardList> = {
-  component: DashboardList,
+const meta: Meta<typeof ListMembers> = {
+  component: ListMembers,
 }
 
 export default meta
 
-type Story = StoryObj<typeof DashboardList>
+type Story = StoryObj<typeof ListMembers>
 
 export const Primary: Story = {}

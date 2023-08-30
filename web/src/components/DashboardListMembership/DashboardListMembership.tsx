@@ -134,8 +134,6 @@ const DashboardListMembership = ({
               disabled={loading || currentUser.id === membership.user?.id}
               hideDescription
               onChange={(event) => {
-                console.log({ id, input: { listRole: event?.target?.value } })
-
                 updateListMembership({
                   variables: { id, input: { listRole: event?.target?.value } },
                 })

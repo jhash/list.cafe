@@ -13,12 +13,12 @@ import { Form, NumberField } from '@redwoodjs/forms'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import { listRolesIntersect } from 'src/layouts/DashboardListLayout/DashboardListLayout'
 import { matchListTypeOption } from 'src/lib/lists'
 
 import { UPDATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/EditListItemCell'
 import { DELETE_LIST_ITEM_MUTATION } from '../Admin/ListItem/ListItem'
 import { CREATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/NewListItem'
-import { listRolesIntersect } from '../DashboardList/DashboardList'
 import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from '../ListItemsCell'

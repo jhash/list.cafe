@@ -195,7 +195,7 @@ export const createListMembership: MutationResolvers['createListMembership'] =
         })
       }
     } catch (error) {
-      console.log('Failed to send invite email')
+      console.error('Failed to send invite email')
     }
 
     return membership

@@ -1,7 +1,8 @@
 import { Redirect, routes } from '@redwoodjs/router'
+import { MetaTags } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import DashboardList from 'src/components/DashboardList/DashboardList'
+import DashboardListLayout from 'src/layouts/DashboardListLayout/DashboardListLayout'
 
 const ListDraftPage = () => {
   const { isAuthenticated } = useAuth()
@@ -15,11 +16,17 @@ const ListDraftPage = () => {
   }
 
   return (
-    <div className="flex w-full max-w-full flex-grow flex-col items-center">
-      <div className="container flex w-full flex-grow flex-col">
-        <DashboardList />
+    <>
+      <MetaTags
+        title={'Finish your list'}
+        description={'Finish setting up your new list'}
+      />
+      <div className="flex w-full max-w-full flex-grow flex-col items-center">
+        <div className="container flex w-full flex-grow flex-col">
+          <DashboardListLayout />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

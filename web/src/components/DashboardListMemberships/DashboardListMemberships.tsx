@@ -1,16 +1,11 @@
 import { useMemo } from 'react'
 
-import intersection from 'lodash/intersection'
-import { ListMembershipsQuery, ListRole } from 'types/graphql'
+import { ListMembershipsQuery } from 'types/graphql'
 
 import { useAuth } from 'src/auth'
+import { listRolesIntersect } from 'src/layouts/DashboardListLayout/DashboardListLayout'
 
 import DashboardListMembership from '../DashboardListMembership/DashboardListMembership'
-
-export const listRolesIntersect = (
-  roles: ListRole[] | undefined,
-  authRoles: ListRole[]
-) => !!roles?.length && !!intersection(roles, authRoles).length
 
 const DashboardListMemberships = ({
   listMemberships,

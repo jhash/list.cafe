@@ -249,7 +249,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
             />
             <FormItem
               disabled={loading}
-              name="identifier"
+              name="identifier.id"
               defaultValue={identifier?.id}
               editing={editing}
               label={<SectionTitle>ID</SectionTitle>}
@@ -261,7 +261,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
               }}
             >
               <Controller
-                name="identifier"
+                name="identifier.id"
                 render={({ field: { value } }) => (
                   <div className="flex items-center p-1 text-sm text-gray-500">
                     {`Ex. ${LIST_CAFE_DOMAIN}/${

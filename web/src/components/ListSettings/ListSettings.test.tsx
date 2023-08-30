@@ -1,14 +1,14 @@
 import { render } from '@redwoodjs/testing/web'
 
-import DashboardList from './DashboardList'
+import ListSettings from './ListSettings'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //    https://redwoodjs.com/docs/testing#testing-components
 
-describe('DashboardList', () => {
+describe('ListSettings', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<DashboardList />)
+      render(<ListSettings />)
     }).not.toThrow()
   })
 })
