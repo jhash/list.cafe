@@ -82,32 +82,34 @@ const EditListItems: ListCellChild = ({
           />
         </Modal>
       )}
-      <div className="flex w-full max-w-full items-center gap-3">
-        <SectionTitle>Items</SectionTitle>
-        {/* TODO: support without having saved? */}
-        {canAdd && (
-          <div className="flex items-center gap-3">
-            <AddItemButton onClick={createNewListItem} disabled={loading} />
-          </div>
-        )}
+      <div className="flex w-full max-w-full flex-col gap-5">
+        <div className="flex w-full max-w-full items-center gap-3">
+          <SectionTitle>Items</SectionTitle>
+          {/* TODO: support without having saved? */}
+          {canAdd && (
+            <div className="flex items-center gap-3">
+              <AddItemButton onClick={createNewListItem} disabled={loading} />
+            </div>
+          )}
+        </div>
+        <ul className="flex w-full max-w-full flex-col gap-2">
+          {id ? (
+            <ListItemsCell listId={id} dashboard deleteItem={deleteItem} />
+          ) : (
+            (items || []).map((listItem, index) => (
+              <li key={index} className="flex w-full max-w-full items-center">
+                <DashboardListItem
+                  {...listItem}
+                  reservations={undefined}
+                  modal={false}
+                  index={index}
+                  deleteItem={deleteItem}
+                />
+              </li>
+            ))
+          )}
+        </ul>
       </div>
-      <ul className="flex w-full max-w-full flex-col gap-2">
-        {id ? (
-          <ListItemsCell listId={id} dashboard deleteItem={deleteItem} />
-        ) : (
-          (items || []).map((listItem, index) => (
-            <li key={index} className="flex w-full max-w-full items-center">
-              <DashboardListItem
-                {...listItem}
-                reservations={undefined}
-                modal={false}
-                index={index}
-                deleteItem={deleteItem}
-              />
-            </li>
-          ))
-        )}
-      </ul>
     </>
   )
 }

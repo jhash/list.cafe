@@ -114,6 +114,7 @@ const Routes = () => {
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
         <Route path="/draft" page={ListDraftPage} name="listDraft" />
+        <Route path="/explore" page={ExplorePage} name="explore" />
         {/* TODO: prerender? */}
         <Route path="/{identifier}" page={IdentifierPage} name="identifier" />
         {/* TODO: prerender */}

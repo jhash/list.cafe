@@ -4,6 +4,7 @@ import { MetaTags } from '@redwoodjs/web'
 import { useAuth } from 'src/auth'
 import NewList from 'src/components/NewList/NewList'
 import DashboardListLayout from 'src/layouts/DashboardListLayout/DashboardListLayout'
+import HomeContainerLayout from 'src/layouts/HomeContainerLayout/HomeContainerLayout'
 
 const ListDraftPage = () => {
   const { isAuthenticated } = useAuth()
@@ -22,11 +23,9 @@ const ListDraftPage = () => {
         title={'Finish your list'}
         description={'Finish setting up your new list'}
       />
-      <div className="flex w-full max-w-full flex-grow flex-col items-center">
-        <div className="container flex w-full flex-grow flex-col">
-          <DashboardListLayout Child={NewList} />
-        </div>
-      </div>
+      <HomeContainerLayout>
+        <DashboardListLayout Child={NewList} />
+      </HomeContainerLayout>
     </>
   )
 }

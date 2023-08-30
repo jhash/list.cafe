@@ -122,8 +122,10 @@ const NewList: ListCellChild = ({
           </Form>
         </Modal>
       )}
-      <ListSettings {...props} />
-      <EditListItems {...props} />
+      <div className="flex w-full max-w-full flex-col gap-12">
+        <ListSettings {...props} />
+        <EditListItems {...props} />
+      </div>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { Link, routes } from '@redwoodjs/router'
+import { NavLink, Link, routes } from '@redwoodjs/router'
 
 import { useAuth } from 'src/auth'
 
@@ -36,18 +36,20 @@ const HomeAuthLinks = () => {
         </>
       ) : (
         <>
-          <Link
+          <NavLink
             className="link font-semibold no-underline hover:underline"
+            activeClassName="font-bold"
             to={routes.login()}
           >
             log in
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             className="link font-semibold no-underline hover:underline"
+            activeClassName="font-bold"
             to={routes.signup()}
           >
             sign up
-          </Link>
+          </NavLink>
         </>
       )}
     </>

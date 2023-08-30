@@ -11,18 +11,11 @@ import { LIST_CAFE_URL } from 'src/lib/url'
 
 export const listMembershipsByListId: QueryResolvers['listMembershipsByListId'] =
   ({ listId }) => {
-    if (!context.currentUser?.id) {
-      throw new Error('You must be logged in to get list memberships')
-    }
-
     // TODO: limit to certain list roles
     return db.listMembership.findMany({ where: { listId } })
   }
 
 export const listMemberships: QueryResolvers['listMemberships'] = () => {
-  if (!context.currentUser?.id) {
-    throw new Error('You must be logged in to get list memberships')
-  }
   // TODO: add this all over
   if (!hasRole(['ADMIN', 'SUPPORT'])) {
     throw new Error('You are not authorized to access this')
@@ -31,9 +24,6 @@ export const listMemberships: QueryResolvers['listMemberships'] = () => {
 }
 
 export const listMembership: QueryResolvers['listMembership'] = ({ id }) => {
-  if (!context.currentUser?.id) {
-    throw new Error('You must be logged in to get list membership')
-  }
   // TODO: limit to certain list roles
   return db.listMembership.findUnique({
     where: { id },
@@ -42,9 +32,6 @@ export const listMembership: QueryResolvers['listMembership'] = ({ id }) => {
 
 export const createListMembership: MutationResolvers['createListMembership'] =
   async ({ input }) => {
-    if (!context.currentUser?.id) {
-      throw new Error('You must be logged in to create memberships')
-    }
     if (!input.email && !input.userId) {
       throw new Error('Either an email or a user id is required')
     }
@@ -203,9 +190,6 @@ export const createListMembership: MutationResolvers['createListMembership'] =
 
 export const updateListMembership: MutationResolvers['updateListMembership'] =
   ({ id, input }) => {
-    if (!context.currentUser?.id) {
-      throw new Error('You must be logged in to get list memberships')
-    }
     // TODO: check that user has list roles
     return db.listMembership.update({
       data: input,
@@ -215,9 +199,6 @@ export const updateListMembership: MutationResolvers['updateListMembership'] =
 
 export const deleteListMembership: MutationResolvers['deleteListMembership'] =
   ({ id }) => {
-    if (!context.currentUser?.id) {
-      throw new Error('You must be logged in to get list memberships')
-    }
     // TODO: check that user has list roles
     return db.listMembership.delete({
       where: { id },

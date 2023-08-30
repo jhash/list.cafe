@@ -61,15 +61,17 @@ const listMembershipsWhereClauses = (
   ]
 }
 
-export const lists: QueryResolvers['lists'] = () => {
-  if (!context.currentUser) {
-    return db.list.findMany({
-      where: {
-        visibility: 'PUBLIC',
-      },
-    })
-  }
+export const publicLists: QueryResolvers['publicLists'] = ({ take, skip }) => {
+  return db.list.findMany({
+    where: {
+      visibility: 'PUBLIC',
+    },
+    take,
+    skip,
+  })
+}
 
+export const lists: QueryResolvers['lists'] = () => {
   return db.list.findMany({
     where: {
       OR: [...listMembershipsWhereClauses()],

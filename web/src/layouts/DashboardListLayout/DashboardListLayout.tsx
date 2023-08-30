@@ -28,7 +28,7 @@ import {
 } from 'src/components/ListCell'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from 'src/components/ListItemsCell'
-import { ListTypeBadge } from 'src/components/ListsCell'
+import { ListTypeBadge } from 'src/components/Lists/Lists'
 import PageTitle from 'src/components/PageTitle/PageTitle'
 import Tabs from 'src/components/Tabs/Tabs'
 import { DigestedList } from 'src/pages/HomePage/HomePage'
