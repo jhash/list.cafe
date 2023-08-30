@@ -70,7 +70,7 @@ const ListMembers: ListCellChild = ({ list, canAddMembers }) => {
     )
   }, [emailRef, listMembership])
 
-  if (!canAddMembers) {
+  if (!!id && !canAddMembers) {
     return <Redirect to={routes.list({ id })} />
   }
 

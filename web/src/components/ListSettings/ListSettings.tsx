@@ -21,7 +21,7 @@ const ListSettings: ListCellChild = ({
 
   const onSubmit = handleSubmit(onSave)
 
-  if (!canEdit) {
+  if (!!id && !canEdit) {
     return <Redirect to={routes.list({ id })} />
   }
 
