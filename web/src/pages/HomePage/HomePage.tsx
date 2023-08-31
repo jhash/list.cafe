@@ -107,8 +107,8 @@ const HomePage = () => {
         <div className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-center justify-center">
           <ReactCanvasConfetti
             fire={digestingLink}
-            height={window.innerHeight}
-            width={window.innerWidth}
+            height={window?.innerHeight}
+            width={window?.innerWidth}
             className="sm:-translate-x-6"
           />
         </div>

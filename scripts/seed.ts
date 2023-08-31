@@ -73,6 +73,9 @@ export default async () => {
       {
         id: 'draft',
       },
+      {
+        id: '404',
+      },
       // TODO: sublinks? or disallow slashes
     ]
 

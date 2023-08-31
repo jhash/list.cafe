@@ -3,7 +3,7 @@ import { Set, Router, Route } from '@redwoodjs/router'
 import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
 
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
-import DashboardLayout from './layouts/DashboardLayout/DashboardLayout'
+import DashboardLayout, { DashboardLoading } from './layouts/DashboardLayout/DashboardLayout'
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
 import AdminPage from './pages/AdminPage/AdminPage'
 import DashboardListPage from './pages/DashboardListPage/DashboardListPage'
@@ -92,7 +92,7 @@ const Routes = ({ useAuth }) => {
         </Set>
         <Route path="/admin" page={AdminPage} name="admin" />
       </Set>
-      <Set wrap={DashboardLayout}>
+      <Set wrap={DashboardLayout} private whileLoadingAuth={DashboardLoading} unauthenticated="home">
         <Route path="/dashboard/groups" page={GroupsPage} name="groups" />
         <Route path="/dashboard/groups/new" page={DashboardGroupPage} name="newGroup" />
         <Route path="/dashboard/groups/{id:Int}" page={DashboardGroupPage} name="group" />
@@ -103,21 +103,21 @@ const Routes = ({ useAuth }) => {
         <Route path="/dashboard/lists/{id:Int}" page={DashboardListPage} name="list" />
         <Route path="/dashboard/settings" page={SettingsPage} name="settings" />
         <Route path="/dashboard/profile" page={ProfilePage} name="profile" />
-        <Route path="/dashboard" page={DashboardPage} name="dashboard" />
+        <Route path="/dashboard" page={DashboardPage} name="dashboard" prerender />
       </Set>
 
-      <Set wrap={HomeLayout}>
+      <Set wrap={HomeLayout} prerender>
         {/* */}
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
         <Route path="/draft" page={ListDraftPage} name="listDraft" />
-        <Route path="/explore" page={ExplorePage} name="explore" prerender />
+        <Route path="/explore" page={ExplorePage} name="explore" />
+        <Route path="/404" page={NotFoundPage} prerender name="404" />
         {/* TODO: prerender? */}
         <Route path="/{identifier}" page={IdentifierPage} name="identifier" />
-        {/* TODO: prerender */}
-        <Route path="/" page={HomePage} name="home" prerender />
+        <Route path="/" page={HomePage} name="home" />
         <Route notfound page={NotFoundPage} />
       </Set>
     </Router>

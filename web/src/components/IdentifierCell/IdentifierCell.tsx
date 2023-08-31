@@ -35,6 +35,10 @@ export const Failure = () => (
 export const Success = ({
   identifier,
 }: CellSuccessProps<FindIdentifierQuery, FindIdentifierQueryVariables>) => {
+  if (!identifier.listId && !identifier.groupId && !identifier.personId) {
+    return <Redirect to={routes.home()} />
+  }
+
   return identifier.listId ? (
     <ListPage id={identifier.listId} />
   ) : (

@@ -112,7 +112,7 @@ export const ListPageTitle: React.FC<ListPageTitleProps> = ({
               event.stopPropagation()
 
               return (
-                window.confirm(
+                window?.confirm(
                   'Are you sure you want to remove this member?'
                 ) && onDelete()
               )
@@ -159,12 +159,12 @@ const DashboardListLayout: ListCellType = ({
   }
   const draftList: DigestedList | undefined = useMemo(() => {
     if (list?.id) {
-      window.localStorage.removeItem('listDraft')
+      window?.localStorage.removeItem('listDraft')
       return
     }
 
     try {
-      const draftString = window.localStorage.getItem('listDraft')
+      const draftString = window?.localStorage.getItem('listDraft')
 
       if (!draftString) {
         throw new Error('listDraft is not available on localStorage')
@@ -238,7 +238,7 @@ const DashboardListLayout: ListCellType = ({
       }))
     )
 
-    window.localStorage.removeItem('listDraft')
+    window?.localStorage.removeItem('listDraft')
   }, [draftList, listItems])
 
   // TODO: remove admin?
@@ -345,12 +345,12 @@ const DashboardListLayout: ListCellType = ({
       })
     }
 
-    window.localStorage.removeItem('listDraft')
+    window?.localStorage.removeItem('listDraft')
   }
 
   useEffect(() => {
     return () => {
-      window.localStorage.removeItem('listDraft')
+      window?.localStorage.removeItem('listDraft')
     }
   }, [])
 

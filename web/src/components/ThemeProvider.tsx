@@ -17,7 +17,7 @@ export const ThemeProvider = ({ children }) => {
     if (
       browser &&
       !localStorage?.getItem('theme') &&
-      !!window.matchMedia?.('(prefers-color-scheme: dark)').matches
+      !!window?.matchMedia?.('(prefers-color-scheme: dark)').matches
     ) {
       setDarkMode(true)
     }

@@ -115,7 +115,7 @@ const DashboardListMembership = ({
               event.preventDefault()
               event.stopPropagation()
               return (
-                window.confirm('Are you sure you want to delete this item?') &&
+                window?.confirm('Are you sure you want to delete this item?') &&
                 deleteListMembership({ variables: { id } })
               )
             }}

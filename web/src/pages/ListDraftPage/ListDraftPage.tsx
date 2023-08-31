@@ -9,7 +9,7 @@ import HomeContainerLayout from 'src/layouts/HomeContainerLayout/HomeContainerLa
 const ListDraftPage = () => {
   const { isAuthenticated } = useAuth()
 
-  if (!window.localStorage.getItem('listDraft')) {
+  if (!window?.localStorage.getItem('listDraft')) {
     return <Redirect to={routes.home()} />
   }
 

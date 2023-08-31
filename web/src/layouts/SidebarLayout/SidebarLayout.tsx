@@ -5,6 +5,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import classNames from 'classnames'
 import { PanelLeft, PanelLeftClose } from 'lucide-react'
 
+import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
 import { useLocation } from '@redwoodjs/router'
 
 import HomeLink from 'src/components/HomeLink/HomeLink'
@@ -21,8 +22,11 @@ export type SidebarType = React.ElementType<SidebarProps>
 
 type SidebarLayoutProps = React.HTMLProps<HTMLDivElement> & {
   Sidebar: SidebarType
+  skeleton?: boolean
 }
-const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
+const SidebarLayout = ({ children, Sidebar, skeleton }: SidebarLayoutProps) => {
+  const browser = useIsBrowser()
+
   const { pathname } = useLocation()
 
   const [state, setState] = useState<{ open: boolean; closing: boolean }>({
@@ -61,14 +65,18 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
   }
 
   useEffect(() => {
-    if (!window.innerWidth || !open || window.innerWidth >= 768) {
+    if (!browser) {
+      return
+    }
+
+    if (!window?.innerWidth || !open || window?.innerWidth >= 768) {
       return
     }
 
     close()
     setHovering(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.innerWidth, pathname])
+  }, [browser ? window?.innerWidth : undefined, pathname])
 
   useEffect(() => {
     setHovering(false)
@@ -127,7 +135,7 @@ const SidebarLayout = ({ children, Sidebar }: SidebarLayoutProps) => {
               )}
             >
               <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-x-visible overflow-y-visible sm:min-h-[85%]">
-                {children}
+                {skeleton ? null : children}
               </div>
             </div>
           </div>

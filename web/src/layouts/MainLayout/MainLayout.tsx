@@ -5,8 +5,11 @@ import { ToastBar, Toaster, toast } from '@redwoodjs/web/dist/toast'
 
 import { useFontFacesLoaded } from 'src/hooks/useFontFacesLoaded'
 
-const MainLayout = ({ children }) => {
-  const fontsLoaded = useFontFacesLoaded()
+type MainLayoutProps = React.HTMLProps<HTMLDivElement> & {
+  skeleton?: boolean
+}
+const MainLayout: React.FC<MainLayoutProps> = ({ children, skeleton }) => {
+  const fontsLoaded = useFontFacesLoaded() || skeleton
 
   return (
     <main

@@ -256,7 +256,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
                   event.preventDefault()
                   event.stopPropagation()
                   return id
-                    ? window.confirm(
+                    ? window?.confirm(
                         'Are you sure you want to delete this item?'
                       ) && onDelete()
                     : onDelete()

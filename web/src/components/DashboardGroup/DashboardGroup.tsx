@@ -207,7 +207,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
                   event.stopPropagation()
 
                   return (
-                    window.confirm(
+                    window?.confirm(
                       'Are you sure you want to delete this group?'
                     ) && onDelete()
                   )

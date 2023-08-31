@@ -81,7 +81,7 @@ export const lists: QueryResolvers['lists'] = () => {
 
 export const list: QueryResolvers['list'] = ({ id }) => {
   if (!context.currentUser) {
-    return db.list.findUniqueOrThrow({
+    return db.list.findUnique({
       where: {
         id,
         OR: [{ visibility: 'PUBLIC' }, { visibility: 'LINK' }],
