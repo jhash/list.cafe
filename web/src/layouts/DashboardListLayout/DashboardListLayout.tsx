@@ -88,11 +88,13 @@ export const ListPageTitle: React.FC<ListPageTitleProps> = ({
 
   return (
     <PageTitle>
-      <div className="flex flex-shrink flex-grow items-center gap-6">
-        {name || 'Create a new list'}
+      <div className="flex max-w-full flex-shrink flex-grow items-center gap-6 overflow-hidden overflow-ellipsis">
+        <span className="flex-shrink overflow-hidden overflow-ellipsis">
+          {name || 'Create a new list'}
+        </span>
         {!!id && <ListTypeBadge type={type} />}
       </div>
-      <div className="flex min-w-0 flex-shrink-0 flex-grow-0 items-center gap-2 text-ellipsis">
+      <div className="flex min-w-0 flex-shrink-0 flex-grow-0 items-center gap-2 overflow-hidden text-ellipsis">
         {!!id && !!identifier?.id && (
           <Link
             to={routes.identifier({ identifier: identifier?.id })}
