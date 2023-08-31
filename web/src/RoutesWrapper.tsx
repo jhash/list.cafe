@@ -1,33 +1,41 @@
 import { Suspense, lazy } from 'react'
 
 import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
-import { Set, Router, Route } from '@redwoodjs/router'
 
 import Loading from './components/Loading'
-import HomeLayout from './layouts/HomeLayout/HomeLayout'
-import HomePage from './pages/HomePage/HomePage'
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
+import Routes from './Routes'
 
-const Routes = lazy(() => import('./Routes'))
+const RoutesWithAuth = lazy(() => import('./RoutesWithAuth'))
+
+const useAuth = () => ({
+  loading: false,
+  isAuthenticated: false,
+  currentUser: null,
+  userMetadata: null,
+  logIn: async () => ({}),
+  logOut: async () => ({}),
+  signUp: async () => ({}),
+  getToken: async () => null,
+  getCurrentUser: async () => null,
+  hasRole: (_rolesToCheck: string | string[]) => true,
+  reauthenticate: async () => null,
+  forgotPassword: async (_username: string) => ({}),
+  resetPassword: async () => ({}),
+  validateResetToken: async (_resetToken: string | null) => ({}),
+  type: '',
+  hasError: false,
+})
 
 const RoutesWrapper = () => {
   const browser = useIsBrowser()
 
-  // Define any pages that we want prerendered here
   if (!browser) {
-    return (
-      <Router>
-        <Set wrap={HomeLayout}>
-          <Route path="/" page={HomePage} name="home" prerender />
-          <Route notfound page={NotFoundPage} />
-        </Set>
-      </Router>
-    )
+    return <Routes useAuth={useAuth} />
   }
 
   return (
     <Suspense fallback={<Loading />}>
-      <Routes />
+      <RoutesWithAuth />
     </Suspense>
   )
 }

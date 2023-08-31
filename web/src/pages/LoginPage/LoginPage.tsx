@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useEffect } from 'react'
 
 import {
@@ -15,33 +15,37 @@ import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
 
-const LoginPage = ({ type }) => {
+const LoginPage = () => {
+  // { type }
   const WELCOME_MESSAGE = 'Welcome back!'
   const REDIRECT = routes.dashboard()
 
   const {
     isAuthenticated,
-    client: webAuthn,
+    // client: webAuthn,
     loading,
     logIn,
     reauthenticate,
   } = useAuth()
-  const [shouldShowWebAuthn, setShouldShowWebAuthn] = useState(false)
-  const [showWebAuthn, setShowWebAuthn] = useState(
-    webAuthn.isEnabled() && type !== 'password'
-  )
+  // const [shouldShowWebAuthn, setShouldShowWebAuthn] = useState(false)
+  // const [showWebAuthn, setShowWebAuthn] = useState(
+  //   webAuthn.isEnabled() && type !== 'password'
+  // )
 
   // should redirect right after login or wait to show the webAuthn prompts?
   useEffect(() => {
-    if (isAuthenticated && (!shouldShowWebAuthn || webAuthn.isEnabled())) {
+    if (isAuthenticated) {
+      // && !shouldShowWebAuthn) {
+      // || webAuthn.isEnabled())) {
       setImmediate(() => navigate(REDIRECT))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, shouldShowWebAuthn])
+  }, [isAuthenticated]) // , shouldShowWebAuthn])
 
   // if WebAuthn is enabled, show the prompt as soon as the page loads
   useEffect(() => {
-    if (!loading && !isAuthenticated && showWebAuthn) {
+    if (!loading && !isAuthenticated) {
+      // && showWebAuthn) {
       onAuthenticate()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,11 +58,11 @@ const LoginPage = ({ type }) => {
   }, [])
 
   const onSubmit = async (data) => {
-    const webAuthnSupported = await webAuthn.isSupported()
+    // const webAuthnSupported = await webAuthn.isSupported()
 
-    if (webAuthnSupported) {
-      setShouldShowWebAuthn(true)
-    }
+    // if (webAuthnSupported) {
+    //   setShouldShowWebAuthn(true)
+    // }
     const response = await logIn({
       username: data.email,
       password: data.password,
@@ -72,76 +76,76 @@ const LoginPage = ({ type }) => {
       toast.error(response.error)
     } else {
       // user logged in
-      if (webAuthnSupported) {
-        setShowWebAuthn(true)
-      } else {
-        toast.success(WELCOME_MESSAGE)
-      }
+      // if (webAuthnSupported) {
+      //   setShowWebAuthn(true)
+      // } else {
+      toast.success(WELCOME_MESSAGE)
+      // }
     }
   }
 
   const onAuthenticate = async () => {
     try {
-      await webAuthn.authenticate()
+      // await webAuthn.authenticate()
       await reauthenticate()
       toast.success(WELCOME_MESSAGE)
       setImmediate(() => navigate(REDIRECT))
     } catch (e) {
       if (e.name === 'WebAuthnDeviceNotFoundError') {
         toast.error('Device not found, log in with Email/Password to continue')
-        setShowWebAuthn(false)
+        // setShowWebAuthn(false)
       } else {
         toast.error(e.message)
       }
     }
   }
 
-  const onRegister = async () => {
-    try {
-      await webAuthn.register()
-      toast.success(WELCOME_MESSAGE)
-      setImmediate(() => navigate(REDIRECT))
-    } catch (e) {
-      toast.error(e.message)
-    }
-  }
+  // const onRegister = async () => {
+  //   try {
+  //     // await webAuthn.register()
+  //     toast.success(WELCOME_MESSAGE)
+  //     setImmediate(() => navigate(REDIRECT))
+  //   } catch (e) {
+  //     toast.error(e.message)
+  //   }
+  // }
 
-  const onSkip = () => {
-    toast.success(WELCOME_MESSAGE)
-    setShouldShowWebAuthn(false)
-  }
+  // const onSkip = () => {
+  //   toast.success(WELCOME_MESSAGE)
+  //   setShouldShowWebAuthn(false)
+  // }
 
-  const AuthWebAuthnPrompt = () => {
-    return (
-      <div className="flex flex-col gap-4">
-        <h2 className="text-2xl">WebAuthn Login Enabled</h2>
-        <p>Log in with your fingerprint, face or PIN</p>
-        <div className="flex py-3">
-          <button className="btn btn-info rounded-lg" onClick={onAuthenticate}>
-            Open Authenticator
-          </button>
-        </div>
-      </div>
-    )
-  }
+  // const AuthWebAuthnPrompt = () => {
+  //   return (
+  //     <div className="flex flex-col gap-4">
+  //       <h2 className="text-2xl">WebAuthn Login Enabled</h2>
+  //       <p>Log in with your fingerprint, face or PIN</p>
+  //       <div className="flex py-3">
+  //         <button className="btn btn-info rounded-lg" onClick={onAuthenticate}>
+  //           Open Authenticator
+  //         </button>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
-  const RegisterWebAuthnPrompt = () => (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl">No more Passwords!</h2>
-      <p>
-        Depending on your device you can log in with your fingerprint, face or
-        PIN next time.
-      </p>
-      <div className="flex gap-3 py-3">
-        <button className="btn btn-info rounded-lg" onClick={onRegister}>
-          Turn On
-        </button>
-        <button className="btn rounded-lg" onClick={onSkip}>
-          Skip for now
-        </button>
-      </div>
-    </div>
-  )
+  // const RegisterWebAuthnPrompt = () => (
+  //   <div className="flex flex-col gap-4">
+  //     <h2 className="text-2xl">No more Passwords!</h2>
+  //     <p>
+  //       Depending on your device you can log in with your fingerprint, face or
+  //       PIN next time.
+  //     </p>
+  //     <div className="flex gap-3 py-3">
+  //       <button className="btn btn-info rounded-lg" onClick={onRegister}>
+  //         Turn On
+  //       </button>
+  //       <button className="btn rounded-lg" onClick={onSkip}>
+  //         Skip for now
+  //       </button>
+  //     </div>
+  //   </div>
+  // )
 
   const PasswordForm = () => (
     <Form onSubmit={onSubmit} className="flex flex-col gap-6">
@@ -205,39 +209,39 @@ const LoginPage = ({ type }) => {
   )
 
   const formToRender = () => {
-    if (showWebAuthn) {
-      if (webAuthn.isEnabled()) {
-        return <AuthWebAuthnPrompt />
-      } else {
-        return <RegisterWebAuthnPrompt />
-      }
-    } else {
-      return <PasswordForm />
-    }
+    // if (showWebAuthn) {
+    //   if (webAuthn.isEnabled()) {
+    //     return <AuthWebAuthnPrompt />
+    //   } else {
+    //     return <RegisterWebAuthnPrompt />
+    //   }
+    // } else {
+    return <PasswordForm />
+    // }
   }
 
   const linkToRender = () => {
-    if (showWebAuthn) {
-      if (webAuthn.isEnabled()) {
-        return (
-          <div>
-            <span>or login with </span>{' '}
-            <a href="?type=password" className="link-info link">
-              email and password
-            </a>
-          </div>
-        )
-      }
-    } else {
-      return (
-        <div className="flex gap-1.5">
-          <span>Don&apos;t have an account?</span>{' '}
-          <Link to={routes.signup()} className="link-info link">
-            Sign up
-          </Link>
-        </div>
-      )
-    }
+    // if (showWebAuthn) {
+    //   if (webAuthn.isEnabled()) {
+    //     return (
+    //       <div>
+    //         <span>or login with </span>{' '}
+    //         <a href="?type=password" className="link-info link">
+    //           email and password
+    //         </a>
+    //       </div>
+    //     )
+    //   }
+    // } else {
+    return (
+      <div className="flex gap-1.5">
+        <span>Don&apos;t have an account?</span>{' '}
+        <Link to={routes.signup()} className="link-info link">
+          Sign up
+        </Link>
+      </div>
+    )
+    // }
   }
 
   if (loading) {

@@ -1,10 +1,6 @@
 import { Suspense, lazy } from 'react'
 
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
-
-const HomeAuthLinks = lazy(
-  () => import('src/components/HomeAuthLinks/HomeAuthLinks')
-)
 import { NavLink, routes } from '@redwoodjs/router'
 
 import HomeLink from 'src/components/HomeLink/HomeLink'
@@ -12,6 +8,9 @@ import Loading from 'src/components/Loading'
 import { DarkModeToggle } from 'src/components/ThemeProvider'
 
 import MainLayout from '../MainLayout/MainLayout'
+const HomeAuthLinks = lazy(
+  () => import('src/components/HomeAuthLinks/HomeAuthLinks')
+)
 
 const HomeLayout = ({ children }) => {
   return (

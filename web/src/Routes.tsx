@@ -2,7 +2,6 @@ import { Set, Router, Route } from '@redwoodjs/router'
 
 import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
 
-import { useAuth } from './auth'
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import DashboardLayout from './layouts/DashboardLayout/DashboardLayout'
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
@@ -15,7 +14,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage'
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage'
 import SignupPage from './pages/SignupPage/SignupPage'
 
-const Routes = () => {
+const Routes = ({ useAuth }) => {
   return (
     <Router useAuth={useAuth}>
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
@@ -114,7 +113,7 @@ const Routes = () => {
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
         <Route path="/draft" page={ListDraftPage} name="listDraft" />
-        <Route path="/explore" page={ExplorePage} name="explore" />
+        <Route path="/explore" page={ExplorePage} name="explore" prerender />
         {/* TODO: prerender? */}
         <Route path="/{identifier}" page={IdentifierPage} name="identifier" />
         {/* TODO: prerender */}
