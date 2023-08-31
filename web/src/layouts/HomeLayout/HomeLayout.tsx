@@ -34,7 +34,7 @@ const HomeLayout = ({ children }) => {
           </BrowserOnly>
         </div>
       </nav>
-      <div className="flex w-full max-w-full flex-grow flex-col p-4">
+      <div className="flex w-full max-w-full flex-grow flex-col px-4 py-8">
         {children}
       </div>
       <footer className="flex h-16 flex-shrink-0 flex-grow-0 flex-row-reverse items-center px-4">
