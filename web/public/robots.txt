@@ -1,2 +1,4 @@
+Sitemap: https://www.list.cafe/sitemap.xml
+
 User-agent: *
-Disallow:
+Disallow: /
