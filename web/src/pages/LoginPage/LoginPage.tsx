@@ -25,7 +25,7 @@ const LoginPage = () => {
     // client: webAuthn,
     loading,
     logIn,
-    reauthenticate,
+    // reauthenticate,
   } = useAuth()
   // const [shouldShowWebAuthn, setShouldShowWebAuthn] = useState(false)
   // const [showWebAuthn, setShowWebAuthn] = useState(
@@ -43,13 +43,13 @@ const LoginPage = () => {
   }, [isAuthenticated]) // , shouldShowWebAuthn])
 
   // if WebAuthn is enabled, show the prompt as soon as the page loads
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      // && showWebAuthn) {
-      onAuthenticate()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, isAuthenticated])
+  // useEffect(() => {
+  //   if (!loading && !isAuthenticated) {
+  // && showWebAuthn) {
+  //   onAuthenticate()
+  // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loading, isAuthenticated])
 
   // focus on the email field as soon as the page loads
   const emailRef = useRef()
@@ -84,21 +84,21 @@ const LoginPage = () => {
     }
   }
 
-  const onAuthenticate = async () => {
-    try {
-      // await webAuthn.authenticate()
-      await reauthenticate()
-      toast.success(WELCOME_MESSAGE)
-      setImmediate(() => navigate(REDIRECT))
-    } catch (e) {
-      if (e.name === 'WebAuthnDeviceNotFoundError') {
-        toast.error('Device not found, log in with Email/Password to continue')
-        // setShowWebAuthn(false)
-      } else {
-        toast.error(e.message)
-      }
-    }
-  }
+  // const onAuthenticate = async () => {
+  //   try {
+  //     // await webAuthn.authenticate()
+  //     await reauthenticate()
+  //     toast.success(WELCOME_MESSAGE)
+  //     setImmediate(() => navigate(REDIRECT))
+  //   } catch (e) {
+  //     if (e.name === 'WebAuthnDeviceNotFoundError') {
+  //       toast.error('Device not found, log in with Email/Password to continue')
+  //       // setShowWebAuthn(false)
+  //     } else {
+  //       toast.error(e.message)
+  //     }
+  //   }
+  // }
 
   // const onRegister = async () => {
   //   try {

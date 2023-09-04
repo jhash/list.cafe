@@ -53,7 +53,7 @@ const SignupPage = ({ userInviteId }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(routes.home())
+      navigate(routes.dashboard())
     }
   }, [isAuthenticated])
 

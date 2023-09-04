@@ -30,6 +30,7 @@ export const handler = async (
     // address in a toast message so the user will know it worked and where
     // to look for the email.
     handler: (user) => {
+      // TODO: send email
       return user
     },
 
