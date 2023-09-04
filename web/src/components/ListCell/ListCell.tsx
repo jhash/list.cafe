@@ -9,6 +9,7 @@ import type {
   UpdateListInput,
 } from 'types/graphql'
 
+import { SignupAttributes } from '@redwoodjs/auth-dbauth-web'
 import { Redirect, routes } from '@redwoodjs/router'
 import { type CellSuccessProps } from '@redwoodjs/web'
 
@@ -69,6 +70,9 @@ export interface ListCellChildProps {
   onSave: (input: CreateListInput | UpdateListInput) => void
   deleteItem: () => void
   addItem: (input: CreateListItemInput) => void
+  signUpAndCreateList: (input: SignupAttributes) => Promise<void>
+  pendingList: CreateListInput
+  resetPendingList: () => void
 }
 export type ListCellChild = ComponentType<ListCellChildProps>
 

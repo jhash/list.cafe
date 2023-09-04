@@ -1,14 +1,8 @@
-import { useRef, useState } from 'react'
-
 import { Save } from 'lucide-react'
-import { CreateListInput } from 'types/graphql'
 
 import { SignupAttributes } from '@redwoodjs/auth-dbauth-web'
 import { Form } from '@redwoodjs/forms'
 import { MetaTags } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
-
-import { useAuth } from 'src/auth'
 
 import EditListItems from '../EditListItems/EditListItems'
 import FormItem from '../FormItem/FormItem'
@@ -19,58 +13,18 @@ import Modal from '../Modal/Modal'
 type CreateUserForm = NonNullable<SignupAttributes>
 
 const NewList: ListCellChild = ({
-  list,
-  items,
-  loading: listLoading,
-  onSave: onSaveList,
+  pendingList,
+  resetPendingList,
+  signUpAndCreateList,
+  loading,
   ...listProps
 }) => {
-  const { signUp, isAuthenticated } = useAuth()
-
-  const emailRef = useRef<HTMLInputElement>()
-
-  const [pendingList, setPendingList] = useState<CreateListInput | undefined>()
-  const [signingUp, setSigningUp] = useState<boolean>(false)
-  const resetPendingList = () => {
-    setPendingList(undefined)
-  }
-  const updateListPending = (input: CreateListInput) => {
-    setPendingList(input)
-  }
-
-  const signUpAndCreateList = async (input: SignupAttributes) => {
-    try {
-      setSigningUp(true)
-      await signUp(input)
-      setSigningUp(false)
-      toast.success('Successfully signed up!')
-      onSave(pendingList)
-      resetPendingList()
-    } catch (error) {
-      toast.error(error.messages)
-    }
-  }
-
-  const loading = listLoading || signingUp
-
-  const onSave = (input: CreateListInput, event?: React.BaseSyntheticEvent) => {
-    event?.stopPropagation?.()
-    event?.preventDefault?.()
-
-    if (!isAuthenticated && !pendingList) {
-      updateListPending(input as CreateListInput)
-      return
-    }
-
-    onSaveList(input)
-  }
-
   const props: ListCellChildProps = {
     ...listProps,
-    list,
-    items,
-    onSave,
     loading,
+    pendingList,
+    resetPendingList,
+    signUpAndCreateList,
   }
 
   return (
@@ -97,7 +51,6 @@ const NewList: ListCellChild = ({
                   message: 'Email is required',
                 },
               }}
-              ref={emailRef}
             />
             <FormItem name="name" type="text" label="Name" />
             <FormItem
@@ -107,7 +60,7 @@ const NewList: ListCellChild = ({
               validation={{
                 required: {
                   value: true,
-                  message: 'Name is required',
+                  message: 'Password is required',
                 },
               }}
             />

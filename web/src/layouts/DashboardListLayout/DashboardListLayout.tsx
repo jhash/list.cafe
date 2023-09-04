@@ -12,11 +12,13 @@ import {
   UpdateListInput,
 } from 'types/graphql'
 
+import { SignupAttributes } from '@redwoodjs/auth-dbauth-web'
 import { FormProvider, useForm, useFormContext } from '@redwoodjs/forms'
 import { Link, navigate, routes, useMatch } from '@redwoodjs/router'
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import { useAuth } from 'src/auth'
 import { UPDATE_LIST_MUTATION } from 'src/components/Admin/List/EditListCell'
 import { DELETE_LIST_MUTATION } from 'src/components/Admin/List/List'
 import { CREATE_LIST_MUTATION } from 'src/components/Admin/List/NewList'
@@ -182,6 +184,14 @@ const DashboardListLayout: ListCellType = ({
 
   const { id, listRoles } = list
 
+  const { signUp, isAuthenticated } = useAuth()
+
+  const [pendingList, setPendingList] = useState<CreateListInput | undefined>()
+  const [signingUp, setSigningUp] = useState<boolean>(false)
+  const resetPendingList = () => {
+    setPendingList(undefined)
+  }
+
   const defaultValues: CreateListInput = {
     ...list,
     ...draftList,
@@ -306,7 +316,9 @@ const DashboardListLayout: ListCellType = ({
     }
   )
 
-  const loading = id ? updateLoading || deleteLoading : createLoading
+  const loading = id
+    ? updateLoading || deleteLoading
+    : createLoading || signingUp
 
   const onDelete = () => deleteListMutation({ variables: { id } })
 
@@ -318,6 +330,11 @@ const DashboardListLayout: ListCellType = ({
     event?.preventDefault?.()
 
     if (loading) {
+      return
+    }
+
+    if (!isAuthenticated && !pendingList) {
+      setPendingList(input as CreateListInput)
       return
     }
 
@@ -356,6 +373,19 @@ const DashboardListLayout: ListCellType = ({
     }
   }, [])
 
+  const signUpAndCreateList = async (input: SignupAttributes) => {
+    try {
+      setSigningUp(true)
+      await signUp(input)
+      setSigningUp(false)
+      toast.success('Successfully signed up!')
+      onSave(pendingList)
+      resetPendingList()
+    } catch (error) {
+      toast.error(error.messages)
+    }
+  }
+
   const props: ListCellChildProps = {
     list,
     items,
@@ -368,6 +398,9 @@ const DashboardListLayout: ListCellType = ({
     loading,
     addItem,
     deleteItem,
+    signUpAndCreateList,
+    pendingList,
+    resetPendingList,
   }
 
   return (
