@@ -5,6 +5,9 @@
   "dependencies": {
     "@google-ai/generativelanguage": "^1.0.0",
     "@prisma/client": "^5.2.0",
+    "@react-email/button": "0.0.10",
+    "@react-email/components": "^0.0.7",
+    "@react-email/html": "0.0.4",
     "@redwoodjs/api": "6.1.0",
     "@redwoodjs/auth-dbauth-api": "6.1.0",
     "@redwoodjs/graphql-server": "6.1.0",
@@ -13,10 +16,14 @@
     "got-scraping": "^3.2.15",
     "jsdom": "^22.1.0",
     "jsonrepair": "^3.2.0",
+    "react-email": "1.9.4",
     "resend": "^1.0.0",
     "validator": "^13.11.0"
   },
   "devDependencies": {
     "prisma": "^5.2.0"
+  },
+  "scripts": {
+    "dev": "email dev -d ./src/lib/emails"
   }
 }
