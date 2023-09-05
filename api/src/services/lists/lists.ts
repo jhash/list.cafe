@@ -4,9 +4,12 @@ import type {
   ListRelationResolvers,
   ListRole,
   GroupRole,
+  CreateListInput,
 } from 'types/graphql'
 
 import { db } from 'src/lib/db'
+
+import { createListItem } from '../listItems/listItems'
 
 export const adminLists: QueryResolvers['lists'] = () => {
   return db.list.findMany()
@@ -101,12 +104,18 @@ export const list: QueryResolvers['list'] = ({ id }) => {
   })
 }
 
-export const createList: MutationResolvers['createList'] = ({ input }) => {
-  return db.list.create({
+export const createList: MutationResolvers['createList'] = async ({
+  input,
+}) => {
+  const listItems = input.listItems
+  delete input.listItems
+  const filteredInput: Omit<CreateListInput, 'listItems'> = { ...input }
+
+  const list = await db.list.create({
     data: {
-      ...input,
+      ...filteredInput,
       identifier: {
-        create: input.identifier,
+        create: filteredInput.identifier,
       },
       listMemberships: {
         create: {
@@ -118,20 +127,29 @@ export const createList: MutationResolvers['createList'] = ({ input }) => {
           listRole: 'OWNER',
         },
       },
-      listItems: {
-        createMany: {
-          data: (input.listItems || []).map((createListItemInput) => ({
-            ...createListItemInput,
-            images: createListItemInput.images
-              ? {
-                  createMany: createListItemInput.images,
-                }
-              : undefined,
-          })),
-        },
-      },
+      // listItems: {
+      //   createMany: {
+      //     data: (input.listItems || []).map((createListItemInput) => ({
+      //       ...createListItemInput,
+      //       // Prisma doesn't support nested createMany yet
+      //       images: createListItemInput.images
+      //         ? {
+      //             createMany: {
+      //               data: createListItemInput.images,
+      //             },
+      //           }
+      //         : undefined,
+      //     })),
+      //   },
+      // },
     },
   })
+
+  for (const listItem of listItems) {
+    await createListItem({ input: { ...listItem, listId: list.id } })
+  }
+
+  return list
 }
 
 export const updateList: MutationResolvers['updateList'] = ({ id, input }) => {

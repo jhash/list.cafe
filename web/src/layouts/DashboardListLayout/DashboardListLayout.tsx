@@ -116,9 +116,8 @@ export const ListPageTitle: React.FC<ListPageTitleProps> = ({
               event.stopPropagation()
 
               return (
-                window?.confirm(
-                  'Are you sure you want to remove this member?'
-                ) && onDelete()
+                window?.confirm('Are you sure you want to delete this list?') &&
+                onDelete()
               )
             }}
             disabled={loading}

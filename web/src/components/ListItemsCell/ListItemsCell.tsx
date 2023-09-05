@@ -29,6 +29,11 @@ export const QUERY = gql`
         listItemId
         comment
       }
+      images {
+        id
+        alt
+        url
+      }
     }
   }
 `

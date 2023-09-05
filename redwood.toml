@@ -14,7 +14,11 @@
     "RESEND_API_KEY",
     "AMAZON_ASSOCIATE_ID",
     "NODE_ENV",
-    "GOOGLE_MAKERSUITE_API_KEY"
+    "GOOGLE_MAKERSUITE_API_KEY",
+    "GCP_PROJECT_ID",
+    "GCP_CLIENT_EMAIL",
+    "GCP_PRIVATE_KEY",
+    "GCP_BUCKET_ID"
     # Add any ENV vars that should be available to the web side to this array
     # See https://redwoodjs.com/docs/environment-variables#web
   ]

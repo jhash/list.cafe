@@ -413,7 +413,8 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
 const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
   listItem,
 }) => {
-  const { id, url, title, description, quantity, list, reservations } = listItem
+  const { id, url, title, description, quantity, list, reservations, images } =
+    listItem
 
   const reservationsAllowed = reservationsEnabled(list.type)
 
@@ -473,6 +474,17 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
     )
   }
 
+  const titleText = (
+    <>
+      {!!images?.length && (
+        <div className="flex max-h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm py-1">
+          <img src={images[0].url} alt={images[0]?.alt} className="w-full" />
+        </div>
+      )}
+      {title}
+    </>
+  )
+
   return (
     <li
       key={id}
@@ -483,13 +495,13 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
           href={url}
           className="link min-h-12 flex flex-grow items-center gap-3 px-3 py-1 text-lg no-underline"
         >
-          {title}
+          {titleText}
           <Link2 size="1rem" className="flex-shrink-0" />
           <QuantityText />
         </ExternalLink>
       ) : (
         <div className="link min-h-12 flex flex-grow items-center gap-3 px-3 py-1 text-lg no-underline">
-          {title}
+          {titleText}
           <QuantityText />
         </div>
       )}

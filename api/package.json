@@ -4,23 +4,30 @@
   "private": true,
   "dependencies": {
     "@google-ai/generativelanguage": "^1.0.0",
+    "@google-cloud/storage": "^7.0.1",
     "@prisma/client": "^5.2.0",
     "@react-email/button": "0.0.10",
     "@react-email/components": "^0.0.7",
     "@react-email/html": "0.0.4",
-    "@redwoodjs/api": "6.1.0",
-    "@redwoodjs/auth-dbauth-api": "6.1.0",
-    "@redwoodjs/graphql-server": "6.1.0",
+    "@redwoodjs/api": "6.1.1",
+    "@redwoodjs/auth-dbauth-api": "6.1.1",
+    "@redwoodjs/graphql-server": "6.1.1",
     "@simplewebauthn/server": "^7.4.0",
     "google-auth-library": "^9.0.0",
     "got-scraping": "^3.2.15",
+    "graphql": "^16.8.0",
+    "graphql-upload-ts": "^2.1.0",
+    "istextorbinary": "^6.0.0",
     "jsdom": "^22.1.0",
     "jsonrepair": "^3.2.0",
     "react-email": "1.9.4",
     "resend": "^1.0.0",
+    "sharp": "^0.32.5",
+    "uuid": "^9.0.0",
     "validator": "^13.11.0"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.3",
     "prisma": "^5.2.0"
   },
   "scripts": {

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { Link2, Pencil, Save, Trash2 } from 'lucide-react'
 import {
+  CreateImageInput,
   CreateListItemInput,
   CreateListItemMutation,
   ListItemsQuery,
@@ -10,19 +11,40 @@ import {
 } from 'types/graphql'
 
 import { Form, NumberField } from '@redwoodjs/forms'
-import { useMutation } from '@redwoodjs/web'
+import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import Loading from 'src/components/Loading'
 import { listRolesIntersect } from 'src/layouts/DashboardListLayout/DashboardListLayout'
 import { matchListTypeOption } from 'src/lib/lists'
 
 import { UPDATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/EditListItemCell'
 import { DELETE_LIST_ITEM_MUTATION } from '../Admin/ListItem/ListItem'
 import { CREATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/NewListItem'
+import DashboardListItemImages from '../DashboardListItemImages/DashboardListItemImages'
 import ExternalLink from '../ExternalLink/ExternalLink'
 import FormItem from '../FormItem/FormItem'
 import { QUERY as LIST_CELL_QUERY } from '../ListCell'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from '../ListItemsCell'
+import UploadImages from '../UploadImages/UploadImages'
+
+export const CREATE_IMAGE_MUTATION = gql`
+  mutation CreateImageMutation($input: CreateImageInput!) {
+    createImage(input: $input) {
+      id
+    }
+  }
+`
+
+export const LIST_ITEM_IMAGES_QUERY = gql`
+  query ListItemImagesQuery($listItemId: Int!) {
+    images(listItemId: $listItemId) {
+      id
+      url
+      alt
+    }
+  }
+`
 
 type CreateListItemForm = NonNullable<CreateListItemMutation['createListItem']>
 
@@ -56,9 +78,13 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     listId,
     listRoles,
     list,
+    images,
   } = listItem
 
   const [editing, setEditing] = useState<boolean>(!id)
+  const [pendingImages, setPendingImages] = useState<
+    CreateImageInput[] | undefined
+  >()
 
   const [open, setOpen] = useState<boolean>(modal && editing)
 
@@ -74,6 +100,24 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']),
     [listRoles, id]
   )
+
+  const { data: imagesQuery, loading: imagesLoading } = useQuery(
+    LIST_ITEM_IMAGES_QUERY,
+    { variables: { listItemId: id } }
+  )
+
+  const [createImageMutation, { loading: createImageLoading }] = useMutation(
+    CREATE_IMAGE_MUTATION,
+    {
+      refetchQueries: [LIST_ITEM_IMAGES_QUERY],
+      awaitRefetchQueries: true,
+    }
+  )
+
+  const { images: queryImages } = imagesQuery || {}
+
+  const imagesFinal = queryImages || images
+  const imagesLoadingFinal = imagesLoading || createImageLoading
 
   const [createListItem, { loading: createLoading, error: createError }] =
     useMutation(CREATE_LIST_ITEM_MUTATION, {
@@ -140,8 +184,14 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       return
     }
 
+    const inputWithImages: CreateListItemInput = {
+      title: '',
+      ...input,
+      images: pendingImages,
+    }
+
     if (!listId) {
-      addItem(input as CreateListItemInput)
+      addItem(inputWithImages)
       toast.success('List item created')
       return
     }
@@ -149,7 +199,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     if (id) {
       updateListItem({ variables: { id, input } })
     } else {
-      createListItem({ variables: { input } })
+      createListItem({ variables: { input: inputWithImages } })
     }
   }
 
@@ -159,6 +209,21 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       return
     }
     deleteListItem({ variables: { id } })
+  }
+
+  const onUpload = async (images: CreateImageInput[]) => {
+    if (!id) {
+      setPendingImages(images)
+      return
+    }
+
+    for (const image of images) {
+      await createImageMutation({
+        variables: { input: { ...image, listItemId: id } },
+      })
+    }
+
+    toast.success('Successfully added images')
   }
 
   useEffect(() => {
@@ -276,6 +341,35 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         )}
       >
         {!!listId && <NumberField hidden name="listId" defaultValue={listId} />}
+        {(!!editing || !!imagesFinal?.length) && (
+          <div className="flex w-full max-w-xl flex-col gap-1">
+            {!!imagesFinal?.length && (
+              <>
+                <div className="label font-medium">Images</div>
+                <div className="flex items-center gap-3 overflow-x-auto pb-3">
+                  {!!imagesLoadingFinal && <Loading />}
+                  <DashboardListItemImages
+                    images={imagesFinal}
+                    editing={editing}
+                  />
+                </div>
+              </>
+            )}
+            {!!editing && (
+              <>
+                <div className="label flex gap-2 font-medium">
+                  Add images
+                  {!!pendingImages?.length && (
+                    <span className="text-gray-500">{`${pendingImages.length} ${
+                      pendingImages.length === 1 ? 'image' : 'images'
+                    } uploaded`}</span>
+                  )}
+                </div>
+                <UploadImages onUpload={onUpload} />
+              </>
+            )}
+          </div>
+        )}
         {url ? (
           <ExternalLink
             href={url}

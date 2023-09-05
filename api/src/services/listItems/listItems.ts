@@ -107,7 +107,7 @@ export const ListItem: ListItemRelationResolvers = {
   // children: (_obj, { root }) => {
   //   return db.listItem.findUnique({ where: { id: root?.id } }).children()
   // },
-  // images: (_obj, { root }) => {
-  //   return db.listItem.findUnique({ where: { id: root?.id } }).images()
-  // },
+  images: (_obj, { root }) => {
+    return db.listItem.findUnique({ where: { id: root?.id } }).images()
+  },
 }

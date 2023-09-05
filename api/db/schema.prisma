@@ -262,9 +262,9 @@ model Image {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now())
   url        String
-  height     Decimal
-  width      Decimal
-  format     String
+  height     Decimal?
+  width      Decimal?
+  format     String?
   listItem   ListItem? @relation(fields: [listItemId], references: [id])
   listItemId Int?
   person     Person?   @relation(fields: [personId], references: [id])

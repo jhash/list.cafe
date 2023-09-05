@@ -77,7 +77,7 @@ export const createListMembership: MutationResolvers['createListMembership'] =
                         name: input.name,
                         createdByUser: {
                           connect: {
-                            id: context.currentUser.id,
+                            id: context.currentUser?.id,
                           },
                         },
                       },
@@ -120,7 +120,7 @@ export const createListMembership: MutationResolvers['createListMembership'] =
                     name: input.name,
                     createdByUser: {
                       connect: {
-                        id: context.currentUser.id,
+                        id: context.currentUser?.id,
                       },
                     },
                   },

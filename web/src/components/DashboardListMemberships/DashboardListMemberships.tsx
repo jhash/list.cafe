@@ -16,7 +16,7 @@ const DashboardListMemberships = ({
     () =>
       listRolesIntersect(
         listMemberships
-          .filter((membership) => membership.user?.id === currentUser.id)
+          .filter((membership) => membership.user?.id === currentUser?.id)
           .map((membership) => membership.listRole),
         ['OWNER', 'ADMIN']
       ),
