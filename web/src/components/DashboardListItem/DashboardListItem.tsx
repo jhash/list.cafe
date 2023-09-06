@@ -269,7 +269,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             !!open && 'border-b'
           )}
         >
-          <div className="flex max-h-full flex-grow items-start gap-3 overflow-hidden overflow-ellipsis py-1">
+          <div className="flex max-h-full min-w-[8rem] flex-grow items-start gap-3 overflow-hidden overflow-ellipsis py-1">
             {title}
             {!!url && (
               <ExternalLink
@@ -282,9 +282,9 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
               </ExternalLink>
             )}
           </div>
-          <div className="flex h-full items-center justify-end gap-3 overflow-hidden overflow-ellipsis py-1">
+          <div className="flex h-full flex-shrink items-center justify-end gap-3 overflow-hidden overflow-ellipsis py-1">
             {!!description && (
-              <span className="flex max-h-full flex-shrink overflow-hidden overflow-ellipsis whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
+              <span className="flex max-h-full flex-shrink flex-grow-0 overflow-hidden overflow-ellipsis whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
                 {description}
               </span>
             )}

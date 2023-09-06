@@ -493,14 +493,14 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
       {url ? (
         <ExternalLink
           href={url}
-          className="link min-h-12 flex flex-grow items-center gap-3 px-3 py-1 text-lg no-underline"
+          className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 px-3 py-1 text-lg no-underline"
         >
           {titleText}
           <Link2 size="1rem" className="flex-shrink-0" />
           <QuantityText />
         </ExternalLink>
       ) : (
-        <div className="link min-h-12 flex flex-grow items-center gap-3 px-3 py-1 text-lg no-underline">
+        <div className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 px-3 py-1 text-lg no-underline">
           {titleText}
           <QuantityText />
         </div>
@@ -508,7 +508,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
 
       <div className="flex items-center justify-end gap-3">
         {!!description && (
-          <span className="flex-shrink overflow-hidden overflow-ellipsis whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
+          <span className="flex-shrink flex-grow-0 overflow-hidden overflow-ellipsis whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
             {description}
           </span>
         )}
