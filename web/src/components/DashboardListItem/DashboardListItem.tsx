@@ -38,7 +38,7 @@ export const CREATE_IMAGE_MUTATION = gql`
 
 export const LIST_ITEM_IMAGES_QUERY = gql`
   query ListItemImagesQuery($listItemId: Int!) {
-    images(listItemId: $listItemId) {
+    listItemImages(listItemId: $listItemId) {
       id
       url
       alt

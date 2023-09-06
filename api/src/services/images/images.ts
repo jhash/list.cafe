@@ -8,8 +8,20 @@ import type {
 import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
-export const images: QueryResolvers['images'] = ({ listItemId, personId }) => {
-  return db.image.findMany({ where: { listItemId, personId } })
+export const adminImages: QueryResolvers['adminImages'] = () => {
+  return db.image.findMany()
+}
+
+export const personImages: QueryResolvers['personImages'] = ({ personId }) => {
+  // TODO: any auth needed here?
+  return db.image.findMany({ where: { personId } })
+}
+
+export const listItemImages: QueryResolvers['listItemImages'] = ({
+  listItemId,
+}) => {
+  // TODO: any auth needed here?
+  return db.image.findMany({ where: { listItemId } })
 }
 
 export const image: QueryResolvers['image'] = ({ id }) => {

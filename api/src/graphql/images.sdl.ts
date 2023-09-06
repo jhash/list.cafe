@@ -12,10 +12,15 @@ export const schema = gql`
     person: Person
   }
 
+  type QueryImagesInput {
+    personId: Int
+    listItemId: Int
+  }
+
   type Query {
-    images(personId: Int!): [Image!]! @skipAuth
-    images(listItemId: Int!): [Image!]! @skipAuth
-    images: [Image!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    personImages(personId: Int!): [Image!]! @skipAuth
+    listItemImages(listItemId: Int!): [Image!]! @skipAuth
+    adminImages: [Image!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
     image(id: Int!): Image @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 

@@ -37,22 +37,10 @@ const Routes = ({ useAuth }) => {
           <Route path="/admin/list-memberships" page={AdminListMembershipListMembershipsPage} name="adminListMemberships" />
         </Set>
         <Set wrap={ScaffoldLayout} title="PartnershipLinks" titleTo="adminPartnershipLinks" buttonLabel="New PartnershipLink" buttonTo="adminNewPartnershipLink">
-          <Route path="/admin/partnership-links/new" page={AdminPartnershipLinkNewPartnershipLinkPage} name="adminNewPartnershipLink" />
-          <Route path="/admin/partnership-links/{id}/edit" page={AdminPartnershipLinkEditPartnershipLinkPage} name="adminEditPartnershipLink" />
-          <Route path="/admin/partnership-links/{id}" page={AdminPartnershipLinkPartnershipLinkPage} name="adminPartnershipLink" />
-          <Route path="/admin/partnership-links" page={AdminPartnershipLinkPartnershipLinksPage} name="adminPartnershipLinks" />
         </Set>
         <Set wrap={ScaffoldLayout} title="PartnershipContacts" titleTo="adminPartnershipContacts" buttonLabel="New PartnershipContact" buttonTo="adminNewPartnershipContact">
-          <Route path="/admin/partnership-contacts/new" page={AdminPartnershipContactNewPartnershipContactPage} name="adminNewPartnershipContact" />
-          <Route path="/admin/partnership-contacts/{id:Int}/edit" page={AdminPartnershipContactEditPartnershipContactPage} name="adminEditPartnershipContact" />
-          <Route path="/admin/partnership-contacts/{id:Int}" page={AdminPartnershipContactPartnershipContactPage} name="adminPartnershipContact" />
-          <Route path="/admin/partnership-contacts" page={AdminPartnershipContactPartnershipContactsPage} name="adminPartnershipContacts" />
         </Set>
         <Set wrap={ScaffoldLayout} title="Partnerships" titleTo="adminPartnerships" buttonLabel="New Partnership" buttonTo="adminNewPartnership">
-          <Route path="/admin/partnerships/new" page={AdminPartnershipNewPartnershipPage} name="adminNewPartnership" />
-          <Route path="/admin/partnerships/{id:Int}/edit" page={AdminPartnershipEditPartnershipPage} name="adminEditPartnership" />
-          <Route path="/admin/partnerships/{id:Int}" page={AdminPartnershipPartnershipPage} name="adminPartnership" />
-          <Route path="/admin/partnerships" page={AdminPartnershipPartnershipsPage} name="adminPartnerships" />
         </Set>
         <Set wrap={ScaffoldLayout} title="ListItems" titleTo="adminListItems" buttonLabel="New ListItem" buttonTo="adminNewListItem">
           <Route path="/admin/list-items/new" page={AdminListItemNewListItemPage} name="adminNewListItem" />

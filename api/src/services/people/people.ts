@@ -45,14 +45,9 @@ export const Person: PersonRelationResolvers = {
   addresses: (_obj, { root }) => {
     return db.person.findUnique({ where: { id: root?.id } }).addresses()
   },
-  partnershipContact: (_obj, { root }) => {
-    return db.person
-      .findUnique({ where: { id: root?.id } })
-      .partnershipContact()
-  },
-  giftPreferences: (_obj, { root }) => {
-    return db.person.findUnique({ where: { id: root?.id } }).giftPreferences()
-  },
+  // giftPreferences: (_obj, { root }) => {
+  //   return db.person.findUnique({ where: { id: root?.id } }).giftPreferences()
+  // },
   images: (_obj, { root }) => {
     return db.person.findUnique({ where: { id: root?.id } }).images()
   },

@@ -6,13 +6,13 @@ export const schema = gql`
     name: String!
     email: String @requireAuth
     user: User
-    # addresses: [Address]!
+    addresses: [Address]!
     # defaultAddressId: Int
     # partnershipContact: PartnershipContact
     # giftPreferences: [GiftPreferences]!
     images: [Image]!
-    # createdByUser: User
-    # createdByUserId: Int
+    createdByUser: User
+    createdByUserId: Int
     identifier: Identifier
     visibility: PersonVisibility
   }
