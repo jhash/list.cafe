@@ -19,9 +19,11 @@ export const schema = gql`
   }
 
   type Query {
-    listMemberships: [ListMembership!]! @requireAuth
+    listMemberships: [ListMembership!]!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
     listMembershipsByListId(listId: Int!): [ListMembership!]! @requireAuth
-    listMembership(id: Int!): ListMembership @requireAuth
+    listMembership(id: Int!): ListMembership
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 
   input CreateListMembershipInput {

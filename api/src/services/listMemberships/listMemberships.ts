@@ -4,27 +4,37 @@ import type {
   ListMembershipRelationResolvers,
 } from 'types/graphql'
 
-import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 import { sendEmail } from 'src/lib/email'
 import { LIST_CAFE_URL } from 'src/lib/url'
 
+import {
+  listMembershipsWhereClauses,
+  validateUserCanEditList,
+} from '../lists/lists'
+
 export const listMembershipsByListId: QueryResolvers['listMembershipsByListId'] =
   ({ listId }) => {
-    // TODO: limit to certain list roles
-    return db.listMembership.findMany({ where: { listId } })
+    return db.listMembership.findMany({
+      where: {
+        listId,
+        list: {
+          OR: [
+            ...listMembershipsWhereClauses(
+              ['ADMIN', 'OWNER', 'EDIT'],
+              ['OWNER', 'ADMIN', 'EDIT']
+            ),
+          ],
+        },
+      },
+    })
   }
 
 export const listMemberships: QueryResolvers['listMemberships'] = () => {
-  // TODO: add this all over
-  if (!hasRole(['ADMIN', 'SUPPORT'])) {
-    throw new Error('You are not authorized to access this')
-  }
   return db.listMembership.findMany()
 }
 
 export const listMembership: QueryResolvers['listMembership'] = ({ id }) => {
-  // TODO: limit to certain list roles
   return db.listMembership.findUnique({
     where: { id },
   })
@@ -42,6 +52,14 @@ export const createListMembership: MutationResolvers['createListMembership'] =
     ) {
       throw new Error('You cannot add yourself as a member')
     }
+
+    if (!input.listId) {
+      throw new Error('listId is required to create a list membership')
+    }
+
+    // TODO: move to directive?
+    // Should throw if user doesn't have contribute access
+    await validateUserCanEditList({ id: input.listId })
 
     const membership = await db.listMembership.create({
       data: {
@@ -190,18 +208,36 @@ export const createListMembership: MutationResolvers['createListMembership'] =
 
 export const updateListMembership: MutationResolvers['updateListMembership'] =
   ({ id, input }) => {
-    // TODO: check that user has list roles
     return db.listMembership.update({
       data: input,
-      where: { id },
+      where: {
+        id,
+        list: {
+          OR: [
+            ...listMembershipsWhereClauses(
+              ['ADMIN', 'OWNER', 'EDIT'],
+              ['OWNER', 'ADMIN', 'EDIT']
+            ),
+          ],
+        },
+      },
     })
   }
 
 export const deleteListMembership: MutationResolvers['deleteListMembership'] =
   ({ id }) => {
-    // TODO: check that user has list roles
     return db.listMembership.delete({
-      where: { id },
+      where: {
+        id,
+        list: {
+          OR: [
+            ...listMembershipsWhereClauses(
+              ['ADMIN', 'OWNER', 'EDIT'],
+              ['OWNER', 'ADMIN', 'EDIT']
+            ),
+          ],
+        },
+      },
     })
   }
 

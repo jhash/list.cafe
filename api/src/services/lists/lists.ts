@@ -88,6 +88,20 @@ export const lists: QueryResolvers['lists'] = () => {
   })
 }
 
+export const validateUserCanEditList: QueryResolvers['list'] = ({ id }) => {
+  return db.list.findUniqueOrThrow({
+    where: {
+      id,
+      OR: [
+        ...listMembershipsWhereClauses(
+          ['ADMIN', 'OWNER', 'EDIT'],
+          ['OWNER', 'ADMIN', 'EDIT']
+        ),
+      ],
+    },
+  })
+}
+
 export const validateUserCanContributeToList: QueryResolvers['list'] = ({
   id,
 }) => {
