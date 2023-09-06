@@ -18,8 +18,10 @@ export const schema = gql`
   }
 
   type Query {
-    groupMemberships: [GroupMembership!]! @requireAuth
-    groupMembership(id: Int!): GroupMembership @requireAuth
+    groupMemberships: [GroupMembership!]!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    groupMembership(id: Int!): GroupMembership
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 
   input CreateGroupMembershipInput {
@@ -36,11 +38,12 @@ export const schema = gql`
 
   type Mutation {
     createGroupMembership(input: CreateGroupMembershipInput!): GroupMembership!
-      @requireAuth
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
     updateGroupMembership(
       id: Int!
       input: UpdateGroupMembershipInput!
-    ): GroupMembership! @requireAuth
-    deleteGroupMembership(id: Int!): GroupMembership! @requireAuth
+    ): GroupMembership! @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    deleteGroupMembership(id: Int!): GroupMembership!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 `

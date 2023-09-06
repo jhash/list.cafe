@@ -23,8 +23,14 @@ export const createReservation: MutationResolvers['createReservation'] =
     const email = input.user?.email || input.user?.person?.email
     const userId = input.userId || context.currentUser?.id
 
+    const { comment, price, quantity, status } = input
+
     const reservation = await db.reservation.create({
       data: {
+        comment,
+        price,
+        quantity,
+        status,
         user: userId
           ? { connect: { id: userId } }
           : {

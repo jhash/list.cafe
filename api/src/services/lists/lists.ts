@@ -15,7 +15,7 @@ export const adminLists: QueryResolvers['lists'] = () => {
   return db.list.findMany()
 }
 
-const listMembershipsWhereClauses = (
+export const listMembershipsWhereClauses = (
   listRoles?: ListRole[],
   groupRoles?: GroupRole[]
 ) => {
@@ -84,6 +84,22 @@ export const lists: QueryResolvers['lists'] = () => {
     },
     orderBy: {
       updatedAt: 'desc',
+    },
+  })
+}
+
+export const validateUserCanContributeToList: QueryResolvers['list'] = ({
+  id,
+}) => {
+  return db.list.findUniqueOrThrow({
+    where: {
+      id,
+      OR: [
+        ...listMembershipsWhereClauses(
+          ['ADMIN', 'CONTRIBUTE', 'OWNER', 'EDIT'],
+          ['OWNER', 'ADMIN', 'EDIT']
+        ),
+      ],
     },
   })
 }

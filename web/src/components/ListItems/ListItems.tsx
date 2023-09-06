@@ -92,7 +92,11 @@ const useListItemReservations = ({
     [userReservations]
   )
   const quantityReservedByUser = useMemo(
-    () => nonReleasedUserReservations.length,
+    () =>
+      nonReleasedUserReservations.reduce(
+        (total, reservation) => total + (reservation.quantity || 1),
+        0
+      ),
     [nonReleasedUserReservations]
   )
   const reservedByUser = useMemo(
@@ -366,7 +370,7 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
               <div>{listItem.title}</div>
             </div>
           )}
-          <Form<CreateReservationInput>
+          <Form<CreateReservationInput | UpdateReservationInput>
             className="flex flex-grow flex-col gap-3"
             onSubmit={reserve}
           >

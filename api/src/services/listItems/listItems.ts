@@ -7,7 +7,11 @@ import type {
 
 import { db } from 'src/lib/db'
 
-import { List } from '../lists/lists'
+import {
+  List,
+  listMembershipsWhereClauses,
+  validateUserCanContributeToList,
+} from '../lists/lists'
 
 export const listItems: QueryResolvers['listItems'] = ({ listId }) => {
   return db.listItem.findMany({
@@ -31,12 +35,16 @@ export const listItem: QueryResolvers['listItem'] = ({ id }) => {
   })
 }
 
-export const createListItem: MutationResolvers['createListItem'] = ({
+export const createListItem: MutationResolvers['createListItem'] = async ({
   input,
 }) => {
   if (!input.listId) {
     throw new Error('List is required to create a list item')
   }
+
+  // TODO: move to directive?
+  // Should throw if user doesn't have contribute access
+  await validateUserCanContributeToList({ id: input.listId })
 
   const {
     description,
@@ -75,19 +83,41 @@ export const createListItem: MutationResolvers['createListItem'] = ({
   })
 }
 
-export const updateListItem: MutationResolvers['updateListItem'] = ({
+export const updateListItem: MutationResolvers['updateListItem'] = async ({
   id,
   input,
 }) => {
   return db.listItem.update({
     data: input,
-    where: { id },
+    where: {
+      id,
+      list: {
+        OR: [
+          ...listMembershipsWhereClauses(
+            ['ADMIN', 'CONTRIBUTE', 'OWNER', 'EDIT'],
+            ['OWNER', 'ADMIN', 'EDIT']
+          ),
+        ],
+      },
+    },
   })
 }
 
-export const deleteListItem: MutationResolvers['deleteListItem'] = ({ id }) => {
+export const deleteListItem: MutationResolvers['deleteListItem'] = async ({
+  id,
+}) => {
   return db.listItem.delete({
-    where: { id },
+    where: {
+      id,
+      list: {
+        OR: [
+          ...listMembershipsWhereClauses(
+            ['ADMIN', 'CONTRIBUTE', 'OWNER', 'EDIT'],
+            ['OWNER', 'ADMIN', 'EDIT']
+          ),
+        ],
+      },
+    },
   })
 }
 

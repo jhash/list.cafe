@@ -16,7 +16,7 @@ import { toast } from '@redwoodjs/web/toast'
 
 import Loading from 'src/components/Loading'
 import { listRolesIntersect } from 'src/layouts/DashboardListLayout/DashboardListLayout'
-import { matchListTypeOption } from 'src/lib/lists'
+import { priceEnabled, reservationsEnabled } from 'src/lib/lists'
 
 import { UPDATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/EditListItemCell'
 import { DELETE_LIST_ITEM_MUTATION } from '../Admin/ListItem/ListItem'
@@ -287,7 +287,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           </div>
           {!!description && (
             <span className="flex h-full max-h-full flex-shrink flex-grow-0 items-center overflow-hidden overflow-ellipsis whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
-              <div className="h-full max-h-full overflow-hidden overflow-ellipsis">
+              <div className="max-h-full overflow-hidden overflow-ellipsis">
                 {description}
               </div>
             </span>
@@ -404,16 +404,27 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
           }}
         />
         <FormItem
+          type="textarea"
           disabled={loading}
-          type="number"
-          step="0.01"
           editing={editing}
-          name="price"
-          defaultValue={price ? price : undefined}
+          name="description"
+          defaultValue={description}
           className="text-base"
-          label="Price"
+          label="Description"
         />
-        {!!matchListTypeOption(list?.type)?.reservations && (
+        {!!priceEnabled(list?.type) && (
+          <FormItem
+            disabled={loading}
+            type="number"
+            step="0.01"
+            editing={editing}
+            name="price"
+            defaultValue={price ? price : undefined}
+            className="text-base"
+            label="Price"
+          />
+        )}
+        {!!reservationsEnabled(list?.type) && (
           <FormItem
             disabled={loading}
             type="number"
@@ -424,15 +435,6 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             label="Quantity"
           />
         )}
-        <FormItem
-          type="textarea"
-          disabled={loading}
-          editing={editing}
-          name="description"
-          defaultValue={description}
-          className="text-base"
-          label="Description"
-        />
         {!!error?.message && (
           <p className="label-error label font-medium">{error?.message}</p>
         )}
