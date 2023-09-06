@@ -488,7 +488,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
   return (
     <li
       key={id}
-      className="flex cursor-pointer items-center gap-3 rounded-lg border pr-3 leading-tight shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
+      className="flex cursor-pointer items-center gap-3 overflow-hidden overflow-ellipsis rounded-lg border pr-3 leading-tight shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
     >
       {url ? (
         <ExternalLink
@@ -508,7 +508,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
 
       <div className="flex items-center justify-end gap-3">
         {!!description && (
-          <span className="whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
+          <span className="flex-shrink overflow-hidden overflow-ellipsis whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
             {description}
           </span>
         )}

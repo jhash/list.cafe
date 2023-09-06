@@ -129,8 +129,7 @@ const ListMembers: ListCellChild = ({ list, canAddMembers }) => {
               </div>
             )}
             <button
-              // TODO: don't use z
-              className="btn btn-secondary z-10 mt-4 flex min-h-0 w-full flex-grow items-center justify-center self-start rounded p-0 px-4"
+              className="btn btn-secondary mt-4 flex min-h-0 w-full flex-grow items-center justify-center self-start rounded p-0 px-4"
               type="submit"
               disabled={loading}
             >

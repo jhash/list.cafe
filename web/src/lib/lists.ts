@@ -43,7 +43,12 @@ export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
     value: 'GROCERIES',
     name: 'Groceries',
     reservations: true,
-    badgeColor: 'bg-green-700',
+    badgeColor: 'bg-green-700 text-white',
+  },
+  {
+    value: 'INFO',
+    name: 'Information',
+    badgeColor: 'bg-slate-700 text-white',
   },
   {
     value: 'GIFTS',

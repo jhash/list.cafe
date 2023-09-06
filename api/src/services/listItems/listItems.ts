@@ -14,6 +14,14 @@ export const listItems: QueryResolvers['listItems'] = ({ listId }) => {
     where: {
       listId,
     },
+    orderBy: [
+      {
+        order: 'asc',
+      },
+      {
+        title: 'asc',
+      },
+    ],
   })
 }
 

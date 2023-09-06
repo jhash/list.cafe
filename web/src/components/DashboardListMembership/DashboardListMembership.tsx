@@ -109,8 +109,7 @@ const DashboardListMembership = ({
         {!!error && <span className="text-error">{error.message}</span>}
         {!!canDelete && currentUser?.id !== membership.user?.id && (
           <button
-            // TODO: don't use z
-            className="btn btn-error z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
+            className="btn btn-error flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
             onClick={(event) => {
               event.preventDefault()
               event.stopPropagation()

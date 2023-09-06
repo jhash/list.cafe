@@ -41,6 +41,7 @@ export const schema = gql`
     SHOPPING
     GROCERIES
     IDEAS
+    INFO
   }
 
   type Query {
