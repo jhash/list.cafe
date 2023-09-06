@@ -25,7 +25,7 @@ export const schema = gql`
   }
 
   type Query {
-    userInvites: [UserInvite!]! @requireAuth
+    userInvites: [UserInvite!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
     userInvite(id: String!): UserInvite @skipAuth
   }
 
@@ -44,9 +44,11 @@ export const schema = gql`
   }
 
   type Mutation {
-    createUserInvite(input: CreateUserInviteInput!): UserInvite! @requireAuth
+    createUserInvite(input: CreateUserInviteInput!): UserInvite!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
     updateUserInvite(id: String!, input: UpdateUserInviteInput!): UserInvite!
-      @skipAuth
-    deleteUserInvite(id: String!): UserInvite! @requireAuth
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    deleteUserInvite(id: String!): UserInvite!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 `

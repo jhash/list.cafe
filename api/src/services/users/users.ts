@@ -4,6 +4,7 @@ import type {
   UserRelationResolvers,
 } from 'types/graphql'
 
+import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
 export const users: QueryResolvers['users'] = () => {
@@ -11,6 +12,10 @@ export const users: QueryResolvers['users'] = () => {
 }
 
 export const user: QueryResolvers['user'] = ({ id }) => {
+  if (context.currentUser?.id === id && !hasRole(['ADMIN', 'SUPPORT'])) {
+    throw new Error(`Users can't directly access other users`)
+  }
+
   return db.user.findUnique({
     where: { id },
   })
@@ -44,6 +49,10 @@ export const createUser: MutationResolvers['createUser'] = ({ input }) => {
 }
 
 export const updateUser: MutationResolvers['updateUser'] = ({ id, input }) => {
+  if (context.currentUser?.id === id && !hasRole(['ADMIN', 'SUPPORT'])) {
+    throw new Error(`Users can't update other users`)
+  }
+
   return db.user.update({
     data: input,
     where: { id },
@@ -51,6 +60,10 @@ export const updateUser: MutationResolvers['updateUser'] = ({ id, input }) => {
 }
 
 export const deleteUser: MutationResolvers['deleteUser'] = ({ id }) => {
+  if (context.currentUser?.id === id && !hasRole(['ADMIN', 'SUPPORT'])) {
+    throw new Error(`Users can't delete other users`)
+  }
+
   return db.user.delete({
     where: { id },
   })

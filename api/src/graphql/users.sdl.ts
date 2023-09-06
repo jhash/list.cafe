@@ -22,7 +22,7 @@ export const schema = gql`
   }
 
   type Query {
-    users: [User!]! @requireAuth
+    users: [User!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
     user(id: Int!): User @requireAuth
   }
 
