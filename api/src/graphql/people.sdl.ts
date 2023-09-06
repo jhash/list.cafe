@@ -43,8 +43,10 @@ export const schema = gql`
   }
 
   type Mutation {
-    createPerson(input: CreatePersonInput!): Person! @requireAuth
-    updatePerson(id: Int!, input: UpdatePersonInput!): Person! @requireAuth
-    deletePerson(id: Int!): Person! @requireAuth
+    createPerson(input: CreatePersonInput!): Person!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    updatePerson(id: Int!, input: UpdatePersonInput!): Person!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    deletePerson(id: Int!): Person! @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 `

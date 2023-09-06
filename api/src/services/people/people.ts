@@ -7,12 +7,29 @@ import type {
 import { db } from 'src/lib/db'
 
 export const people: QueryResolvers['people'] = () => {
-  return db.person.findMany()
+  // TODO: groups, connections
+  return db.person.findMany({
+    where: {
+      visibility: {
+        in: ['PUBLIC'],
+      },
+    },
+  })
 }
 
 export const person: QueryResolvers['person'] = ({ id }) => {
+  // TODO: groups, connections
   return db.person.findUnique({
-    where: { id },
+    where: {
+      id,
+      ...(context.currentUser?.person?.id === id
+        ? {}
+        : {
+            visibility: {
+              in: ['PUBLIC'],
+            },
+          }),
+    },
   })
 }
 
