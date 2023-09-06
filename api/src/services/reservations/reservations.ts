@@ -23,6 +23,12 @@ export const createReservation: MutationResolvers['createReservation'] =
     const email = input.user?.email || input.user?.person?.email
     const userId = input.userId || context.currentUser?.id
 
+    if (!userId && !email) {
+      throw new Error(
+        'You must either log in or include your email in order to create a reservation'
+      )
+    }
+
     const { comment, price, quantity, status } = input
 
     const reservation = await db.reservation.create({
@@ -114,17 +120,19 @@ export const updateReservation: MutationResolvers['updateReservation'] = ({
   id,
   input,
 }) => {
+  // TODO: support deleting reservations for owners, admins, etc.
   return db.reservation.update({
     data: input,
-    where: { id },
+    where: { id, userId: context.currentUser?.id },
   })
 }
 
 export const deleteReservation: MutationResolvers['deleteReservation'] = ({
   id,
 }) => {
+  // TODO: support deleting reservations for owners, admins, etc.
   return db.reservation.delete({
-    where: { id },
+    where: { id, userId: context.currentUser?.id },
   })
 }
 

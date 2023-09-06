@@ -20,8 +20,8 @@ export const schema = gql`
   }
 
   type Query {
-    reservations: [Reservation!]! @requireAuth
-    reservation(id: Int!): Reservation @requireAuth
+    reservations: [Reservation!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    reservation(id: Int!): Reservation @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 
   input CreateReservationInput {
