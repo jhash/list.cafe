@@ -71,6 +71,9 @@ export const publicLists: QueryResolvers['publicLists'] = ({ take, skip }) => {
     },
     take,
     skip,
+    orderBy: {
+      createdAt: 'desc',
+    },
   })
 }
 
@@ -78,6 +81,9 @@ export const lists: QueryResolvers['lists'] = () => {
   return db.list.findMany({
     where: {
       OR: [...listMembershipsWhereClauses()],
+    },
+    orderBy: {
+      updatedAt: 'desc',
     },
   })
 }

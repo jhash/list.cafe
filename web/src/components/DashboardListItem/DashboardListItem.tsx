@@ -265,71 +265,73 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       {!modal && (
         <div
           className={classNames(
-            'collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 px-4 py-0 pr-12 leading-none',
+            'collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 overflow-hidden overflow-ellipsis px-4 py-0 pr-12 leading-tight',
             !!open && 'border-b'
           )}
         >
-          <div className="flex flex-grow items-center gap-3">
+          <div className="flex max-h-full flex-grow items-start gap-3 overflow-hidden overflow-ellipsis py-1">
             {title}
             {!!url && (
               <ExternalLink
                 href={url}
                 // TODO: don't use z
-                className="z-10 flex flex-shrink-0 items-center"
+                className="z-10 flex h-full flex-shrink-0 items-center self-center"
                 onClick={(event) => event.stopPropagation()}
               >
                 <Link2 size="1rem" className="flex-shrink-0" />
               </ExternalLink>
             )}
           </div>
-          <div className="flex max-h-full items-center justify-end gap-3 overflow-hidden overflow-ellipsis">
+          <div className="flex h-full items-center justify-end gap-3 overflow-hidden overflow-ellipsis py-1">
             {!!description && (
-              <span className="flex-shrink whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
+              <span className="flex max-h-full flex-shrink overflow-hidden overflow-ellipsis whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
                 {description}
               </span>
             )}
-            {!editing && !!canEdit && (
-              <button
-                // TODO: don't use z
-                className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
-                type="button"
-                onClick={() => {
-                  setEditing(true)
-                  setOpen(true)
-                }}
-                disabled={loading}
-              >
-                <Pencil size="1.25rem" />
-              </button>
-            )}
-            {!!open && !!editing && !!id && (
-              <button
-                // TODO: don't use z
-                className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
-                type="submit"
-                disabled={loading}
-              >
-                <Save size="1.25rem" />
-              </button>
-            )}
-            {canDelete && (
-              <button
-                // TODO: don't use z
-                className="btn btn-error z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
-                disabled={loading}
-                onClick={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  return id
-                    ? window?.confirm(
-                        'Are you sure you want to delete this item?'
-                      ) && onDelete()
-                    : onDelete()
-                }}
-              >
-                <Trash2 size="1.25rem" />
-              </button>
-            )}
+            <div className="flex flex-shrink-0 items-center gap-3">
+              {!editing && !!canEdit && (
+                <button
+                  // TODO: don't use z
+                  className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0"
+                  type="button"
+                  onClick={() => {
+                    setEditing(true)
+                    setOpen(true)
+                  }}
+                  disabled={loading}
+                >
+                  <Pencil size="1.25rem" />
+                </button>
+              )}
+              {!!open && !!editing && !!id && (
+                <button
+                  // TODO: don't use z
+                  className="btn btn-secondary z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0"
+                  type="submit"
+                  disabled={loading}
+                >
+                  <Save size="1.25rem" />
+                </button>
+              )}
+              {canDelete && (
+                <button
+                  // TODO: don't use z
+                  className="btn btn-error z-10 flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0"
+                  disabled={loading}
+                  onClick={(event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    return id
+                      ? window?.confirm(
+                          'Are you sure you want to delete this item?'
+                        ) && onDelete()
+                      : onDelete()
+                  }}
+                >
+                  <Trash2 size="1.25rem" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}

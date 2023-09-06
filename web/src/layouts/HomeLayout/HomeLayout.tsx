@@ -15,7 +15,7 @@ const HomeAuthLinks = lazy(
 const HomeLayout = ({ children }) => {
   return (
     <MainLayout>
-      <nav className="min-h-16 flex w-full max-w-full flex-grow-0 items-center px-4 py-2">
+      <nav className="min-h-16 flex max-h-16 w-full max-w-full flex-grow-0 items-center gap-x-3 px-4 py-2">
         <div className="flex flex-grow items-center gap-x-3">
           <HomeLink />
           <NavLink
@@ -26,7 +26,7 @@ const HomeLayout = ({ children }) => {
             {'explore'}
           </NavLink>
         </div>
-        <div className="flex flex-shrink select-none flex-wrap items-center justify-end gap-x-3 sm:flex-nowrap">
+        <div className="flex flex-shrink select-none flex-nowrap items-center justify-end gap-x-3 overflow-hidden">
           <BrowserOnly>
             <Suspense fallback={<Loading />}>
               <HomeAuthLinks />

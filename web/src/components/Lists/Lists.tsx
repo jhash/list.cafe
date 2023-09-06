@@ -31,9 +31,9 @@ const Lists: React.FC<ListsProps> = ({ lists }) => {
                 ? routes.identifier({ identifier: identifier.id })
                 : routes.list({ id })
             }
-            className="link min-h-12 flex flex-grow items-center gap-4 rounded-md border px-4 no-underline shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
+            className="link min-h-12 flex flex-grow items-center gap-4 rounded-md border px-4 py-1 no-underline shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
           >
-            <div className="flex flex-grow items-center">{name}</div>
+            <div className="flex flex-grow items-center text-lg">{name}</div>
             <ListTypeBadge type={type} />
           </Link>
         )

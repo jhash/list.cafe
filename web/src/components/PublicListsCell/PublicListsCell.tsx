@@ -7,7 +7,7 @@ import Spinner from 'src/components/Loading'
 import Lists from '../Lists/Lists'
 
 export const QUERY = gql`
-  query PublicListsQuery($take: Int = 10, $skip: Int) {
+  query PublicListsQuery($take: Int = 100, $skip: Int) {
     lists: publicLists(take: $take, skip: $skip) {
       id
       createdAt
@@ -22,7 +22,7 @@ export const QUERY = gql`
   }
 `
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 100
 
 export const Loading = () => <Spinner />
 

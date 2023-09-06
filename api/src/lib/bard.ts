@@ -111,13 +111,13 @@ const CATEGORY_PROMPT_KEY_MAP: { [prompt: string]: ListType } = {
   'baby shower registry': 'BABY_SHOWER',
   bookmarks: 'BOOKMARKS',
   'favorites list': 'FAVORITES',
-  forum: 'FORUM',
+  // forum: 'FORUM',
   'gift list': 'GIFTS',
   inventory: 'INVENTORY',
   'jobs list': 'JOBS',
   linktree: 'LINKTREE',
   'social list (like pinterest)': 'SOCIAL',
-  table: 'TABLE',
+  // table: 'TABLE',
   'todo list': 'TODO',
   'top 10 list': 'TOP',
   'wedding registry': 'WEDDING',
@@ -125,6 +125,7 @@ const CATEGORY_PROMPT_KEY_MAP: { [prompt: string]: ListType } = {
   'back to school': 'SCHOOL',
   groceries: 'GROCERIES',
   shopping: 'SHOPPING',
+  ideas: 'IDEAS',
 }
 
 const PROMPT = `Can you create a list with a name, description, and a type from the following options: [${Object.keys(
@@ -230,6 +231,7 @@ const convertPotentialJSONToList = async (original: string) => {
           try {
             await validateUrl(listItem.url)
           } catch (error) {
+            console.error(`Failed to validate url for ${listItem.title}`, error)
             listItem.url = undefined
           }
         }

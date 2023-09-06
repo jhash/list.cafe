@@ -380,7 +380,7 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
       )} */}
       <button
         className={classNames(
-          'btn flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0',
+          'btn flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0',
           reservedByOthers
             ? allReserved
               ? 'btn-warning'
@@ -452,7 +452,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
             {!!quantityReservedByUser && (
               <div
                 className={classNames(
-                  'flex items-center text-sm font-medium text-info'
+                  'flex items-center whitespace-nowrap text-sm font-medium text-info'
                 )}
               >
                 {`${quantityReservedByUser} reserved`}
@@ -461,7 +461,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
             {!!quantityReserved && !!remaining && (
               <div
                 className={classNames(
-                  'flex items-center text-sm font-medium',
+                  'flex items-center whitespace-nowrap text-sm font-medium',
                   'text-secondary'
                 )}
               >
@@ -508,7 +508,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
 
       <div className="flex items-center justify-end gap-3">
         {!!description && (
-          <span className="whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
+          <span className="whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
             {description}
           </span>
         )}

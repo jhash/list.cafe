@@ -4,12 +4,12 @@ import { CreateListInput, CreateListItemInput } from 'types/graphql'
 import { convertLinkToList } from 'src/lib/bard'
 import { logger } from 'src/lib/logger'
 
-// import {
-//   AMAZON_PRODUCT_REGEX,
-//   AMAZON_WISHLIST_REGEX,
-//   fetchAmazonProductLink,
-//   fetchAmazonWishlistLink,
-// } from '../../lib/amazon'
+import {
+  AMAZON_PRODUCT_REGEX,
+  AMAZON_WISHLIST_REGEX,
+  fetchAmazonProductLink,
+  fetchAmazonWishlistLink,
+} from '../../lib/amazon'
 
 /**
  * The handler function is your code that processes http request events.
@@ -36,12 +36,12 @@ export type DigestedList = CreateListInput & {
 }
 export type DigestHandler = (link: string) => Promise<DigestedList>
 const digest: DigestHandler = async (link: string) => {
-  // if (link.match(AMAZON_PRODUCT_REGEX)) {
-  //   return await fetchAmazonProductLink(link)
-  // }
-  // if (link.match(AMAZON_WISHLIST_REGEX)) {
-  //   return await fetchAmazonWishlistLink(link)
-  // }
+  if (link.match(AMAZON_PRODUCT_REGEX)) {
+    return await fetchAmazonProductLink(link)
+  }
+  if (link.match(AMAZON_WISHLIST_REGEX)) {
+    return await fetchAmazonWishlistLink(link)
+  }
 
   return await convertLinkToList(link)
 }

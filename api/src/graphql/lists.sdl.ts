@@ -33,13 +33,14 @@ export const schema = gql`
     AWESOME
     INVENTORY
     TODO
-    FORUM
-    TABLE
+    # FORUM
+    # TABLE
     LINKTREE
     JOBS
     SCHOOL
     SHOPPING
     GROCERIES
+    IDEAS
   }
 
   type Query {

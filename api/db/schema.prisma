@@ -220,13 +220,14 @@ enum ListType {
   INVENTORY
   TODO
   // Like reddit, voting by default?
-  FORUM
-  TABLE
+  // FORUM
+  // TABLE
   LINKTREE
   JOBS
   SCHOOL
   SHOPPING
   GROCERIES
+  IDEAS
 }
 
 enum ListVisibility {
