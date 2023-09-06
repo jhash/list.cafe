@@ -5,10 +5,11 @@ import type {
   CreateImageInput,
 } from 'types/graphql'
 
+import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
-export const images: QueryResolvers['images'] = ({ listItemId }) => {
-  return db.image.findMany({ where: { listItemId } })
+export const images: QueryResolvers['images'] = ({ listItemId, personId }) => {
+  return db.image.findMany({ where: { listItemId, personId } })
 }
 
 export const image: QueryResolvers['image'] = ({ id }) => {
@@ -22,7 +23,16 @@ export const createImage: MutationResolvers['createImage'] = ({ input }) => {
 
   delete input.listItemId
 
-  const strippedInput: Omit<CreateImageInput, 'listItemId'> = {
+  const personId = input.personId
+
+  delete input.personId
+
+  // TODO: write test
+  if (!personId && !listItemId && !hasRole(['ADMIN', 'SUPPORT'])) {
+    throw new Error('Either personId or listItemId is required to create image')
+  }
+
+  const strippedInput: Omit<CreateImageInput, 'listItemId' | 'personId'> = {
     ...input,
   }
   return db.image.create({
@@ -31,6 +41,11 @@ export const createImage: MutationResolvers['createImage'] = ({ input }) => {
       listItem: {
         connect: {
           id: listItemId,
+        },
+      },
+      person: {
+        connect: {
+          id: personId,
         },
       },
     },

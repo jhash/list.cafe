@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 
 import classNames from 'classnames'
-import { Link2, Lock, Save, Unlock, X } from 'lucide-react'
+import { Lock, Save, Unlock, X } from 'lucide-react'
 import {
   CreateReservationInput,
   ListItemsQuery,
@@ -284,6 +284,7 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
             name="price"
             type="number"
             label="Price"
+            step="0.01"
             defaultValue={reservation.price}
             description="How much did you pay for this item? Only you will be able to see this"
             placeholder="N/A"
@@ -378,34 +379,36 @@ const ListItemReservationButtons: React.FC<ListItemReservationsButtons> = ({
           <Lock size="1.25rem" />
         </div>
       )} */}
-      <button
-        className={classNames(
-          'btn flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0',
-          reservedByOthers
-            ? allReserved
-              ? 'btn-warning'
-              : 'btn-info'
-            : reservedByUser
-            ? 'btn-primary'
-            : 'btn-secondary'
-        )}
-        type="button"
-        onClick={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          setReservation(
-            userReservations?.[0] || {
-              status: 'RESERVED',
-              quantity: listItem.quantity || 1,
-              listItemId: listItem.id,
-              price: listItem.price,
-            }
-          )
-        }}
-        // disabled={loading}
-      >
-        {reservedByUser ? <Unlock size="1.25rem" /> : <Lock size="1.25rem" />}
-      </button>
+      <div>
+        <button
+          className={classNames(
+            'btn flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0',
+            reservedByOthers
+              ? allReserved
+                ? 'btn-warning'
+                : 'btn-info'
+              : reservedByUser
+              ? 'btn-primary'
+              : 'btn-secondary'
+          )}
+          type="button"
+          onClick={(event) => {
+            event.preventDefault()
+            event.stopPropagation()
+            setReservation(
+              userReservations?.[0] || {
+                status: 'RESERVED',
+                quantity: listItem.quantity || 1,
+                listItemId: listItem.id,
+                price: listItem.price,
+              }
+            )
+          }}
+          // disabled={loading}
+        >
+          {reservedByUser ? <Unlock size="1.25rem" /> : <Lock size="1.25rem" />}
+        </button>
+      </div>
     </>
   )
 }
@@ -427,7 +430,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
     }
 
     return (
-      <>
+      <div className="flex flex-shrink flex-wrap justify-center gap-x-3 gap-y-1 px-1">
         {quantity > 1 && (
           <div
             className={classNames(
@@ -470,18 +473,30 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
             )}
           </>
         )}
-      </>
+      </div>
     )
   }
 
   const titleText = (
     <>
       {!!images?.length && (
-        <div className="flex max-h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-sm py-1">
+        <div className="flex max-h-24 w-24 flex-shrink-0 items-center justify-center self-start overflow-hidden rounded-sm py-1">
           <img src={images[0].url} alt={images[0]?.alt} className="w-full" />
         </div>
       )}
       {title}
+    </>
+  )
+
+  const descriptionText = (
+    <>
+      {!!description && (
+        <span className="ml-auto flex flex-shrink flex-grow-0 items-center overflow-hidden overflow-ellipsis whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
+          <span className="overflow-hidden overflow-ellipsis">
+            {description}
+          </span>
+        </span>
+      )}
     </>
   )
 
@@ -493,27 +508,22 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
       {url ? (
         <ExternalLink
           href={url}
-          className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 px-3 py-1 text-lg no-underline"
+          className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 py-1 pl-3 text-lg no-underline"
         >
           {titleText}
-          <Link2 size="1rem" className="flex-shrink-0" />
           <QuantityText />
+          {descriptionText}
+          {/* <Link2 size="1rem" className="flex-shrink-0" /> */}
         </ExternalLink>
       ) : (
-        <div className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 px-3 py-1 text-lg no-underline">
+        <div className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 py-1 pl-3 text-lg no-underline">
           {titleText}
           <QuantityText />
+          {descriptionText}
         </div>
       )}
 
-      <div className="flex items-center justify-end gap-3">
-        {!!description && (
-          <span className="flex-shrink flex-grow-0 overflow-hidden overflow-ellipsis whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
-            {description}
-          </span>
-        )}
-        <ListItemReservationButtons listItem={listItem} />
-      </div>
+      <ListItemReservationButtons listItem={listItem} />
     </li>
   )
 }

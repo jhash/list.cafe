@@ -10,7 +10,7 @@ export const schema = gql`
   }
 
   type Query {
-    identifiers: [Identifier!]! @requireAuth
+    identifiers: [Identifier!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
     identifier(id: String!): Identifier @skipAuth
   }
 
@@ -28,9 +28,11 @@ export const schema = gql`
   }
 
   type Mutation {
-    createIdentifier(input: CreateIdentifierInput!): Identifier! @requireAuth
+    createIdentifier(input: CreateIdentifierInput!): Identifier!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
     updateIdentifier(id: String!, input: UpdateIdentifierInput!): Identifier!
-      @requireAuth
-    deleteIdentifier(id: String!): Identifier! @requireAuth
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    deleteIdentifier(id: String!): Identifier!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 `

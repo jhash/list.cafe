@@ -250,7 +250,7 @@ const convertPotentialJSONToList = async (original: string) => {
     type,
     headerImage: unfiltered.headerImage,
     description: unfiltered.description,
-    visibility: 'PUBLIC',
+    visibility: 'LINK',
     listItems: (unfiltered.listItems || []).map((listItem, index) => ({
       url: listItem.url,
       title: listItem.title || `Item ${index + 1}`,

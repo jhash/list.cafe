@@ -242,6 +242,9 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     />
   )
 
+  const showButtons =
+    (!editing && !!canEdit) || (!!open && !!editing && !!id) || canDelete
+
   return (
     <Form<CreateListItemForm>
       className={classNames(
@@ -282,13 +285,15 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
               </ExternalLink>
             )}
           </div>
-          <div className="flex h-full flex-shrink items-center justify-end gap-3 overflow-hidden overflow-ellipsis py-1">
-            {!!description && (
-              <span className="flex max-h-full flex-shrink flex-grow-0 overflow-hidden overflow-ellipsis whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
+          {!!description && (
+            <span className="flex h-full max-h-full flex-shrink flex-grow-0 items-center overflow-hidden overflow-ellipsis whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
+              <div className="h-full max-h-full overflow-hidden overflow-ellipsis">
                 {description}
-              </span>
-            )}
-            <div className="flex flex-shrink-0 items-center gap-3">
+              </div>
+            </span>
+          )}
+          {!!showButtons && (
+            <div className="flex h-full flex-shrink-0 items-center justify-end gap-3 overflow-hidden overflow-ellipsis py-1">
               {!editing && !!canEdit && (
                 <button
                   // TODO: don't use z
@@ -332,7 +337,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
                 </button>
               )}
             </div>
-          </div>
+          )}
         </div>
       )}
       <div
@@ -372,7 +377,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             )}
           </div>
         )}
-        {url ? (
+        {url && !editing ? (
           <ExternalLink
             href={url}
             // TODO: don't use z

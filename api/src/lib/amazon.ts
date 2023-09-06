@@ -87,10 +87,13 @@ export const fetchAmazonProductLink: DigestHandler = async (
     console.error(error)
   }
 
+  const listItem = { url, title, images, description, quantity: 1 }
+
   return {
-    listItems: [{ url, title, images, description, quantity: 1 }],
-    name: 'My Amazon Wishlist',
+    listItems: [listItem],
+    name: 'Amazon Wishlist',
     type: 'WISHLIST',
+    visibility: 'LINK',
   }
 }
 
@@ -99,7 +102,7 @@ export const fetchAmazonWishlistLink: DigestHandler = async (
 ) => {
   let link = originalLink
   let listItems: DigestedItem[] = []
-  let name = ''
+  let name = 'Amazon Wishlist'
   // const groupName = ''
   // const description = ''
 
@@ -158,5 +161,6 @@ export const fetchAmazonWishlistLink: DigestHandler = async (
     name,
     listItems,
     type: 'WISHLIST',
+    visibility: 'LINK',
   }
 }

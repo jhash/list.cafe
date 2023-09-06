@@ -13,9 +13,10 @@ export const schema = gql`
   }
 
   type Query {
+    images(personId: Int!): [Image!]! @skipAuth
     images(listItemId: Int!): [Image!]! @skipAuth
-    images: [Image!]! @requireAuth
-    image(id: Int!): Image @requireAuth
+    images: [Image!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    image(id: Int!): Image @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 
   input CreateImageInput {
@@ -25,6 +26,7 @@ export const schema = gql`
     format: String
     alt: String
     listItemId: Int
+    personId: Int
   }
 
   input UpdateImageInput {
@@ -37,9 +39,11 @@ export const schema = gql`
 
   type Mutation {
     createImage(input: CreateImageInput!): Image! @requireAuth
-    updateImage(id: Int!, input: UpdateImageInput!): Image! @requireAuth
-    deleteImage(id: Int!): Image! @requireAuth
-    uploadImages(images: [Upload!]!): SuccessResult @requireAuth
+    updateImage(id: Int!, input: UpdateImageInput!): Image!
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    deleteImage(id: Int!): Image! @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    uploadImages(images: [Upload!]!): SuccessResult
+      @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }
 
   scalar Upload
