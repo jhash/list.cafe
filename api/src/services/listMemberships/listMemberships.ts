@@ -42,6 +42,8 @@ export const listMembership: QueryResolvers['listMembership'] = ({ id }) => {
 
 export const createListMembership: MutationResolvers['createListMembership'] =
   async ({ input }) => {
+    // TODO: don't allow creating roles above current user's
+
     if (!input.email && !input.userId) {
       throw new Error('Either an email or a user id is required')
     }
@@ -208,6 +210,8 @@ export const createListMembership: MutationResolvers['createListMembership'] =
 
 export const updateListMembership: MutationResolvers['updateListMembership'] =
   ({ id, input }) => {
+    // TODO: don't allow updating roles above current user's
+
     return db.listMembership.update({
       data: input,
       where: {
@@ -215,8 +219,8 @@ export const updateListMembership: MutationResolvers['updateListMembership'] =
         list: {
           OR: [
             ...listMembershipsWhereClauses(
-              ['ADMIN', 'OWNER', 'EDIT'],
-              ['OWNER', 'ADMIN', 'EDIT']
+              ['ADMIN', 'OWNER'],
+              ['OWNER', 'ADMIN']
             ),
           ],
         },
@@ -232,8 +236,8 @@ export const deleteListMembership: MutationResolvers['deleteListMembership'] =
         list: {
           OR: [
             ...listMembershipsWhereClauses(
-              ['ADMIN', 'OWNER', 'EDIT'],
-              ['OWNER', 'ADMIN', 'EDIT']
+              ['ADMIN', 'OWNER'],
+              ['OWNER', 'ADMIN']
             ),
           ],
         },

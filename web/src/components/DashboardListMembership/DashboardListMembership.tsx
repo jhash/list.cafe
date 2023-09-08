@@ -112,22 +112,25 @@ const DashboardListMembership = ({
       )}
       <div className="flex flex-shrink-0 items-center gap-3">
         {!!error && <span className="text-error">{error.message}</span>}
-        {!!canDelete && currentUser?.id !== membership.user?.id && (
-          <button
-            className="btn btn-error flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
-            onClick={(event) => {
-              event.preventDefault()
-              event.stopPropagation()
-              return (
-                window?.confirm('Are you sure you want to delete this item?') &&
-                deleteListMembership({ variables: { id } })
-              )
-            }}
-            disabled={loading}
-          >
-            <Trash2 size="1.25rem" />
-          </button>
-        )}
+        {!!canDelete &&
+          currentUser?.id !== membership.user?.id &&
+          membership.listRole !== 'OWNER' && (
+            <button
+              className="btn btn-error flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
+              onClick={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                return (
+                  window?.confirm(
+                    'Are you sure you want to delete this item?'
+                  ) && deleteListMembership({ variables: { id } })
+                )
+              }}
+              disabled={loading}
+            >
+              <Trash2 size="1.25rem" />
+            </button>
+          )}
         {!!canEdit && (
           <Form>
             <FormInput
@@ -136,7 +139,11 @@ const DashboardListMembership = ({
               className="select-sm"
               defaultValue={listRole}
               options={LIST_ROLE_TYPES}
-              disabled={loading || currentUser?.id === membership.user?.id}
+              disabled={
+                loading ||
+                currentUser?.id === membership.user?.id ||
+                membership.listRole === 'OWNER'
+              }
               hideDescription
               onChange={(event) => {
                 updateListMembership({
