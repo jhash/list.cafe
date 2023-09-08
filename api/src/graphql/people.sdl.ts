@@ -5,6 +5,8 @@ export const schema = gql`
     updatedAt: DateTime!
     name: String!
     email: String @requireAuth
+    description: String
+    pronouns: String
     user: User
     addresses: [Address]!
     # defaultAddressId: Int
@@ -31,15 +33,24 @@ export const schema = gql`
   input CreatePersonInput {
     name: String!
     email: String
+    description: String
+    pronouns: String
     defaultAddressId: Int
     createdByUserId: Int
+    images: [CreateImageInput]
+    identifier: CreateIdentifierInput
+    visibility: PersonVisibility
   }
 
   input UpdatePersonInput {
     name: String
     email: String
+    description: String
+    pronouns: String
     defaultAddressId: Int
-    createdByUserId: Int
+    images: [CreateImageInput]
+    identifier: CreateIdentifierInput
+    visibility: PersonVisibility
   }
 
   type Mutation {

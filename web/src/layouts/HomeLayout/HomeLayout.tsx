@@ -1,5 +1,7 @@
 import { Suspense, lazy } from 'react'
 
+import { Globe2 } from 'lucide-react'
+
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 import { NavLink, routes } from '@redwoodjs/router'
 
@@ -18,15 +20,16 @@ const HomeLayout = ({ children }) => {
       <nav className="min-h-16 flex max-h-16 w-full max-w-full flex-grow-0 items-center gap-x-3 px-4 py-2">
         <div className="flex flex-grow items-center gap-x-3">
           <HomeLink />
+        </div>
+        <div className="flex flex-shrink select-none flex-nowrap items-center justify-end gap-x-3 overflow-hidden">
           <NavLink
             className="link font-semibold no-underline hover:underline"
             activeClassName="font-bold"
             to={routes.explore()}
+            title="Explore"
           >
-            {'explore'}
+            <Globe2 size="1.25rem" />
           </NavLink>
-        </div>
-        <div className="flex flex-shrink select-none flex-nowrap items-center justify-end gap-x-3 overflow-hidden">
           <BrowserOnly>
             <Suspense fallback={<Loading />}>
               <HomeAuthLinks />

@@ -12,7 +12,7 @@ export const users: QueryResolvers['users'] = () => {
 }
 
 export const user: QueryResolvers['user'] = ({ id }) => {
-  if (context.currentUser?.id === id && !hasRole(['ADMIN', 'SUPPORT'])) {
+  if (context.currentUser?.id !== id && !hasRole(['ADMIN', 'SUPPORT'])) {
     throw new Error(`Users can't directly access other users`)
   }
 
@@ -22,7 +22,18 @@ export const user: QueryResolvers['user'] = ({ id }) => {
 }
 
 export const createUser: MutationResolvers['createUser'] = ({ input }) => {
-  const { email, hashedPassword, salt } = input
+  const { hashedPassword, salt, person } = input
+  const {
+    description,
+    pronouns,
+    name,
+    defaultAddressId,
+    identifier,
+    visibility,
+  } = person || {}
+
+  const email = input.email || person.email
+
   return db.user.create({
     data: {
       email,
@@ -37,7 +48,24 @@ export const createUser: MutationResolvers['createUser'] = ({ input }) => {
             email: input.email,
           },
           create: {
-            ...input.person,
+            name,
+            description,
+            pronouns,
+            email,
+            defaultAddressId,
+            visibility,
+            identifier: identifier?.id
+              ? {
+                  create: identifier,
+                }
+              : undefined,
+            images: person.images
+              ? {
+                  createMany: {
+                    data: person.images,
+                  },
+                }
+              : undefined,
           },
         },
       },
@@ -49,18 +77,73 @@ export const createUser: MutationResolvers['createUser'] = ({ input }) => {
 }
 
 export const updateUser: MutationResolvers['updateUser'] = ({ id, input }) => {
-  if (context.currentUser?.id === id && !hasRole(['ADMIN', 'SUPPORT'])) {
+  if (context.currentUser?.id !== id && !hasRole(['ADMIN', 'SUPPORT'])) {
     throw new Error(`Users can't update other users`)
   }
 
+  const { hashedPassword, salt, person } = input
+  const {
+    description,
+    pronouns,
+    name,
+    defaultAddressId,
+    identifier,
+    visibility,
+  } = person || {}
+
+  const email = input.email || person.email
+
   return db.user.update({
-    data: input,
+    data: {
+      email,
+      hashedPassword,
+      salt,
+      person: {
+        update: {
+          where: {
+            user: {
+              id,
+            },
+          },
+          data: {
+            name,
+            description,
+            pronouns,
+            email,
+            defaultAddressId,
+            visibility,
+            identifier: identifier?.id
+              ? {
+                  upsert: {
+                    where: {
+                      person: {
+                        user: {
+                          id,
+                        },
+                      },
+                    },
+                    update: identifier,
+                    create: identifier,
+                  },
+                }
+              : undefined,
+            images: person.images
+              ? {
+                  createMany: {
+                    data: person.images,
+                  },
+                }
+              : undefined,
+          },
+        },
+      },
+    },
     where: { id },
   })
 }
 
 export const deleteUser: MutationResolvers['deleteUser'] = ({ id }) => {
-  if (context.currentUser?.id === id && !hasRole(['ADMIN', 'SUPPORT'])) {
+  if (context.currentUser?.id !== id && !hasRole(['ADMIN', 'SUPPORT'])) {
     throw new Error(`Users can't delete other users`)
   }
 

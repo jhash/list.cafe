@@ -17,6 +17,7 @@ import SignupPage from './pages/SignupPage/SignupPage'
 const Routes = ({ useAuth }) => {
   return (
     <Router useAuth={useAuth}>
+      <Route path="/person" page={PersonPage} name="person" />
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
         <Set wrap={ScaffoldLayout} title="ListGroupMemberships" titleTo="adminListGroupMemberships" buttonLabel="New ListGroupMembership" buttonTo="adminNewListGroupMembership">
           <Route path="/admin/list-group-memberships/new" page={AdminListGroupMembershipNewListGroupMembershipPage} name="adminNewListGroupMembership" />
@@ -35,12 +36,6 @@ const Routes = ({ useAuth }) => {
           <Route path="/admin/list-memberships/{id:Int}/edit" page={AdminListMembershipEditListMembershipPage} name="adminEditListMembership" />
           <Route path="/admin/list-memberships/{id:Int}" page={AdminListMembershipListMembershipPage} name="adminListMembership" />
           <Route path="/admin/list-memberships" page={AdminListMembershipListMembershipsPage} name="adminListMemberships" />
-        </Set>
-        <Set wrap={ScaffoldLayout} title="PartnershipLinks" titleTo="adminPartnershipLinks" buttonLabel="New PartnershipLink" buttonTo="adminNewPartnershipLink">
-        </Set>
-        <Set wrap={ScaffoldLayout} title="PartnershipContacts" titleTo="adminPartnershipContacts" buttonLabel="New PartnershipContact" buttonTo="adminNewPartnershipContact">
-        </Set>
-        <Set wrap={ScaffoldLayout} title="Partnerships" titleTo="adminPartnerships" buttonLabel="New Partnership" buttonTo="adminNewPartnership">
         </Set>
         <Set wrap={ScaffoldLayout} title="ListItems" titleTo="adminListItems" buttonLabel="New ListItem" buttonTo="adminNewListItem">
           <Route path="/admin/list-items/new" page={AdminListItemNewListItemPage} name="adminNewListItem" />
@@ -90,6 +85,7 @@ const Routes = ({ useAuth }) => {
         <Route path="/dashboard/lists/{id:Int}/members" page={ListMembersPage} name="listMembers" />
         <Route path="/dashboard/lists/{id:Int}" page={DashboardListPage} name="list" />
         <Route path="/dashboard/settings" page={SettingsPage} name="settings" />
+        <Route path="/profile-settings" page={ProfileSettingsPage} name="profileSettings" />
         <Route path="/dashboard/profile" page={ProfilePage} name="profile" />
         <Route path="/dashboard" page={DashboardPage} name="dashboard" prerender />
       </Set>

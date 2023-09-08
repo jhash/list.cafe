@@ -1,3 +1,5 @@
+import { ChefHat, LayoutDashboard, LogOut } from 'lucide-react'
+
 import { NavLink, Link, routes } from '@redwoodjs/router'
 
 import { useAuth } from 'src/auth'
@@ -16,22 +18,27 @@ const HomeAuthLinks = () => {
           <Link
             className="link font-semibold no-underline hover:underline"
             to={routes.dashboard()}
+            title="Dashboard"
           >
-            dashboard
+            <LayoutDashboard size="1.25rem" />
           </Link>
           {hasRole(['ADMIN', 'SUPPORT']) && (
             <Link
               className="link font-semibold no-underline hover:underline"
               to={routes.admin()}
+              title="Admin"
             >
-              admin
+              <ChefHat size="1.25rem" />
             </Link>
           )}
           <button
             className="btn btn-link p-0 text-base lowercase text-black no-underline dark:text-white"
-            onClick={() => logOut()}
+            onClick={() =>
+              window?.confirm('Are you sure you want to log out?') && logOut()
+            }
+            title="Log out"
           >
-            log out
+            <LogOut size="1.25rem" />
           </button>
         </>
       ) : (

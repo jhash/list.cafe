@@ -359,6 +359,8 @@ model Person {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @default(now())
   name               String
+  description        String?
+  pronouns           String?
   email              String?             @unique
   user               User?               @relation(name: "attachedUser")
   addresses          Address[]

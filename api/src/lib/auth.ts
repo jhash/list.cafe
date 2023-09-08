@@ -34,21 +34,25 @@ export const getCurrentUser = async (decoded: Decoded) => {
 
   const user = await db.user.findUnique({
     where: { id: decoded.id },
-    select: {
-      id: true,
-      email: true,
+    include: {
       userRoles: true,
-      person: true,
+      person: {
+        include: {
+          images: true,
+          identifier: true,
+        },
+      },
     },
   })
 
-  const { id, email, userRoles, person } = user
+  const { id, email, userRoles, person, personId } = user
 
   const fullUser = {
     id,
     email,
     roles: userRoles.map((userRole) => userRole.role),
     person,
+    personId,
   }
 
   return fullUser

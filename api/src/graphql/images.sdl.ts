@@ -46,7 +46,7 @@ export const schema = gql`
     createImage(input: CreateImageInput!): Image! @requireAuth
     updateImage(id: Int!, input: UpdateImageInput!): Image!
       @requireAuth(roles: ["ADMIN", "SUPPORT"])
-    deleteImage(id: Int!): Image! @requireAuth(roles: ["ADMIN", "SUPPORT"])
+    deleteImage(id: Int!): Image! @requireAuth
     uploadImages(images: [Upload!]!): SuccessResult
       @requireAuth(roles: ["ADMIN", "SUPPORT"])
   }

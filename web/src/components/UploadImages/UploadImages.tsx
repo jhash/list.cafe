@@ -42,7 +42,15 @@ const UploadImages = ({ onUpload, ...rest }: UploadImagesProps) => {
     return <Loading />
   }
 
-  return <input {...rest} type="file" onChange={onChange} multiple />
+  return (
+    <input
+      {...rest}
+      type="file"
+      onChange={onChange}
+      multiple
+      className="cursor-pointer"
+    />
+  )
 }
 
 export default UploadImages

@@ -9,6 +9,7 @@ import type { CellSuccessProps } from '@redwoodjs/web'
 import Spinner from 'src/components/Loading'
 
 import ListPage from '../../pages/ListPage/ListPage'
+import PersonPage from '../../pages/PersonPage/PersonPage'
 
 export const QUERY = gql`
   query FindIdentifierQuery($id: String!) {
@@ -41,7 +42,9 @@ export const Success = ({
 
   return identifier.listId ? (
     <ListPage id={identifier.listId} />
+  ) : identifier.personId ? (
+    <PersonPage id={identifier.personId} />
   ) : (
-    <div>Person and Group Pages not created yet</div>
+    <div>Group Page not created yet</div>
   )
 }

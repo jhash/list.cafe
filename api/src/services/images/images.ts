@@ -8,6 +8,8 @@ import type {
 import { hasRole } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
+import { listMembershipsWhereClauses } from '../lists/lists'
+
 export const adminImages: QueryResolvers['adminImages'] = () => {
   return db.image.findMany()
 }
@@ -50,16 +52,20 @@ export const createImage: MutationResolvers['createImage'] = ({ input }) => {
   return db.image.create({
     data: {
       ...strippedInput,
-      listItem: {
-        connect: {
-          id: listItemId,
-        },
-      },
-      person: {
-        connect: {
-          id: personId,
-        },
-      },
+      listItem: listItemId
+        ? {
+            connect: {
+              id: listItemId,
+            },
+          }
+        : undefined,
+      person: personId
+        ? {
+            connect: {
+              id: personId,
+            },
+          }
+        : undefined,
     },
   })
 }
@@ -77,7 +83,32 @@ export const updateImage: MutationResolvers['updateImage'] = ({
 export const deleteImage: MutationResolvers['deleteImage'] = ({ id }) => {
   // TODO: delete from google?
   return db.image.delete({
-    where: { id },
+    where: {
+      id,
+      ...(hasRole(['ADMIN', 'SUPPORT'])
+        ? {}
+        : {
+            OR: [
+              {
+                person: {
+                  id: context.currentUser?.person?.id,
+                },
+              },
+              {
+                listItem: {
+                  list: {
+                    OR: [
+                      ...listMembershipsWhereClauses(
+                        ['ADMIN', 'CONTRIBUTE', 'OWNER', 'EDIT'],
+                        ['OWNER', 'ADMIN', 'EDIT']
+                      ),
+                    ],
+                  },
+                },
+              },
+            ],
+          }),
+    },
   })
 }
 

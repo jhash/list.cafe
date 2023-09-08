@@ -1,4 +1,5 @@
-import { User, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
+import { User } from 'types/graphql'
 
 import { createDbAuthClient, createAuth } from '@redwoodjs/auth-dbauth-web'
 // import WebAuthnClient from '@redwoodjs/auth-dbauth-web/webAuthn'
