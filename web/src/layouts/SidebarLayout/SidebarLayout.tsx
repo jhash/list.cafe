@@ -3,13 +3,15 @@ import './SidebarLayout.scss'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import classNames from 'classnames'
-import { PanelLeft, PanelLeftClose } from 'lucide-react'
+import { LogOut, PanelLeft, PanelLeftClose } from 'lucide-react'
 
 import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
 import { useLocation } from '@redwoodjs/router'
 
+import { useAuth } from 'src/auth'
 import HomeLink from 'src/components/HomeLink/HomeLink'
 import Loading from 'src/components/Loading'
+import PersonAvatar from 'src/components/PersonAvatar/PersonAvatar'
 
 import MainLayout from '../MainLayout/MainLayout'
 
@@ -29,6 +31,7 @@ const SidebarLayout = ({ children, Sidebar, skeleton }: SidebarLayoutProps) => {
   const browser = useIsBrowser()
 
   const { pathname } = useLocation()
+  const { logOut, currentUser } = useAuth()
 
   const [state, setState] = useState<{ open: boolean; closing: boolean }>({
     open: true,
@@ -123,6 +126,35 @@ const SidebarLayout = ({ children, Sidebar, skeleton }: SidebarLayoutProps) => {
               <HomeLink />
             </div>
             <Sidebar {...sidebarProps} />
+            <div className="flex w-full max-w-full flex-shrink-0 px-2 pb-[0.475rem]">
+              <div className="dropdown-left dropdown-top dropdown relative ml-auto flex h-12 items-center">
+                <button className="btn btn-ghost h-8 min-h-0 rounded-full p-0">
+                  <PersonAvatar
+                    person={currentUser?.person}
+                    className="h-8 w-8 text-[0.375rem]"
+                  />
+                </button>
+                <ul
+                  // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+                  tabIndex={0}
+                  className="dropdown-content z-[1] w-52 translate-x-[2.16rem] rounded-md border bg-base-100 p-0 shadow"
+                >
+                  <li className="m-0 flex h-10 items-center justify-start p-0">
+                    <button
+                      className="btn btn-ghost flex h-full min-h-0 w-full items-center justify-start gap-3 rounded-md p-0 px-3 text-base font-medium lowercase text-black no-underline dark:text-white"
+                      onClick={() =>
+                        window?.confirm('Are you sure you want to log out?') &&
+                        logOut()
+                      }
+                      title="Log out"
+                    >
+                      <LogOut size="1.25rem" />
+                      {'log out'}
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
           <div
             className={classNames(

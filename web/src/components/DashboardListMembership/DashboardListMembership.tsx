@@ -11,6 +11,7 @@ import { UPDATE_LIST_MEMBERSHIP_MUTATION } from '../Admin/ListMembership/EditLis
 import { DELETE_LIST_MEMBERSHIP_MUTATION } from '../Admin/ListMembership/ListMemberships'
 import FormInput from '../FormInput/FormInput'
 import { QUERY as LIST_MEMBERSHIPS_CELL_QUERY } from '../ListMembershipsCell'
+import PersonAvatar from '../PersonAvatar/PersonAvatar'
 
 export const LIST_ROLE_TYPES = [
   { value: 'VIEW', name: 'View', description: 'Member can view the list' },
@@ -93,6 +94,10 @@ const DashboardListMembership = ({
     >
       {!!user?.person && (
         <div className="flex flex-shrink flex-grow items-center gap-3 overflow-hidden overflow-ellipsis">
+          <PersonAvatar
+            person={user.person}
+            className="h-8 w-8 text-[0.375rem]"
+          />
           {!!user?.person?.name && (
             <div className="flex-shrink whitespace-normal">
               {user?.person?.name}

@@ -17,6 +17,11 @@ export const QUERY = gql`
         person {
           name
           email
+          images {
+            id
+            url
+            alt
+          }
         }
       }
     }

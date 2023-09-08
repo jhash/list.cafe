@@ -1,5 +1,5 @@
 import kebabCase from 'lodash/kebabCase'
-import { Save, Trash2 } from 'lucide-react'
+import { Eye, Save, Trash2 } from 'lucide-react'
 import {
   CreateImageInput,
   EditUserById,
@@ -8,6 +8,7 @@ import {
 } from 'types/graphql'
 
 import { Controller, Form } from '@redwoodjs/forms'
+import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/dist/toast'
 
@@ -101,6 +102,17 @@ const ProfileSettingsPage = () => {
       >
         <PageTitle>
           <div className="flex-grow">{'Profile'}</div>
+          {!!currentUser?.person?.identifier?.id && (
+            <Link
+              to={routes.identifier({
+                identifier: currentUser?.person?.identifier?.id,
+              })}
+              className="btn btn-primary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
+              title="Preview"
+            >
+              <Eye />
+            </Link>
+          )}
           <button
             className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
             type="submit"

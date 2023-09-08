@@ -8,7 +8,7 @@ const PageTitle: React.FC<PageTitleProps> = ({ title, children }) => {
   const { isAuthenticated } = useAuth()
 
   return (
-    <div className="flex min-h-20 w-full min-w-0 max-w-full select-none items-center gap-3 pl-8 font-serif text-3xl font-medium sm:pl-0">
+    <div className="flex min-h-19 w-full min-w-0 max-w-full select-none items-center gap-3 pl-8 font-serif text-3xl font-medium sm:pl-0">
       {!!isAuthenticated && <SidebarButton />}
       <div className="flex min-w-0 flex-shrink flex-grow basis-auto flex-nowrap items-center justify-start gap-3 overflow-hidden text-ellipsis whitespace-nowrap">
         {title || children}

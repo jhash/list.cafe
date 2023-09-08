@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     extend: {
       minHeight: {
+        19: '4.75rem',
         20: '5rem',
       },
       spacing: {
