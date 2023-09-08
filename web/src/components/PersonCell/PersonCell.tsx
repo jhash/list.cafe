@@ -2,6 +2,8 @@ import type { FindPersonQuery, FindPersonQueryVariables } from 'types/graphql'
 
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import Spinner from 'src/components/Loading'
+
 import Profile from '../Profile/Profile'
 
 export const QUERY = gql`
@@ -23,7 +25,7 @@ export const QUERY = gql`
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <Spinner />
 
 export const Empty = () => <div>Empty</div>
 
