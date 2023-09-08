@@ -229,6 +229,8 @@ enum ListType {
   GROCERIES
   IDEAS
   INFO
+  CLASSIFIEDS
+  LISTINGS
 }
 
 enum ListVisibility {

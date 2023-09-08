@@ -106,6 +106,18 @@ export const LIST_TYPE_OPTIONS: ListTypeOption[] = [
     reservations: true,
   },
   { value: 'IDEAS', name: 'Ideas', badgeColor: 'badge-success' },
+  {
+    value: 'CLASSIFIEDS',
+    name: 'Classifieds',
+    badgeColor: 'bg-purple-800 text-white',
+    // reservations: true,
+  },
+  {
+    value: 'LISTINGS',
+    name: 'Ideas',
+    badgeColor: 'bg-blue-800 text-white',
+    // reservations: true,
+  },
   // { value: 'FORUM', name: 'Forum', badgeColor: 'badge-primary' },
   // { value: 'TABLE', name: 'Table', badgeColor: 'badge-primary' },
 ]

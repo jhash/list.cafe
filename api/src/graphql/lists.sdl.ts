@@ -43,6 +43,8 @@ export const schema = gql`
     GROCERIES
     IDEAS
     INFO
+    CLASSIFIEDS
+    LISTINGS
   }
 
   type Query {

@@ -92,6 +92,8 @@ const HomePage = () => {
 
   const onPaste: ClipboardEventHandler<HTMLInputElement> = (event) => {
     onSubmit(undefined, event.clipboardData.getData('text'))
+    ;(event.target as HTMLInputElement).value =
+      event.clipboardData.getData('text')
   }
 
   useEffect(() => {

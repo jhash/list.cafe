@@ -127,6 +127,8 @@ const CATEGORY_PROMPT_KEY_MAP: { [prompt: string]: ListType } = {
   shopping: 'SHOPPING',
   ideas: 'IDEAS',
   informational: 'INFO',
+  classifieds: 'CLASSIFIEDS',
+  listings: 'LISTINGS',
 }
 
 const PROMPT = `Can you create a list with a name, description, and a type from the following options: [${Object.keys(

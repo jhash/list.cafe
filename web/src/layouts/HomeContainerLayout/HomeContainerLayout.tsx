@@ -4,7 +4,7 @@ type HomeContainerLayoutProps = {
 
 const HomeContainerLayout = ({ children }: HomeContainerLayoutProps) => {
   return (
-    <div className="flex flex-grow flex-col items-center justify-center">
+    <div className="flex flex-grow flex-col items-center">
       <div className="container flex flex-col gap-12">{children}</div>
     </div>
   )

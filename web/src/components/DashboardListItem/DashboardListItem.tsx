@@ -268,11 +268,11 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
       {!modal && (
         <div
           className={classNames(
-            'collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 overflow-hidden overflow-ellipsis px-4 py-0 pr-12 leading-tight',
-            !!open && 'border-b'
+            'collapse-title min-h-12 flex h-12 flex-grow flex-nowrap items-center gap-3 overflow-hidden overflow-ellipsis border-b px-4 py-1 pr-12 leading-tight',
+            !open && 'border-transparent'
           )}
         >
-          <div className="flex max-h-full min-w-[8rem] flex-grow items-start gap-3 overflow-hidden overflow-ellipsis py-1">
+          <div className="flex max-h-full min-w-[8rem] flex-grow items-start gap-3 overflow-hidden overflow-ellipsis">
             {title}
             {!!url && (
               <ExternalLink
@@ -286,7 +286,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
             )}
           </div>
           {!!description && (
-            <span className="flex h-full max-h-full flex-shrink flex-grow-0 items-center overflow-hidden overflow-ellipsis whitespace-normal py-1 text-right text-sm text-gray-500 dark:text-gray-400">
+            <span className="flex h-full max-h-full flex-shrink flex-grow-0 items-center overflow-hidden overflow-ellipsis whitespace-normal text-right text-sm text-gray-500 dark:text-gray-400">
               <div className="max-h-full overflow-hidden overflow-ellipsis">
                 {description}
               </div>
