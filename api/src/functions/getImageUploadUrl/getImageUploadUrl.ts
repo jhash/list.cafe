@@ -25,6 +25,9 @@ import { logger } from 'src/lib/logger'
 
 export const handler = async (event: APIGatewayEvent, _context: Context) => {
   logger.info(`${event.httpMethod} ${event.path}: uploadImages function`)
+  logger.info(
+    `${event.httpMethod} ${event.path}: uploadImages body: ${event.body}`
+  )
 
   if (!event.body) {
     throw new Error('No body included')

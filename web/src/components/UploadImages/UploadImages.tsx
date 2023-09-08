@@ -38,18 +38,20 @@ const UploadImages = ({ onUpload, ...rest }: UploadImagesProps) => {
     }
   }
 
-  if (loading) {
-    return <Loading />
-  }
-
   return (
-    <input
-      {...rest}
-      type="file"
-      onChange={onChange}
-      multiple
-      className="cursor-pointer"
-    />
+    <div className="flex w-full max-w-xl flex-col">
+      {loading ? (
+        <Loading />
+      ) : (
+        <input
+          {...rest}
+          type="file"
+          onChange={onChange}
+          multiple
+          className="cursor-pointer"
+        />
+      )}
+    </div>
   )
 }
 
