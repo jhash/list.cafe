@@ -93,7 +93,7 @@ const ProfileSettingsPage = () => {
 
   return (
     <>
-      <MetaTags title="ProfileSettings" description="ProfileSettings page" />
+      <MetaTags title="Profile settings" description="Profile settings page" />
 
       <Form<ProfileForm>
         className="flex w-full max-w-full flex-col gap-3"

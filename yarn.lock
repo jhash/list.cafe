@@ -7568,6 +7568,7 @@ __metadata:
     istextorbinary: ^6.0.0
     jsdom: ^22.1.0
     jsonrepair: ^3.2.0
+    lodash: ^4.17.21
     prisma: ^5.2.0
     react-email: 1.9.4
     resend: ^1.0.0

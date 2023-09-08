@@ -33,7 +33,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <MetaTags title="Profile" description="Profile page" />
+      <MetaTags title="Preview profile" description="Profile preview page" />
 
       <div className="flex w-full max-w-full flex-col gap-3">
         <PageTitle>

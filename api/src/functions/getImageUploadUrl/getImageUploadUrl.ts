@@ -1,4 +1,5 @@
 import type { APIGatewayEvent, Context } from 'aws-lambda'
+import isString from 'lodash/isString'
 
 import { UserInputError } from '@redwoodjs/graphql-server'
 
@@ -34,7 +35,9 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
   }
 
   try {
-    const { name } = JSON.parse(event.body) as { name: string }
+    const { name } = (
+      isString(event.body) ? JSON.parse(event.body) : event.body
+    ) as { name: string }
 
     // generate a scrubbed unique filename
     const uniqueFilename = `images/${generateUniqueFilename(name)}`

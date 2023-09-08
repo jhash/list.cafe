@@ -9,6 +9,7 @@ import { useIsBrowser } from '@redwoodjs/prerender/browserUtils'
 import { useLocation } from '@redwoodjs/router'
 
 import HomeLink from 'src/components/HomeLink/HomeLink'
+import Loading from 'src/components/Loading'
 
 import MainLayout from '../MainLayout/MainLayout'
 
@@ -135,7 +136,7 @@ const SidebarLayout = ({ children, Sidebar, skeleton }: SidebarLayoutProps) => {
               )}
             >
               <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-x-visible overflow-y-visible sm:min-h-[85%]">
-                {skeleton ? null : children}
+                {skeleton ? <Loading /> : children}
               </div>
             </div>
           </div>
