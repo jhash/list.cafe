@@ -58,7 +58,7 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
       }),
     }
   } catch (error) {
-    console.error(error)
+    logger.error(error)
     throw new UserInputError('Error creating image upload url')
   }
 }
