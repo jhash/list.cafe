@@ -9,10 +9,12 @@ import { ListCellProps } from '../ListCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import ListItemsCell from '../ListItemsCell'
 import { ListTypeBadge } from '../Lists/Lists'
+import PersonAvatar from '../PersonAvatar/PersonAvatar'
+import SectionTitle from '../SectionTitle/SectionTitle'
 
 const PublicList: React.FC<
   Omit<ListCellProps, 'canSave' | 'canDelete' | 'onSave'>
-> = ({ list: { description, name, id, type, listRoles } }) => {
+> = ({ list: { description, name, id, type, listRoles, owners } }) => {
   return (
     <>
       <MetaTags title={name} description={description} />
@@ -47,6 +49,28 @@ const PublicList: React.FC<
             deleteItem={undefined}
           />
         </ul>
+        {!!owners.length && (
+          <div className="flex flex-col gap-3">
+            <SectionTitle>{'Listed by'}</SectionTitle>
+            {owners.map((owner, index) => (
+              <Link
+                key={index}
+                className="min-h-12 flex items-center gap-3 overflow-hidden overflow-ellipsis rounded-lg border px-3 py-1 shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
+                to={routes.identifier({ identifier: owner.identifier?.id })}
+              >
+                <PersonAvatar
+                  person={owner}
+                  className="h-8 w-8 text-[0.375rem]"
+                />
+                {!!owner.name && (
+                  <div className="flex-shrink whitespace-normal">
+                    {owner.name}
+                  </div>
+                )}
+              </Link>
+            ))}
+          </div>
+        )}
         <ListFadeOut />
       </HomeContainerLayout>
     </>

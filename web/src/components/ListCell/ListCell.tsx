@@ -36,6 +36,17 @@ export const QUERY = gql`
       listGroupMemberships {
         id
       }
+      owners {
+        name
+        images {
+          id
+          alt
+          url
+        }
+        identifier {
+          id
+        }
+      }
     }
   }
 `

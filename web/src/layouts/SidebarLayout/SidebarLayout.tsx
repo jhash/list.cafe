@@ -164,7 +164,7 @@ const SidebarLayout = ({ children, Sidebar, skeleton }: SidebarLayoutProps) => {
           >
             <div
               className={classNames(
-                'container flex min-h-full w-full max-w-full flex-grow flex-col items-center justify-center overflow-x-visible overflow-y-visible sm:pl-14'
+                'container flex min-h-full w-full max-w-full flex-grow flex-col items-center justify-start overflow-x-visible overflow-y-visible sm:pl-14'
               )}
             >
               <div className="flex min-h-full w-full max-w-full flex-col gap-y-6 overflow-x-visible overflow-y-visible sm:min-h-[85%]">

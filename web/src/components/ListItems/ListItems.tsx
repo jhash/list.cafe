@@ -484,7 +484,8 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
   const titleText = (
     <>
       {!!images?.length && (
-        <div className="flex max-h-24 w-24 flex-shrink-0 items-center justify-center self-start overflow-hidden rounded-sm py-1">
+        // TODO: remove -ml - quick and dirty hack
+        <div className="-ml-2 flex max-h-14 w-14 flex-shrink-0 items-center justify-center self-start overflow-hidden rounded-sm py-1">
           <img src={images[0].url} alt={images[0]?.alt} className="w-full" />
         </div>
       )}
@@ -512,7 +513,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
       {url ? (
         <ExternalLink
           href={url}
-          className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 py-1 pl-3 text-lg no-underline"
+          className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 py-1 pl-3 text-lg leading-tight no-underline"
         >
           {titleText}
           <QuantityText />
@@ -520,7 +521,7 @@ const ListItem: React.FC<{ listItem: ListItemsQuery['listItems'][number] }> = ({
           {/* <Link2 size="1rem" className="flex-shrink-0" /> */}
         </ExternalLink>
       ) : (
-        <div className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 py-1 pl-3 text-lg no-underline">
+        <div className="link min-h-12 flex min-w-[8rem] flex-grow items-center gap-3 py-1 pl-3 text-lg leading-tight no-underline">
           {titleText}
           <QuantityText />
           {descriptionText}

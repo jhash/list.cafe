@@ -258,4 +258,31 @@ export const List: ListRelationResolvers = {
       })
     ).map((membership) => membership.listRole)
   },
+  owners: async (_obj, { root }) => {
+    return await Promise.all(
+      (
+        await db.list.findUnique({ where: { id: root?.id } }).listMemberships({
+          where: {
+            listRole: {
+              equals: 'OWNER',
+            },
+            user: {
+              person: {
+                visibility: {
+                  equals: 'PUBLIC',
+                },
+              },
+            },
+          },
+          include: {
+            user: {
+              include: {
+                person: true,
+              },
+            },
+          },
+        })
+      ).map((membership) => membership.user.person)
+    )
+  },
 }

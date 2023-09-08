@@ -12,6 +12,7 @@ export const schema = gql`
     listMemberships: [ListMembership]
     listGroupMemberships: [ListGroupMembership]
     listRoles: [ListRole]
+    owners: [Person]
   }
 
   enum ListVisibility {
