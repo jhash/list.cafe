@@ -64,10 +64,28 @@ export const listMembershipsWhereClauses = (
   ]
 }
 
-export const publicLists: QueryResolvers['publicLists'] = ({ take, skip }) => {
+export const publicLists: QueryResolvers['publicLists'] = ({
+  take,
+  skip,
+  personId,
+}) => {
   return db.list.findMany({
     where: {
       visibility: 'PUBLIC',
+      listMemberships: personId
+        ? {
+            some: {
+              user: {
+                person: {
+                  id: personId,
+                },
+              },
+              listRole: {
+                in: ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT'],
+              },
+            },
+          }
+        : {},
     },
     take,
     skip,

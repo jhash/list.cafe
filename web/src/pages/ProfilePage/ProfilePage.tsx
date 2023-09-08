@@ -7,6 +7,8 @@ import { useAuth } from 'src/auth'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import PageTitle from 'src/components/PageTitle/PageTitle'
 import Profile from 'src/components/Profile/Profile'
+import PublicListsCell from 'src/components/PublicListsCell'
+import SectionTitle from 'src/components/SectionTitle/SectionTitle'
 import Tabs from 'src/components/Tabs/Tabs'
 
 export const ProfileTabs = () => {
@@ -51,7 +53,11 @@ const ProfilePage = () => {
           )}
         </PageTitle>
         <ProfileTabs />
-        <Profile person={currentUser.person} />
+        <Profile person={currentUser?.person} />
+      </div>
+      <div className="flex w-full max-w-full flex-col gap-3">
+        <SectionTitle>{'Lists'}</SectionTitle>
+        <PublicListsCell personId={currentUser?.person?.id} />
       </div>
       <ListFadeOut />
     </>

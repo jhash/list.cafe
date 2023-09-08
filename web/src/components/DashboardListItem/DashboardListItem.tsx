@@ -344,7 +344,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
         className={classNames(
           'flex w-full max-w-full flex-shrink-0 flex-wrap gap-x-5 gap-y-2',
           !modal && 'collapse-content overflow-x-visible',
-          !!open && !modal && 'py-4'
+          !!open && !modal && 'pb-4 pt-2'
         )}
       >
         {!!listId && <NumberField hidden name="listId" defaultValue={listId} />}

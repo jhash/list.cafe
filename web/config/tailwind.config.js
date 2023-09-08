@@ -6,6 +6,9 @@ module.exports = {
   content: ['src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      minHeight: {
+        20: '5rem',
+      },
       spacing: {
         sidebar: '14rem',
         xl: '14rem',
