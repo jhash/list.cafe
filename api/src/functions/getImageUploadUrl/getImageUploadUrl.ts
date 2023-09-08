@@ -1,4 +1,4 @@
-import type { APIGatewayEvent, Context } from 'aws-lambda'
+import type { Context } from 'aws-lambda'
 import isString from 'lodash/isString'
 
 import { UserInputError } from '@redwoodjs/graphql-server'
@@ -24,20 +24,23 @@ import { logger } from 'src/lib/logger'
  * function, and execution environment.
  */
 
-export const handler = async (event: APIGatewayEvent, _context: Context) => {
+export const handler = async (event, _context: Context) => {
   logger.info(`${event.httpMethod} ${event.path}: uploadImages function`)
-  logger.info(
-    `${event.httpMethod} ${event.path}: uploadImages body: "${event.body}"`
-  )
 
-  if (!event.body) {
+  const body = event.isBase64Encoded
+    ? Buffer.from(event.body, 'base64').toString('utf-8')
+    : event.body
+
+  logger.info(`${event.httpMethod} ${event.path}: uploadImages body: "${body}"`)
+
+  if (!body) {
     throw new Error('No body included')
   }
 
   try {
-    const { name } = (
-      isString(event.body) ? JSON.parse(event.body) : event.body
-    ) as { name: string }
+    const { name } = (isString(body) ? JSON.parse(body) : body) as {
+      name: string
+    }
 
     // generate a scrubbed unique filename
     const uniqueFilename = `images/${generateUniqueFilename(name)}`
