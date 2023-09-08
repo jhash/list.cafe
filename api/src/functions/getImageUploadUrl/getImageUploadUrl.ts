@@ -42,6 +42,10 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
     // generate a scrubbed unique filename
     const uniqueFilename = `images/${generateUniqueFilename(name)}`
 
+    logger.info(
+      `${event.httpMethod} ${event.path}: uploadImages file name: ${name}, ${uniqueFilename}`
+    )
+
     const [signedUrl] = await bucket.file(uniqueFilename).getSignedUrl({
       version: 'v4',
       action: 'write',

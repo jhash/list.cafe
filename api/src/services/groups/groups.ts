@@ -7,7 +7,7 @@ import type {
 
 import { db } from 'src/lib/db'
 
-const groupMembershipsWhereClauses = (groupRoles?: GroupRole[]) => {
+export const groupMembershipsWhereClauses = (groupRoles?: GroupRole[]) => {
   return [
     {
       groupMemberships: {
