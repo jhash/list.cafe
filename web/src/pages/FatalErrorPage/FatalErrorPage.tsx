@@ -11,11 +11,16 @@
 import { DevFatalErrorPage } from '@redwoodjs/web/dist/components/DevFatalErrorPage'
 
 export default DevFatalErrorPage ||
-  (() => (
-    <main>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
+  (() => {
+    if (window?.location) {
+      window.location.reload()
+    }
+
+    return (
+      <main>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
               html, body {
                 margin: 0;
               }
@@ -29,6 +34,7 @@ export default DevFatalErrorPage ||
                 text-align: center;
                 background-color: #E2E8F0;
                 height: 100vh;
+                width: 100vh;
               }
               section {
                 background-color: white;
@@ -46,12 +52,13 @@ export default DevFatalErrorPage ||
                 color: #2D3748;
               }
             `,
-        }}
-      />
-      <section>
-        <h1>
-          <span>Something went wrong</span>
-        </h1>
-      </section>
-    </main>
-  ))
+          }}
+        />
+        <section>
+          <h1>
+            <span>Something went wrong</span>
+          </h1>
+        </section>
+      </main>
+    )
+  })
