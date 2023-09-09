@@ -10,11 +10,11 @@ const ListDraftPage = () => {
   const { isAuthenticated } = useAuth()
 
   if (!window?.localStorage.getItem('listDraft')) {
-    return <Redirect to={routes.home()} />
+    return <Redirect to={routes.home()} options={{ replace: true }} />
   }
 
   if (isAuthenticated) {
-    return <Redirect to={routes.newList()} />
+    return <Redirect to={routes.newList()} options={{ replace: true }} />
   }
 
   return (

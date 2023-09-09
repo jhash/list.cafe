@@ -26,7 +26,7 @@ const PAGE_SIZE = 100
 
 export const Loading = () => <Spinner />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>No lists match this query</div>
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>

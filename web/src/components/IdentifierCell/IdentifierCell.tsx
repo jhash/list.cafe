@@ -24,20 +24,22 @@ export const QUERY = gql`
 
 export const Loading = () => <Spinner />
 
-export const Empty = () => <Redirect to={routes.home()} />
+export const Empty = () => (
+  <Redirect to={routes.home()} options={{ replace: true }} />
+)
 
 export const Failure = () => (
   // {
   //   error,
   // }: CellFailureProps<FindIdentifierQueryVariables>
-  <Redirect to={routes.home()} />
+  <Redirect to={routes.home()} options={{ replace: true }} />
 )
 
 export const Success = ({
   identifier,
 }: CellSuccessProps<FindIdentifierQuery, FindIdentifierQueryVariables>) => {
   if (!identifier.listId && !identifier.groupId && !identifier.personId) {
-    return <Redirect to={routes.home()} />
+    return <Redirect to={routes.home()} options={{ replace: true }} />
   }
 
   return identifier.listId ? (

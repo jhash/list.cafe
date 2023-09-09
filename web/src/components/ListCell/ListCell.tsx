@@ -54,14 +54,20 @@ export const QUERY = gql`
 export const Loading = () => <Spinner />
 
 export const Empty = ({ dashboard }: ListCellProps) => (
-  <Redirect to={dashboard ? routes.lists() : routes.home()} />
+  <Redirect
+    to={dashboard ? routes.lists() : routes.home()}
+    options={{ replace: true }}
+  />
 )
 
 export const Failure = ({ dashboard }: ListCellProps) => (
   // {
   //   error,
   // }: CellFailureProps<FindListQueryVariables>
-  <Redirect to={dashboard ? routes.lists() : routes.home()} />
+  <Redirect
+    to={dashboard ? routes.lists() : routes.home()}
+    options={{ replace: true }}
+  />
 )
 
 export type ListCellProps = FindListQuery & {
@@ -93,7 +99,7 @@ export const Success = ({
   dashboard,
 }: CellSuccessProps<ListCellProps, FindListQueryVariables>) => {
   if (dashboard && !list.listRoles.length) {
-    return <Redirect to={routes.lists()} />
+    return <Redirect to={routes.lists()} options={{ replace: true }} />
   }
 
   const childProps = { list, Child }

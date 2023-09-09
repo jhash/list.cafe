@@ -23,7 +23,7 @@ export const QUERY = gql`
 
 export const Loading = () => <Spinner />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>No groups added yet. Start a new one!</div>
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>

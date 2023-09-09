@@ -17,10 +17,14 @@ export const QUERY = gql`
         person {
           name
           email
+          visibility
           images {
             id
             url
             alt
+          }
+          identifier {
+            id
           }
         }
       }
@@ -30,7 +34,7 @@ export const QUERY = gql`
 
 export const Loading = () => <Spinner />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>No members added yet</div>
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>

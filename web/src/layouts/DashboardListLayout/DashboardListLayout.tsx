@@ -478,10 +478,11 @@ const DashboardListLayout: ListCellType = ({
                   setShowPrompt(false)
                   setDigestingPrompt(false)
                 }}
+                className="max-w-3xl"
               >
                 {!digestingPrompt && (
-                  <div className="flex flex-col items-center gap-3 self-center">
-                    <div className="text-xl font-bold">OR</div>
+                  <div className="flex w-full max-w-3xl flex-col items-start gap-3 px-3 text-center">
+                    <div className="w-40 text-xl font-bold">OR</div>
                     <button
                       className="btn btn-primary"
                       type="button"
@@ -491,11 +492,10 @@ const DashboardListLayout: ListCellType = ({
                     </button>
                   </div>
                 )}
-                <ListFadeOut />
               </ListPrompt>
             )}
           </div>
-          {!showPrompt && <ListFadeOut />}
+          <ListFadeOut />
         </div>
       </FormProvider>
     </>

@@ -8,7 +8,7 @@ interface ListMembersPage {
 }
 const ListMembersPage = ({ id }: ListMembersPage) => {
   if (!id) {
-    return <Redirect to={routes.lists()} />
+    return <Redirect to={routes.lists()} options={{ replace: true }} />
   }
   return <ListCell id={id} dashboard Child={ListMembers} />
 }

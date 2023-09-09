@@ -16,7 +16,7 @@ const AdminLayout = ({ children }) => {
   }
 
   if (!loading && (!isAuthenticated || !hasRole(['ADMIN', 'SUPPORT']))) {
-    return <Redirect to={routes.home()} />
+    return <Redirect to={routes.home()} options={{ replace: true }} />
   }
 
   return <SidebarLayout Sidebar={AdminSidebar}>{children}</SidebarLayout>

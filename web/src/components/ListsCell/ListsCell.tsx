@@ -21,7 +21,7 @@ export const QUERY = gql`
 
 export const Loading = () => <Spinner />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>No lists yet. Add the first one!</div>
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>

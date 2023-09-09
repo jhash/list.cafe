@@ -1,7 +1,9 @@
+import classNames from 'classnames'
 import { Trash2 } from 'lucide-react'
 import { ListMembershipsQuery } from 'types/graphql'
 
 import { Form } from '@redwoodjs/forms'
+import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -87,13 +89,27 @@ const DashboardListMembership = ({
 
   const error = updateError || deleteError
 
+  const PersonWrapper = (props) =>
+    user?.person?.identifier?.id && user?.person?.visibility === 'PUBLIC' ? (
+      <Link
+        {...props}
+        to={routes.identifier({ identifier: user?.person?.identifier?.id })}
+        className={classNames(
+          props.className,
+          'link no-underline hover:no-underline'
+        )}
+      />
+    ) : (
+      <div {...props} />
+    )
+
   return (
     <li
       key={id}
       className="min-h-12 flex w-full max-w-full flex-grow flex-nowrap items-center gap-3 overflow-x-hidden rounded-lg border px-4 leading-none shadow-sm"
     >
       {!!user?.person && (
-        <div className="flex flex-shrink flex-grow items-center gap-3 overflow-hidden overflow-ellipsis">
+        <PersonWrapper className="flex flex-shrink flex-grow items-center gap-3 overflow-hidden overflow-ellipsis">
           <PersonAvatar
             person={user.person}
             className="h-8 w-8 text-[0.375rem]"
@@ -108,7 +124,7 @@ const DashboardListMembership = ({
               {user?.person?.email}
             </span>
           )}
-        </div>
+        </PersonWrapper>
       )}
       <div className="flex flex-shrink-0 items-center gap-3">
         {!!error && <span className="text-error">{error.message}</span>}

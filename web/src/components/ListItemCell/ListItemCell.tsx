@@ -17,7 +17,7 @@ export const QUERY = gql`
 
 export const Loading = () => <Spinner />
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>Nothing to see here</div>
 
 export const Failure = ({
   error,

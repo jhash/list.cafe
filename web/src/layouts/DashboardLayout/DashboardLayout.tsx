@@ -22,7 +22,7 @@ const DashboardLayout = ({ children, skeleton }: DashboardLayoutProps) => {
   }
 
   if (!loading && !isAuthenticated && !skeleton) {
-    return <Redirect to={routes.home()} />
+    return <Redirect to={routes.home()} options={{ replace: true }} />
   }
 
   return (
