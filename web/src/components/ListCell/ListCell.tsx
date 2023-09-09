@@ -71,7 +71,7 @@ export type ListCellProps = FindListQuery & {
 export type ListCellType = ComponentType<ListCellProps>
 export interface ListCellChildProps {
   list: FindListQuery['list']
-  items?: ListItemsQuery['listItems']
+  items?: ListItemsQuery['listItems'] | CreateListItemInput[]
   loading: boolean
   canSave: boolean
   canEdit: boolean

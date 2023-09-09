@@ -1,19 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import classNames from 'classnames'
 import intersection from 'lodash/intersection'
 import isUndefined from 'lodash/isUndefined'
 import kebabCase from 'lodash/kebabCase'
 import { Cog, Eye, List, Save, Trash2, Users } from 'lucide-react'
+import ReactCanvasConfetti from 'react-canvas-confetti'
 import {
   CreateListInput,
   CreateListItemInput,
   FindListQuery,
+  ListItemsQuery,
   ListRole,
   UpdateListInput,
 } from 'types/graphql'
 
 import { SignupAttributes } from '@redwoodjs/auth-dbauth-web'
 import { FormProvider, useForm, useFormContext } from '@redwoodjs/forms'
+import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 import { Link, navigate, routes, useMatch } from '@redwoodjs/router'
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -30,10 +34,13 @@ import {
 } from 'src/components/ListCell'
 import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import { QUERY as LIST_ITEMS_CELL_QUERY } from 'src/components/ListItemsCell'
+import { ListPrompt } from 'src/components/ListPrompt/ListPrompt'
 import { ListTypeBadge } from 'src/components/Lists/Lists'
 import PageTitle from 'src/components/PageTitle/PageTitle'
 import Tabs from 'src/components/Tabs/Tabs'
 import { DigestedList } from 'src/pages/HomePage/HomePage'
+
+import { useSidebarContext } from '../SidebarLayout/SidebarLayout'
 
 type ListForm = NonNullable<CreateListInput>
 
@@ -160,7 +167,7 @@ const DashboardListLayout: ListCellType = ({
   if (!Child) {
     throw new Error('Child is required within DashboardListLayout')
   }
-  const draftList: DigestedList | undefined = useMemo(() => {
+  const digestedDraftList: DigestedList | undefined = useMemo(() => {
     if (list?.id) {
       window?.localStorage.removeItem('listDraft')
       return
@@ -181,9 +188,20 @@ const DashboardListLayout: ListCellType = ({
     }
   }, [list?.id])
 
+  const { open } = useSidebarContext()
+
+  const [draftList, setDraftList] = useState<DigestedList | undefined>(
+    digestedDraftList
+  )
+
   const { id, listRoles } = list
 
   const { signUp, isAuthenticated } = useAuth()
+
+  const [digestingPrompt, setDigestingPrompt] = useState<boolean>(false)
+  const [showPrompt, setShowPrompt] = useState<boolean>(
+    !id && !draftList && !digestingPrompt
+  )
 
   const [pendingList, setPendingList] = useState<CreateListInput | undefined>()
   const [signingUp, setSigningUp] = useState<boolean>(false)
@@ -194,6 +212,11 @@ const DashboardListLayout: ListCellType = ({
   const defaultValues: CreateListInput = {
     ...list,
     ...draftList,
+  }
+  if (!defaultValues.identifier?.id && defaultValues?.name) {
+    defaultValues.identifier = {
+      id: kebabCase(defaultValues?.name),
+    }
   }
   const formMethods = useForm<ListForm>({
     defaultValues: {
@@ -210,13 +233,21 @@ const DashboardListLayout: ListCellType = ({
     id ? routes.listSettings({ id }) : 'noMatch'
   )
 
-  const { data } = useQuery(LIST_ITEMS_CELL_QUERY, {
-    variables: { listId: id },
-  })
+  const { data } = useQuery<{ listItems?: ListItemsQuery['listItems'] }>(
+    LIST_ITEMS_CELL_QUERY,
+    {
+      variables: { listId: id },
+      skip: !id,
+    }
+  )
 
-  const [listItems, setListItems] = useState<CreateListItemInput[]>([])
+  const [listItems, setListItems] = useState<
+    CreateListItemInput[] | ListItemsQuery['listItems']
+  >([])
 
-  const items = data?.listItems || listItems
+  const items = useMemo(() => {
+    return data?.listItems || listItems || []
+  }, [data, listItems])
 
   const addItem = (input: CreateListItemInput) => {
     if (id) {
@@ -372,6 +403,12 @@ const DashboardListLayout: ListCellType = ({
     }
   }, [])
 
+  // useEffect(() => {
+  //   if (!id && !draftList && !items?.length && !digestingPrompt) {
+  //     setShowPrompt(true)
+  //   }
+  // }, [id, draftList, items, digestingPrompt])
+
   const signUpAndCreateList = async (input: SignupAttributes) => {
     try {
       setSigningUp(true)
@@ -403,19 +440,65 @@ const DashboardListLayout: ListCellType = ({
   }
 
   return (
-    <FormProvider {...formMethods}>
-      <div className="flex w-full max-w-full flex-col gap-8">
-        <div className="flex w-full max-w-full flex-col gap-3">
-          <ListPageTitle
-            {...props}
-            canSave={canSave && (!id || settingsMatch)}
+    <>
+      <BrowserOnly>
+        <div className="pointer-events-none fixed bottom-0 left-0 right-0 top-0 z-50 flex flex-col items-center justify-center">
+          <ReactCanvasConfetti
+            fire={digestingPrompt}
+            height={window?.innerHeight}
+            width={window?.innerWidth}
+            className={classNames(open && 'sm:translate-x-20')}
           />
-          {!!id && <ListTabs {...props} />}
-          <Child {...props} />
         </div>
-        <ListFadeOut />
-      </div>
-    </FormProvider>
+      </BrowserOnly>
+      <FormProvider {...formMethods}>
+        <div className="flex w-full max-w-full flex-col gap-8">
+          <div className="flex w-full max-w-full flex-col gap-3">
+            <ListPageTitle
+              {...props}
+              canSave={canSave && (!id || settingsMatch) && !showPrompt}
+            />
+            {!!id && <ListTabs {...props} />}
+            {!showPrompt && <Child {...props} />}
+            {showPrompt && (
+              <ListPrompt
+                onStart={() => setDigestingPrompt(true)}
+                onEnd={() => {
+                  setShowPrompt(false)
+                  setDigestingPrompt(false)
+                }}
+                onSuccess={(draft) => {
+                  setDraftList(draft)
+                  formMethods.reset({
+                    identifier: {
+                      id: kebabCase(draft.name),
+                    },
+                    ...draft,
+                  })
+                  setShowPrompt(false)
+                  setDigestingPrompt(false)
+                }}
+              >
+                {!digestingPrompt && (
+                  <div className="flex flex-col items-center gap-3 self-center">
+                    <div className="text-xl font-bold">OR</div>
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() => setShowPrompt(false)}
+                    >
+                      Create manually
+                    </button>
+                  </div>
+                )}
+                <ListFadeOut />
+              </ListPrompt>
+            )}
+          </div>
+          {!showPrompt && <ListFadeOut />}
+        </div>
+      </FormProvider>
+    </>
   )
 }
 

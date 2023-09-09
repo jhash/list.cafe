@@ -103,7 +103,7 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
 
   const { data: imagesQuery, loading: imagesLoading } = useQuery(
     LIST_ITEM_IMAGES_QUERY,
-    { variables: { listItemId: id } }
+    { variables: { listItemId: id }, skip: !id }
   )
 
   const [createImageMutation, { loading: createImageLoading }] = useMutation(

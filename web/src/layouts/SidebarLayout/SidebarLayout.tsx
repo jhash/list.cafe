@@ -195,4 +195,6 @@ export const SidebarButton = () => {
   )
 }
 
+export const useSidebarContext = () => useContext(SidebarContext) || {}
+
 export default SidebarLayout
