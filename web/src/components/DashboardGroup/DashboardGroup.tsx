@@ -10,11 +10,10 @@ import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
-
 import { UPDATE_GROUP_MUTATION } from '../Admin/Group/EditGroupCell'
 import { DELETE_GROUP_MUTATION } from '../Admin/Group/Group'
 import { CREATE_GROUP_MUTATION } from '../Admin/Group/NewGroup'
+import CopyListCafeLink from '../CopyListCafeLink/CopyListCafeLink'
 import FormItem from '../FormItem/FormItem'
 import { QUERY as GROUP_CELL_QUERY } from '../GroupCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
@@ -264,11 +263,13 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
                 name="identifier.id"
                 render={({ field: { value } }) => (
                   <div className="flex items-center p-1 text-sm text-gray-500">
-                    {`Ex. ${LIST_CAFE_DOMAIN}/${
-                      (editing ? kebabCase(value) : undefined) ||
-                      identifier?.id ||
-                      'your-group-name'
-                    }`}
+                    <CopyListCafeLink
+                      path={
+                        (editing ? kebabCase(value) : undefined) ||
+                        identifier?.id ||
+                        'your-group-name'
+                      }
+                    />
                   </div>
                 )}
               />

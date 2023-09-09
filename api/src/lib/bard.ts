@@ -135,7 +135,8 @@ const PROMPT = `Can you create a list with a name, description, and a type from 
   CATEGORY_PROMPT_KEY_MAP
 ).join(', ')}], formatted like this example: \`\`\`json${JSON.stringify(
   {}
-)}\`\`\`, with a list of listItems that each include a title, description, url, price, and quantity, all in a consistent JSON data structure, from the following text? `
+)}\`\`\`, with a list of listItems that each include a title, description, price, and quantity, all in a consistent JSON data structure, from the following text? `
+// TODO: put url back? Find a better way?
 
 const NUMBER_OF_CHARACTERS = 100
 const popCharactersUntilValid = (original: string) => {

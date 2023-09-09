@@ -14,6 +14,7 @@ import { toast } from '@redwoodjs/web/dist/toast'
 
 import { useAuth } from 'src/auth'
 import { UPDATE_USER_MUTATION } from 'src/components/Admin/User/EditUserCell'
+import CopyListCafeLink from 'src/components/CopyListCafeLink/CopyListCafeLink'
 import { CREATE_IMAGE_MUTATION } from 'src/components/DashboardListItem/DashboardListItem'
 import { DELETE_IMAGE_MUTATION } from 'src/components/DashboardListItemImages/DashboardListItemImages'
 import FormItem from 'src/components/FormItem/FormItem'
@@ -21,7 +22,6 @@ import ListFadeOut from 'src/components/ListFadeOut/ListFadeOut'
 import Loading from 'src/components/Loading'
 import PageTitle from 'src/components/PageTitle/PageTitle'
 import UploadImages from 'src/components/UploadImages/UploadImages'
-import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
 
 import { ProfileTabs } from '../ProfilePage/ProfilePage'
 
@@ -212,9 +212,13 @@ const ProfileSettingsPage = () => {
                       name="person.identifier.id"
                       render={({ field: { value } }) => (
                         <div className="flex items-center p-1 text-sm text-gray-500">
-                          {`Ex. ${LIST_CAFE_DOMAIN}/${
-                            kebabCase(value) || identifier?.id || 'your-handle'
-                          }`}
+                          <CopyListCafeLink
+                            path={
+                              kebabCase(value) ||
+                              identifier?.id ||
+                              'your-handle'
+                            }
+                          />
                         </div>
                       )}
                     />

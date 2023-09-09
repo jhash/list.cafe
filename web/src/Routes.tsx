@@ -85,7 +85,7 @@ const Routes = ({ useAuth }) => {
         <Route path="/dashboard/lists/{id:Int}/members" page={ListMembersPage} name="listMembers" />
         <Route path="/dashboard/lists/{id:Int}" page={DashboardListPage} name="list" />
         <Route path="/dashboard/settings" page={SettingsPage} name="settings" />
-        <Route path="/profile-settings" page={ProfileSettingsPage} name="profileSettings" />
+        <Route path="/dashboard/profile/settings" page={ProfileSettingsPage} name="profileSettings" />
         <Route path="/dashboard/profile" page={ProfilePage} name="profile" />
         <Route path="/dashboard" page={DashboardPage} name="dashboard" prerender />
       </Set>

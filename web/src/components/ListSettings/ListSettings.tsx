@@ -4,9 +4,9 @@ import { Controller, useFormContext } from '@redwoodjs/forms'
 import { Redirect, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
-import { LIST_CAFE_DOMAIN } from 'src/constants/urls'
 import { LIST_TYPE_OPTIONS, LIST_VISIBILITY_OPTIONS } from 'src/lib/lists'
 
+import CopyListCafeLink from '../CopyListCafeLink/CopyListCafeLink'
 import FormItem from '../FormItem/FormItem'
 import { ListCellChild } from '../ListCell'
 import SectionTitle from '../SectionTitle/SectionTitle'
@@ -64,9 +64,11 @@ const ListSettings: ListCellChild = ({
               name="identifier.id"
               render={({ field: { value } }) => (
                 <div className="flex items-center p-1 text-sm text-gray-500">
-                  {`Ex. ${LIST_CAFE_DOMAIN}/${
-                    kebabCase(value) || identifier?.id || 'your-list-name'
-                  }`}
+                  <CopyListCafeLink
+                    path={
+                      kebabCase(value) || identifier?.id || 'your-list-name'
+                    }
+                  />
                 </div>
               )}
             />

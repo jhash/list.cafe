@@ -16,7 +16,7 @@ const HomeAuthLinks = () => {
       {isAuthenticated ? (
         <>
           <Link
-            className="link font-semibold no-underline hover:underline"
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
             to={routes.dashboard()}
             title="Dashboard"
           >
@@ -24,7 +24,7 @@ const HomeAuthLinks = () => {
           </Link>
           {hasRole(['ADMIN', 'SUPPORT']) && (
             <Link
-              className="link font-semibold no-underline hover:underline"
+              className="link flex items-center rounded-md font-semibold no-underline hover:underline"
               to={routes.admin()}
               title="Admin"
             >
@@ -32,7 +32,7 @@ const HomeAuthLinks = () => {
             </Link>
           )}
           <button
-            className="btn btn-link p-0 text-base lowercase text-black no-underline dark:text-white"
+            className="btn btn-link link p-0 text-base lowercase text-black no-underline dark:text-white"
             onClick={() =>
               window?.confirm('Are you sure you want to log out?') && logOut()
             }
@@ -44,14 +44,14 @@ const HomeAuthLinks = () => {
       ) : (
         <>
           <NavLink
-            className="link font-semibold no-underline hover:underline"
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
             activeClassName="font-bold"
             to={routes.login()}
           >
             log in
           </NavLink>
           <NavLink
-            className="link font-semibold no-underline hover:underline"
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
             activeClassName="font-bold"
             to={routes.signup()}
           >

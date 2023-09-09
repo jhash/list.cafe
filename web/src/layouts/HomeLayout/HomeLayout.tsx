@@ -21,9 +21,9 @@ const HomeLayout = ({ children }) => {
         <div className="flex flex-grow items-center gap-x-3">
           <HomeLink />
         </div>
-        <div className="flex flex-shrink select-none flex-nowrap items-center justify-end gap-x-3 overflow-hidden">
+        <div className="flex flex-shrink select-none flex-nowrap items-stretch justify-end gap-x-3 overflow-visible">
           <NavLink
-            className="link font-semibold no-underline hover:underline"
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
             activeClassName="font-bold"
             to={routes.explore()}
             title="Explore"

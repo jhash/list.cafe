@@ -9829,6 +9829,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"copy-text-to-clipboard@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "copy-text-to-clipboard@npm:3.2.0"
+  checksum: d60fdadc59d526e19d56ad23cec2b292d33c771a5091621bd322d138804edd3c10eb2367d46ec71b39f5f7f7116a2910b332281aeb36a5b679199d746a8a5381
+  languageName: node
+  linkType: hard
+
 "copy-webpack-plugin@npm:11.0.0":
   version: 11.0.0
   resolution: "copy-webpack-plugin@npm:11.0.0"
@@ -23096,6 +23103,7 @@ __metadata:
     autoprefixer: ^10.4.15
     axios: ^1.5.0
     classnames: ^2.3.2
+    copy-text-to-clipboard: ^3.2.0
     daisyui: ^3.7.3
     eslint-plugin-prettier: ^4.2.1
     fontfaceobserver: ^2.3.0

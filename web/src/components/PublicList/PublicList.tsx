@@ -1,10 +1,11 @@
-import { Pencil } from 'lucide-react'
+import { Pencil, Share } from 'lucide-react'
 
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import HomeContainerLayout from 'src/layouts/HomeContainerLayout/HomeContainerLayout'
 
+import CopyListCafeLink from '../CopyListCafeLink/CopyListCafeLink'
 import { ListCellProps } from '../ListCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import ListItemsCell from '../ListItemsCell'
@@ -14,7 +15,9 @@ import SectionTitle from '../SectionTitle/SectionTitle'
 
 const PublicList: React.FC<
   Omit<ListCellProps, 'canSave' | 'canDelete' | 'onSave'>
-> = ({ list: { description, name, id, type, listRoles, owners } }) => {
+> = ({
+  list: { description, name, id, type, listRoles, owners, identifier },
+}) => {
   return (
     <>
       <MetaTags title={name} description={description} />
@@ -33,6 +36,15 @@ const PublicList: React.FC<
                   >
                     <Pencil size="1.25rem" />
                   </Link>
+                )}
+                {!!identifier && (
+                  <CopyListCafeLink
+                    path={routes.identifier({ identifier: identifier.id })}
+                  >
+                    <div className="btn btn-secondary ml-auto flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0">
+                      <Share size="1.25rem" />
+                    </div>
+                  </CopyListCafeLink>
                 )}
               </div>
             )}

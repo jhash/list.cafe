@@ -43,7 +43,7 @@ export const Success = ({
   return identifier.listId ? (
     <ListPage id={identifier.listId} />
   ) : identifier.personId ? (
-    <PersonPage id={identifier.personId} />
+    <PersonPage id={identifier.personId} identifier={identifier.id} />
   ) : (
     <div>Group Page not created yet</div>
   )
