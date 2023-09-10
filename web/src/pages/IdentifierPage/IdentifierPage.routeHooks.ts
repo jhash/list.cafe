@@ -1,6 +1,3 @@
-import { groupMembershipsWhereClauses } from '../../../../api/src/services/groups/groups'
-import { listMembershipsWhereClauses } from '../../../../api/src/services/lists/lists'
-
 import { db } from '$api/src/lib/db'
 
 export async function routeParameters() {
@@ -10,21 +7,12 @@ export async function routeParameters() {
         OR: [
           {
             list: {
-              OR: [
-                { visibility: 'PUBLIC' },
-                { visibility: 'LINK' },
-                ...listMembershipsWhereClauses(),
-              ],
+              OR: [{ visibility: 'PUBLIC' }, { visibility: 'LINK' }],
             },
           },
           {
             person: {
               OR: [
-                {
-                  user: {
-                    id: context.currentUser?.id,
-                  },
-                },
                 {
                   visibility: 'PUBLIC',
                 },
@@ -34,11 +22,7 @@ export async function routeParameters() {
           },
           {
             group: {
-              OR: [
-                { visibility: 'PUBLIC' },
-                { visibility: 'LINK' },
-                ...groupMembershipsWhereClauses(),
-              ],
+              OR: [{ visibility: 'PUBLIC' }, { visibility: 'LINK' }],
             },
           },
         ],
