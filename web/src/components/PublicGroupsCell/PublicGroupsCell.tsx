@@ -6,7 +6,7 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import { GroupTypeBadge } from '../GroupsCell'
 
 export const QUERY = gql`
-  query PublicGroupsQuery($take: Int = 100, $skip: Int, $personId: Int) {
+  query PublicGroupsQuery($take: Int = 20, $skip: Int, $personId: Int) {
     publicGroups(take: $take, skip: $skip, personId: $personId) {
       id
       name
@@ -18,7 +18,7 @@ export const QUERY = gql`
   }
 `
 
-const PAGE_SIZE = 100
+const PAGE_SIZE = 20
 
 export const Loading = () => <div>Loading...</div>
 

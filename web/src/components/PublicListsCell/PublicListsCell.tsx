@@ -8,7 +8,7 @@ import Lists from '../Lists/Lists'
 
 export const QUERY = gql`
   query PublicListsQuery(
-    $take: Int = 100
+    $take: Int = 20
     $skip: Int
     $personId: Int
     $groupId: Int
@@ -36,7 +36,7 @@ export const QUERY = gql`
   }
 `
 
-const PAGE_SIZE = 100
+const PAGE_SIZE = 20
 
 export const Loading = () => <Spinner />
 
