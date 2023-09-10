@@ -83,7 +83,7 @@ export const groups: QueryResolvers['groups'] = () => {
 
 export const group: QueryResolvers['group'] = ({ id }) => {
   if (!context.currentUser) {
-    return db.group.findUniqueOrThrow({
+    return db.group.findUnique({
       where: {
         id,
         OR: [{ visibility: 'PUBLIC' }, { visibility: 'LINK' }],
