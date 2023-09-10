@@ -16,7 +16,17 @@ import SectionTitle from '../SectionTitle/SectionTitle'
 const PublicList: React.FC<
   Omit<ListCellProps, 'canSave' | 'canDelete' | 'onSave'>
 > = ({
-  list: { description, name, id, type, listRoles, owners, identifier },
+  list: {
+    description,
+    name,
+    id,
+    type,
+    listRoles,
+    owners,
+    identifier,
+    groupOwners,
+    groupListRoles,
+  },
 }) => {
   return (
     <>
@@ -29,22 +39,30 @@ const PublicList: React.FC<
             {!!id && (
               <div className="flex min-h-[2.58rem] flex-grow items-center gap-3 self-start sm:min-h-[4.125rem]">
                 <ListTypeBadge type={type} />
-                {!!listRoles?.filter((role) => role !== 'VIEW').length && (
-                  <Link
-                    className="btn btn-secondary ml-auto flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0"
-                    to={routes.list({ id })}
-                  >
-                    <Pencil size="1.25rem" />
-                  </Link>
-                )}
-                {!!identifier && (
-                  <CopyListCafeLink
-                    path={routes.identifier({ identifier: identifier.id })}
-                  >
-                    <div className="btn btn-secondary ml-auto flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0">
-                      <Share size="1.25rem" />
-                    </div>
-                  </CopyListCafeLink>
+                {(!!listRoles?.length ||
+                  !!groupListRoles?.length ||
+                  !!identifier) && (
+                  <div className="ml-auto flex items-center gap-3">
+                    {(!!listRoles?.length || !!groupListRoles?.length) && (
+                      <Link
+                        className="btn btn-secondary flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0"
+                        to={routes.list({ id })}
+                      >
+                        <Pencil size="1.25rem" />
+                      </Link>
+                    )}
+                    {!!identifier && (
+                      <CopyListCafeLink
+                        path={routes.identifier({
+                          identifier: identifier.id,
+                        })}
+                      >
+                        <div className="btn btn-secondary flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center rounded-full p-0">
+                          <Share size="1.25rem" />
+                        </div>
+                      </CopyListCafeLink>
+                    )}
+                  </div>
                 )}
               </div>
             )}
@@ -74,6 +92,28 @@ const PublicList: React.FC<
                   person={owner}
                   className="h-8 w-8 text-[0.375rem]"
                 />
+                {!!owner.name && (
+                  <div className="flex-shrink whitespace-normal">
+                    {owner.name}
+                  </div>
+                )}
+              </Link>
+            ))}
+          </div>
+        )}
+        {!!groupOwners.length && (
+          <div className="flex flex-col gap-3">
+            <SectionTitle>{'Listed by'}</SectionTitle>
+            {groupOwners.map((owner, index) => (
+              <Link
+                key={index}
+                className="min-h-12 flex items-center gap-3 overflow-hidden overflow-ellipsis rounded-lg border px-3 py-1 shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
+                to={routes.identifier({ identifier: owner.identifier?.id })}
+              >
+                {/* <PersonAvatar
+                  person={owner}
+                  className="h-8 w-8 text-[0.375rem]"
+                /> */}
                 {!!owner.name && (
                   <div className="flex-shrink whitespace-normal">
                     {owner.name}

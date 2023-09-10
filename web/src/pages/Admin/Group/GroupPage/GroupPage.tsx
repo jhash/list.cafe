@@ -1,11 +1,11 @@
 import GroupCell from 'src/components/Admin/Group/GroupCell'
 
 type GroupPageProps = {
-  id: number
+  groupId: number
 }
 
-const GroupPage = ({ id }: GroupPageProps) => {
-  return <GroupCell id={id} />
+const GroupPage = ({ groupId }: GroupPageProps) => {
+  return <GroupCell id={groupId} />
 }
 
 export default GroupPage

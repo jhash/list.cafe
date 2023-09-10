@@ -19,6 +19,8 @@ export const schema = gql`
     order: Int
     price: Float
     listRoles: [ListRole]
+    groupListRoles: [ListRole]
+    groupRoles: [GroupRole]
   }
 
   type Query {

@@ -1,6 +1,8 @@
 import { HTMLProps } from 'react'
 
+import classNames from 'classnames'
 import copy from 'copy-text-to-clipboard'
+import isString from 'lodash/isString'
 
 import { toast } from '@redwoodjs/web/dist/toast'
 
@@ -12,7 +14,10 @@ const CopyToClipboard = ({ children, text, message }: CopyToClipboardProps) => {
   return (
     <button
       type="button"
-      className="cursor-pointer hover:opacity-80"
+      className={classNames(
+        'cursor-pointer',
+        isString(children) && 'hover:opacity-80'
+      )}
       onClick={() => {
         copy(text)
         toast.success(message || 'Copied to clipboard')

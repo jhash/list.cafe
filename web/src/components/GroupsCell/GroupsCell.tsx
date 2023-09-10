@@ -46,7 +46,7 @@ export const Success = ({ groups }: CellSuccessProps<GroupsQuery>) => {
         return (
           <Link
             key={id || index}
-            to={routes.group({ id })}
+            to={routes.group({ groupId: id })}
             className="link min-h-12 flex flex-grow items-center gap-4 rounded-md border px-4 no-underline shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20"
           >
             <div className="flex flex-grow items-center">{name}</div>

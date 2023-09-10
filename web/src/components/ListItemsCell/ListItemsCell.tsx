@@ -18,6 +18,8 @@ export const QUERY = gql`
       price
       listId
       listRoles
+      groupListRoles
+      groupRoles
       list {
         type
       }

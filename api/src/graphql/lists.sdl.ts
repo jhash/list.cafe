@@ -9,10 +9,11 @@ export const schema = gql`
     identifier: Identifier
     visibility: ListVisibility
     listItems: [ListItem]
-    listMemberships: [ListMembership]
-    listGroupMemberships: [ListGroupMembership]
     listRoles: [ListRole]
+    groupListRoles: [ListRole]
+    groupRoles: [GroupRole]
     owners: [Person]
+    groupOwners: [Group]
   }
 
   enum ListVisibility {
@@ -61,6 +62,7 @@ export const schema = gql`
     identifier: CreateIdentifierInput
     visibility: ListVisibility
     listItems: [CreateListItemInput]
+    groupId: Int
   }
 
   input UpdateListInput {
@@ -69,6 +71,7 @@ export const schema = gql`
     type: ListType
     identifier: CreateIdentifierInput
     visibility: ListVisibility
+    groupId: Int
   }
 
   type Mutation {

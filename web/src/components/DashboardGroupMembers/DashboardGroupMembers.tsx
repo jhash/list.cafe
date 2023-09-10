@@ -77,7 +77,12 @@ const DashboardGroupMembers: DashboardGroupChild = ({
   }, [emailRef, groupMembership])
 
   if (!!id && !canAddMembers) {
-    return <Redirect to={routes.group({ id })} options={{ replace: true }} />
+    return (
+      <Redirect
+        to={routes.group({ groupId: id })}
+        options={{ replace: true }}
+      />
+    )
   }
 
   return (

@@ -15,6 +15,10 @@ export const QUERY = gql`
       name
       description
       type
+      groupOwners {
+        id
+        name
+      }
     }
   }
 `

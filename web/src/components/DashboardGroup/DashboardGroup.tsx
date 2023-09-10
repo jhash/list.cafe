@@ -91,7 +91,7 @@ const DashboardGroup: React.FC<DashboardGroupProps> = ({
       onCompleted: (data) => {
         toast.success('Group created')
         if (data?.createGroup) {
-          navigate(routes.group({ id: data?.createGroup.id }))
+          navigate(routes.group({ groupId: data?.createGroup.id }))
         }
       },
       onError: (error) => {
@@ -185,14 +185,14 @@ const DashboardGroup: React.FC<DashboardGroupProps> = ({
               links={[
                 {
                   name: 'Lists',
-                  path: routes.group({ id }),
+                  path: routes.group({ groupId: id }),
                   Icon: List,
                 },
                 ...(canEdit
                   ? [
                       {
                         name: 'Settings',
-                        path: routes.groupSettings({ id }),
+                        path: routes.groupSettings({ groupId: id }),
                         Icon: Cog,
                       },
                     ]
@@ -201,7 +201,7 @@ const DashboardGroup: React.FC<DashboardGroupProps> = ({
                   ? [
                       {
                         name: 'Members',
-                        path: routes.groupMembers({ id }),
+                        path: routes.groupMembers({ groupId: id }),
                         Icon: Cog,
                       },
                     ]

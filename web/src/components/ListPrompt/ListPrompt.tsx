@@ -51,7 +51,7 @@ export const ListPrompt = ({
     event?.preventDefault()
     event?.stopPropagation()
 
-    const prompt = text || firstListItemRef.current.value
+    const prompt = [firstListItemRef.current.value, text].join(' ').trim()
 
     setDigestingLink(true)
     onStart?.()

@@ -18,6 +18,10 @@ export const QUERY = gql`
       identifier {
         id
       }
+      groupOwners {
+        id
+        name
+      }
     }
   }
 `

@@ -15,7 +15,10 @@ import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import Loading from 'src/components/Loading'
-import { listRolesIntersect } from 'src/layouts/DashboardListLayout/DashboardListLayout'
+import {
+  listGroupRolesIntersect,
+  listRolesIntersect,
+} from 'src/layouts/DashboardListLayout/DashboardListLayout'
 import { priceEnabled, reservationsEnabled } from 'src/lib/lists'
 
 import { UPDATE_LIST_ITEM_MUTATION } from '../Admin/ListItem/EditListItemCell'
@@ -79,6 +82,8 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
     listRoles,
     list,
     images,
+    groupListRoles,
+    groupRoles,
   } = listItem
 
   const [editing, setEditing] = useState<boolean>(!id)
@@ -90,15 +95,27 @@ const DashboardListItem: React.FC<DashboardListItemProps> = ({
 
   const canEdit = useMemo(
     () =>
-      listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']),
-    [listRoles]
+      listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']) ||
+      listGroupRolesIntersect(
+        groupListRoles,
+        ['OWNER', 'EDIT', 'ADMIN', 'CONTRIBUTE'],
+        groupRoles,
+        ['OWNER', 'ADMIN', 'EDIT']
+      ),
+    [listRoles, groupListRoles, groupRoles]
   )
 
   const canDelete = useMemo(
     () =>
       !id ||
-      listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']),
-    [listRoles, id]
+      listRolesIntersect(listRoles, ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT']) ||
+      listGroupRolesIntersect(
+        groupListRoles,
+        ['OWNER', 'EDIT', 'ADMIN', 'CONTRIBUTE'],
+        groupRoles,
+        ['OWNER', 'ADMIN', 'EDIT']
+      ),
+    [listRoles, groupListRoles, groupRoles, id]
   )
 
   const { data: imagesQuery, loading: imagesLoading } = useQuery(

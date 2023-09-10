@@ -4,7 +4,10 @@ import { CreateListItemInput, ListItemsQuery } from 'types/graphql'
 
 import { MetaTags } from '@redwoodjs/web'
 
-import { listRolesIntersect } from 'src/layouts/DashboardListLayout/DashboardListLayout'
+import {
+  listGroupRolesIntersect,
+  listRolesIntersect,
+} from 'src/layouts/DashboardListLayout/DashboardListLayout'
 
 import { AddItemButton } from '../AddItemButton/AddItemButton'
 import DashboardListItem from '../DashboardListItem/DashboardListItem'
@@ -14,7 +17,7 @@ import Modal from '../Modal/Modal'
 import SectionTitle from '../SectionTitle/SectionTitle'
 
 const EditListItems: ListCellChild = ({
-  list: { id, name, description, listRoles, type },
+  list: { id, name, description, listRoles, type, groupListRoles, groupRoles },
   items,
   addItem,
   deleteItem,
@@ -22,8 +25,14 @@ const EditListItems: ListCellChild = ({
   const canAdd = useMemo(
     () =>
       !id ||
-      listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN', 'CONTRIBUTE']),
-    [listRoles, id]
+      listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN', 'CONTRIBUTE']) ||
+      listGroupRolesIntersect(
+        groupListRoles,
+        ['EDIT', 'OWNER', 'ADMIN', 'CONTRIBUTE'],
+        groupRoles,
+        ['ADMIN', 'EDIT', 'OWNER']
+      ),
+    [listRoles, groupListRoles, groupRoles, id]
   )
 
   const [listItem, setListItem] = useState<

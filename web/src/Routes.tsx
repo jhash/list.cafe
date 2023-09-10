@@ -79,9 +79,13 @@ const Routes = ({ useAuth }) => {
       <Set wrap={DashboardLayout} private whileLoadingAuth={DashboardLoading} unauthenticated="home">
         <Route path="/dashboard/groups" page={GroupsPage} name="groups" />
         <Route path="/dashboard/groups/new" page={DashboardGroupPage} name="newGroup" />
-        <Route path="/dashboard/groups/{id:Int}" page={DashboardGroupListsPage} name="group" />
-        <Route path="/dashboard/groups/{id:Int}/members" page={DashboardGroupMembersPage} name="groupMembers" />
-        <Route path="/dashboard/groups/{id:Int}/settings" page={DashboardGroupPage} name="groupSettings" />
+        <Route path="/dashboard/groups/{groupId:Int}" page={DashboardGroupListsPage} name="group" />
+        <Route path="/dashboard/groups/{groupId:Int}/members" page={DashboardGroupMembersPage} name="groupMembers" />
+        <Route path="/dashboard/groups/{groupId:Int}/settings" page={DashboardGroupPage} name="groupSettings" />
+        <Route path="/dashboard/groups/{groupId:Int}/lists/new" page={DashboardListPage} name="groupNewList" />
+        <Route path="/dashboard/groups/{groupId:Int}/lists/{id:Int}/settings" page={ListSettingsPage} name="groupListSettings" />
+        <Route path="/dashboard/groups/{groupId:Int}/lists/{id:Int}/members" page={ListMembersPage} name="groupListMembers" />
+        <Route path="/dashboard/groups/{groupId:Int}/lists/{id:Int}" page={DashboardListPage} name="groupList" />
         <Route path="/dashboard/lists" page={ListsPage} name="lists" />
         <Route path="/dashboard/lists/new" page={DashboardListPage} name="newList" />
         <Route path="/dashboard/lists/{id:Int}/settings" page={ListSettingsPage} name="listSettings" />

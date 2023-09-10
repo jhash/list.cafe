@@ -3,14 +3,14 @@ import DashboardGroupSettings from 'src/components/DashboardGroupSettings/Dashbo
 import GroupCell from 'src/components/GroupCell'
 
 interface DashboardGroupPage {
-  id?: number
+  groupId?: number
 }
-const DashboardGroupPage = ({ id }: DashboardGroupPage) => {
-  if (!id) {
+const DashboardGroupPage = ({ groupId }: DashboardGroupPage) => {
+  if (!groupId) {
     return <DashboardGroup Child={DashboardGroupSettings} />
   }
 
-  return <GroupCell id={id} Child={DashboardGroupSettings} dashboard />
+  return <GroupCell id={groupId} Child={DashboardGroupSettings} dashboard />
 }
 
 export default DashboardGroupPage

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import classNames from 'classnames'
+// import classNames from 'classnames'
 import intersection from 'lodash/intersection'
 import isUndefined from 'lodash/isUndefined'
 import kebabCase from 'lodash/kebabCase'
@@ -10,6 +10,7 @@ import {
   CreateListInput,
   CreateListItemInput,
   FindListQuery,
+  GroupRole,
   ListItemsQuery,
   ListRole,
   UpdateListInput,
@@ -18,7 +19,7 @@ import {
 import { SignupAttributes } from '@redwoodjs/auth-dbauth-web'
 import { FormProvider, useForm, useFormContext } from '@redwoodjs/forms'
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
-import { Link, navigate, routes, useMatch } from '@redwoodjs/router'
+import { Link, navigate, routes, useMatch, useParams } from '@redwoodjs/router'
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -40,7 +41,7 @@ import PageTitle from 'src/components/PageTitle/PageTitle'
 import Tabs from 'src/components/Tabs/Tabs'
 import { DigestedList } from 'src/pages/HomePage/HomePage'
 
-import { useSidebarContext } from '../SidebarLayout/SidebarLayout'
+// import { useSidebarContext } from '../SidebarLayout/SidebarLayout'
 
 type ListForm = NonNullable<CreateListInput>
 
@@ -49,19 +50,25 @@ export const ListTabs: ListCellChild = ({
   canAddMembers,
   canEdit,
 }) => {
+  const { groupId } = useParams()
+
   return (
     <Tabs
       links={[
         {
           name: 'List',
-          path: routes.list({ id }),
+          path: groupId
+            ? routes.groupList({ groupId: +groupId, id })
+            : routes.list({ id }),
           Icon: List,
         },
         ...(canAddMembers
           ? [
               {
                 name: 'Members',
-                path: routes.listMembers({ id }),
+                path: groupId
+                  ? routes.groupListMembers({ groupId: +groupId, id })
+                  : routes.listMembers({ id }),
                 Icon: Users,
               },
             ]
@@ -70,7 +77,9 @@ export const ListTabs: ListCellChild = ({
           ? [
               {
                 name: 'Settings',
-                path: routes.listSettings({ id }),
+                path: groupId
+                  ? routes.groupListSettings({ groupId: +groupId, id })
+                  : routes.listSettings({ id }),
                 Icon: Cog,
               },
             ]
@@ -153,6 +162,18 @@ export const listRolesIntersect = (
   authRoles: ListRole[]
 ) => !!roles?.length && !!intersection(roles, authRoles).length
 
+// TODO: I think this isn't exactly how it should work, it should be specific to each group - can the backend return canEdit, delete, etc.?
+export const listGroupRolesIntersect = (
+  groupListRoles: ListRole[] | undefined,
+  authListRoles: ListRole[],
+  groupRoles: GroupRole[] | undefined,
+  authGroupRoles: GroupRole[]
+) =>
+  !!groupListRoles?.length &&
+  !!groupRoles?.length &&
+  listRolesIntersect(groupListRoles, authListRoles) &&
+  !!intersection(groupRoles, authGroupRoles).length
+
 const DEFAULT_LIST: FindListQuery['list'] = {
   id: undefined,
   name: '',
@@ -188,13 +209,15 @@ const DashboardListLayout: ListCellType = ({
     }
   }, [list?.id])
 
-  const { open } = useSidebarContext()
+  const { groupId } = useParams()
+
+  // const { open } = useSidebarContext()
 
   const [draftList, setDraftList] = useState<DigestedList | undefined>(
     digestedDraftList
   )
 
-  const { id, listRoles } = list
+  const { id, listRoles, groupListRoles, groupRoles } = list
 
   const { signUp, isAuthenticated } = useAuth()
 
@@ -230,7 +253,11 @@ const DashboardListLayout: ListCellType = ({
   })
 
   const { match: settingsMatch } = useMatch(
-    id ? routes.listSettings({ id }) : 'noMatch'
+    id
+      ? groupId
+        ? routes.groupListSettings({ groupId: +groupId, id })
+        : routes.listSettings({ id })
+      : 'noMatch'
   )
 
   const { data } = useQuery<{ listItems?: ListItemsQuery['listItems'] }>(
@@ -284,20 +311,34 @@ const DashboardListLayout: ListCellType = ({
   }, [draftList, listItems])
 
   const canDelete = useMemo(
-    () => listRolesIntersect(listRoles, ['OWNER']),
-    [listRoles]
+    () =>
+      listRolesIntersect(listRoles, ['OWNER']) ||
+      listGroupRolesIntersect(groupListRoles, ['OWNER'], groupRoles, ['OWNER']),
+    [listRoles, groupListRoles, groupRoles]
   )
 
   const canEdit = useMemo(
-    () => listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN']),
-    [listRoles]
+    () =>
+      listRolesIntersect(listRoles, ['EDIT', 'OWNER', 'ADMIN']) ||
+      listGroupRolesIntersect(
+        groupListRoles,
+        ['OWNER', 'EDIT', 'ADMIN'],
+        groupRoles,
+        ['OWNER', 'ADMIN', 'EDIT']
+      ),
+    [listRoles, groupListRoles, groupRoles]
   )
 
   const canSave = id ? canEdit : true
 
   const canAddMembers = useMemo(
     () => listRolesIntersect(listRoles, ['OWNER', 'ADMIN']),
-    [listRoles]
+    // || listGroupRolesIntersect(groupListRoles, ['OWNER', 'ADMIN'], groupRoles, [
+    //   'OWNER',
+    //   'ADMIN',
+    //   'EDIT',
+    // ]),
+    [listRoles] // , groupListRoles, groupRoles]
   )
 
   const [deleteListMutation, { loading: deleteLoading }] = useMutation(
@@ -305,7 +346,7 @@ const DashboardListLayout: ListCellType = ({
     {
       onCompleted: () => {
         toast.success('List deleted')
-        navigate(routes.lists())
+        navigate(groupId ? routes.group({ groupId: +groupId }) : routes.lists())
       },
       onError: (error) => {
         toast.error(error.message)
@@ -336,7 +377,16 @@ const DashboardListLayout: ListCellType = ({
       onCompleted: (data) => {
         toast.success('List created')
         if (data?.createList) {
-          setImmediate(() => navigate(routes.list({ id: data?.createList.id })))
+          setImmediate(() =>
+            navigate(
+              groupId
+                ? routes.groupList({
+                    groupId: +groupId,
+                    id: data?.createList.id,
+                  })
+                : routes.list({ id: data?.createList.id })
+            )
+          )
         }
       },
       onError: (error) => {
@@ -446,7 +496,9 @@ const DashboardListLayout: ListCellType = ({
             fire={digestingPrompt}
             height={window?.innerHeight}
             width={window?.innerWidth}
-            className={classNames(open && 'sm:translate-x-20')}
+            // className={classNames(
+            //   open ? 'sm:-translate-x-20' : 'sm:-translate-x-24'
+            // )}
           />
         </div>
       </BrowserOnly>
@@ -477,10 +529,10 @@ const DashboardListLayout: ListCellType = ({
                   setShowPrompt(false)
                   setDigestingPrompt(false)
                 }}
-                className="max-w-3xl"
+                // className="max-w-3xl"
               >
                 {!digestingPrompt && (
-                  <div className="flex w-full max-w-3xl flex-col items-start gap-3 px-3 text-center">
+                  <div className="flex w-full max-w-full flex-col items-center gap-3 px-3 text-center">
                     <div className="w-40 text-xl font-bold">OR</div>
                     <button
                       className="btn btn-primary"

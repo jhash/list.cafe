@@ -30,12 +30,6 @@ export const QUERY = gql`
       type
       visibility
       listRoles
-      listMemberships {
-        id
-      }
-      listGroupMemberships {
-        id
-      }
       owners {
         name
         images {
@@ -47,6 +41,14 @@ export const QUERY = gql`
           id
         }
       }
+      groupOwners {
+        name
+        identifier {
+          id
+        }
+      }
+      groupRoles
+      groupListRoles
     }
   }
 `
@@ -98,7 +100,7 @@ export const Success = ({
   Child,
   dashboard,
 }: CellSuccessProps<ListCellProps, FindListQueryVariables>) => {
-  if (dashboard && !list.listRoles.length) {
+  if (dashboard && !list.listRoles.length && !list.groupListRoles?.length) {
     return <Redirect to={routes.lists()} options={{ replace: true }} />
   }
 

@@ -1,7 +1,7 @@
 import kebabCase from 'lodash/kebabCase'
 
-import { Controller, useFormContext } from '@redwoodjs/forms'
-import { Redirect, routes } from '@redwoodjs/router'
+import { Controller, NumberField, useFormContext } from '@redwoodjs/forms'
+import { Redirect, routes, useParams } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import { LIST_TYPE_OPTIONS, LIST_VISIBILITY_OPTIONS } from 'src/lib/lists'
@@ -16,6 +16,8 @@ const ListSettings: ListCellChild = ({
   loading,
   canEdit,
 }) => {
+  const { groupId } = useParams()
+
   const { handleSubmit } = useFormContext()
 
   const onSubmit = handleSubmit(onSave)
@@ -34,6 +36,9 @@ const ListSettings: ListCellChild = ({
       )}
       <form onSubmit={onSubmit}>
         <div className="flex flex-wrap gap-x-5 gap-y-3">
+          {!!groupId && (
+            <NumberField name="groupId" defaultValue={groupId} hidden />
+          )}
           <FormItem
             // TODO: this shouldn't be necessary
             onSubmit={onSubmit}

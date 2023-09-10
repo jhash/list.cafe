@@ -168,8 +168,12 @@ export const list: QueryResolvers['list'] = ({ id }) => {
 export const createList: MutationResolvers['createList'] = async ({
   input,
 }) => {
+  const groupId = input.groupId
+  delete input.groupId
+
   const listItems = input.listItems
   delete input.listItems
+
   const filteredInput: Omit<CreateListInput, 'listItems'> = { ...input }
 
   const list = await db.list.create({
@@ -178,16 +182,26 @@ export const createList: MutationResolvers['createList'] = async ({
       identifier: {
         create: filteredInput.identifier,
       },
-      listMemberships: {
-        create: {
-          user: {
-            connect: {
-              id: context.currentUser?.id,
+      listMemberships: groupId
+        ? undefined
+        : {
+            create: {
+              user: {
+                connect: {
+                  id: context.currentUser?.id,
+                },
+              },
+              listRole: 'OWNER',
             },
           },
-          listRole: 'OWNER',
-        },
-      },
+      listGroupMemberships: groupId
+        ? {
+            create: {
+              groupId,
+              listRole: 'OWNER',
+            },
+          }
+        : undefined,
       // listItems: {
       //   createMany: {
       //     data: (input.listItems || []).map((createListItemInput) => ({
@@ -214,6 +228,8 @@ export const createList: MutationResolvers['createList'] = async ({
 }
 
 export const updateList: MutationResolvers['updateList'] = ({ id, input }) => {
+  delete input.groupId
+
   // TODO: delete attached reservations if not reservable? or message attached users?
   return db.list.update({
     data: {
@@ -265,31 +281,103 @@ export const List: ListRelationResolvers = {
       })
     ).map((membership) => membership.listRole)
   },
-  owners: async (_obj, { root }) => {
-    return await Promise.all(
-      (
-        await db.list.findUnique({ where: { id: root?.id } }).listMemberships({
+  groupListRoles: async (_obj, { root }) => {
+    return (
+      await db.list
+        .findUnique({ where: { id: root?.id } })
+        .listGroupMemberships({
           where: {
-            listRole: {
-              equals: 'OWNER',
+            listId: root?.id,
+            group: {
+              groupMemberships: {
+                some: {
+                  userId: context.currentUser?.id,
+                },
+              },
             },
-            user: {
-              person: {
-                visibility: {
-                  equals: 'PUBLIC',
+          },
+        })
+    ).map((membership) => membership.listRole)
+  },
+  groupRoles: async (_obj, { root }) => {
+    return (
+      await db.list
+        .findUnique({ where: { id: root?.id } })
+        .listGroupMemberships({
+          where: {
+            listId: root?.id,
+            group: {
+              groupMemberships: {
+                some: {
+                  userId: context.currentUser?.id,
                 },
               },
             },
           },
           include: {
-            user: {
+            group: {
               include: {
-                person: true,
+                groupMemberships: {
+                  where: {
+                    userId: context.currentUser?.id,
+                  },
+                },
               },
             },
           },
         })
-      ).map((membership) => membership.user.person)
     )
+      .map((membership) =>
+        membership.group.groupMemberships.map(
+          (groupMembership) => groupMembership.groupRole
+        )
+      )
+      .reduce((roles, rolesArray) => roles.concat(rolesArray), [])
+  },
+  owners: async (_obj, { root }) => {
+    return (
+      await db.list.findUnique({ where: { id: root?.id } }).listMemberships({
+        where: {
+          listRole: {
+            equals: 'OWNER',
+          },
+          user: {
+            person: {
+              visibility: {
+                equals: 'PUBLIC',
+              },
+            },
+          },
+        },
+        include: {
+          user: {
+            include: {
+              person: true,
+            },
+          },
+        },
+      })
+    ).map((membership) => membership.user.person)
+  },
+  groupOwners: async (_obj, { root }) => {
+    return (
+      await db.list
+        .findUnique({ where: { id: root?.id } })
+        .listGroupMemberships({
+          where: {
+            listRole: {
+              equals: 'OWNER',
+            },
+            group: {
+              visibility: {
+                in: ['PUBLIC', 'LINK'],
+              },
+            },
+          },
+          include: {
+            group: true,
+          },
+        })
+    ).map((membership) => membership.group)
   },
 }

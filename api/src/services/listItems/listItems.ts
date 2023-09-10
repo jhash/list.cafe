@@ -136,6 +136,28 @@ export const ListItem: ListItemRelationResolvers = {
       }
     )
   },
+  groupListRoles: (_obj, { root, ...rest }) => {
+    return List.groupListRoles(
+      {},
+      {
+        root: {
+          id: root?.listId,
+        } as ResolversParentTypes['List'],
+        ...rest,
+      }
+    )
+  },
+  groupRoles: (_obj, { root, ...rest }) => {
+    return List.groupRoles(
+      {},
+      {
+        root: {
+          id: root?.listId,
+        } as ResolversParentTypes['List'],
+        ...rest,
+      }
+    )
+  },
   reservations: (_obj, { root }) => {
     return db.listItem.findUnique({ where: { id: root?.id } }).reservations()
   },
