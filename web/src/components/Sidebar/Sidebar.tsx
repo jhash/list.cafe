@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { LucideIcon, PlusCircle } from 'lucide-react'
 
-import { Link, NavLink } from '@redwoodjs/router'
+import { NavLink, navigate } from '@redwoodjs/router'
 
 import { SidebarProps } from '../../layouts/SidebarLayout/SidebarLayout'
 
@@ -29,16 +29,16 @@ const Sidebar: React.FC<SidebarTypeProps> = ({ links }) => {
           <Icon size={'1.25rem'} />
           <span className="flex-grow">{name}</span>
           {!!toNewUrl && (
-            <Link
+            <button
               className="btn btn-secondary flex h-6 min-h-0 w-6 flex-grow-0 items-center justify-center rounded-full p-0"
-              to={toNewUrl}
               onClick={(event) => {
                 event.preventDefault()
                 event.stopPropagation()
+                navigate(toNewUrl)
               }}
             >
               <PlusCircle size="0.85rem" />
-            </Link>
+            </button>
           )}
         </NavLink>
       ))}

@@ -1,89 +1,99 @@
 import classNames from 'classnames'
 import { Trash2 } from 'lucide-react'
-import { ListMembershipsQuery } from 'types/graphql'
+import { GroupMembershipsQuery, GroupRole } from 'types/graphql'
 
-import { Form } from '@redwoodjs/forms'
+import { useForm, FormProvider } from '@redwoodjs/forms'
 import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
 
-import { UPDATE_LIST_MEMBERSHIP_MUTATION } from '../Admin/ListMembership/EditListMembershipCell'
-import { DELETE_LIST_MEMBERSHIP_MUTATION } from '../Admin/ListMembership/ListMemberships'
+import { UPDATE_GROUP_MEMBERSHIP_MUTATION } from '../Admin/GroupMembership/EditGroupMembershipCell'
+import { DELETE_GROUP_MEMBERSHIP_MUTATION } from '../Admin/GroupMembership/GroupMembership'
 import FormInput from '../FormInput/FormInput'
-import { QUERY as LIST_MEMBERSHIPS_CELL_QUERY } from '../ListMembershipsCell'
+import { QUERY as GROUP_MEMBERSHIPS_CELL_QUERY } from '../GroupMembershipsCell'
 import PersonAvatar from '../PersonAvatar/PersonAvatar'
 
-export const LIST_ROLE_TYPES = [
-  { value: 'VIEW', name: 'View', description: 'Member can view the list' },
-  {
-    value: 'CONTRIBUTE',
-    name: 'Contribute',
-    description: 'Member can add, remove, and change items',
-  },
+export const GROUP_ROLE_TYPES: {
+  value: GroupRole
+  name: string
+  description: string
+  disabled?: boolean
+}[] = [
+  { value: 'VIEW', name: 'View', description: 'Member can view the group' },
   {
     value: 'EDIT',
     name: 'Edit',
-    description: 'Member can contribute to items and edit list details',
+    description: 'Member can contribute to lists and edit group details',
   },
   {
     value: 'ADMIN',
     name: 'Admin',
     description:
-      'Member can contribute to items, edit list details, and change or add members',
+      'Member can contribute to lists, edit group details, and change or add members',
   },
   {
     value: 'OWNER',
     name: 'Owner',
     disabled: true,
     description:
-      'Member can do everything admins can do as well as delete the list',
+      'Member can do everything admins can do as well as delete the group',
   },
 ]
 
-type DashboardListMembershipProps = {
-  membership: ListMembershipsQuery['listMemberships'][number]
+type DashboardGroupMembershipProps = {
+  membership: GroupMembershipsQuery['groupMemberships'][number]
   canEdit: boolean
   canDelete: boolean
 }
-const DashboardListMembership = ({
+const DashboardGroupMembership = ({
   membership,
   canEdit,
   canDelete,
-}: DashboardListMembershipProps) => {
-  const { id, user, listRole, listId } = membership
+}: DashboardGroupMembershipProps) => {
+  const { id, user, groupRole, groupId } = membership
 
   const { currentUser } = useAuth()
 
-  const [updateListMembership, { loading: updateLoading, error: updateError }] =
-    useMutation(UPDATE_LIST_MEMBERSHIP_MUTATION, {
-      onCompleted: () => {
-        toast.success('Member updated')
-      },
-      onError: (error) => {
-        toast.error(error.message)
-      },
-      refetchQueries: [
-        { query: LIST_MEMBERSHIPS_CELL_QUERY, variables: { listId } },
-      ],
-      awaitRefetchQueries: true,
-    })
+  const methods = useForm({
+    defaultValues: {
+      groupRole,
+    },
+  })
 
-  // TODO: update memberships list?
-  const [deleteListMembership, { loading: deleteLoading, error: deleteError }] =
-    useMutation(DELETE_LIST_MEMBERSHIP_MUTATION, {
-      onCompleted: () => {
-        toast.success('Member removed')
-      },
-      onError: (error) => {
-        toast.error(error.message)
-      },
-      refetchQueries: [
-        { query: LIST_MEMBERSHIPS_CELL_QUERY, variables: { listId } },
-      ],
-      awaitRefetchQueries: true,
-    })
+  const [
+    updateGroupMembership,
+    { loading: updateLoading, error: updateError },
+  ] = useMutation(UPDATE_GROUP_MEMBERSHIP_MUTATION, {
+    onCompleted: () => {
+      toast.success('Member updated')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    refetchQueries: [
+      { query: GROUP_MEMBERSHIPS_CELL_QUERY, variables: { groupId } },
+    ],
+    awaitRefetchQueries: true,
+  })
+
+  // TODO: update memberships group?
+  const [
+    deleteGroupMembership,
+    { loading: deleteLoading, error: deleteError },
+  ] = useMutation(DELETE_GROUP_MEMBERSHIP_MUTATION, {
+    onCompleted: () => {
+      toast.success('Member removed')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    refetchQueries: [
+      { query: GROUP_MEMBERSHIPS_CELL_QUERY, variables: { groupId } },
+    ],
+    awaitRefetchQueries: true,
+  })
 
   const loading = updateLoading || deleteLoading
 
@@ -130,7 +140,7 @@ const DashboardListMembership = ({
         {!!error && <span className="text-error">{error.message}</span>}
         {!!canDelete &&
           currentUser?.id !== membership.user?.id &&
-          membership.listRole !== 'OWNER' && (
+          membership.groupRole !== 'OWNER' && (
             <button
               className="btn btn-error flex h-9 min-h-0 w-9 flex-grow-0 items-center justify-center self-start rounded-full p-0"
               onClick={(event) => {
@@ -139,7 +149,7 @@ const DashboardListMembership = ({
                 return (
                   window?.confirm(
                     'Are you sure you want to delete this item?'
-                  ) && deleteListMembership({ variables: { id } })
+                  ) && deleteGroupMembership({ variables: { id } })
                 )
               }}
               disabled={loading}
@@ -147,31 +157,35 @@ const DashboardListMembership = ({
               <Trash2 size="1.25rem" />
             </button>
           )}
-        {!!canEdit && (
-          <Form>
+        {canEdit && (
+          <FormProvider {...methods}>
             <FormInput
-              name="listRole"
+              {...methods.register('groupRole')}
               type="select"
               className="select-sm"
-              defaultValue={listRole}
-              options={LIST_ROLE_TYPES}
+              options={GROUP_ROLE_TYPES}
               disabled={
                 loading ||
                 currentUser?.id === membership.user?.id ||
-                membership.listRole === 'OWNER'
+                groupRole === 'OWNER'
               }
               hideDescription
               onChange={(event) => {
-                updateListMembership({
-                  variables: { id, input: { listRole: event?.target?.value } },
+                event.stopPropagation()
+                event.preventDefault()
+                updateGroupMembership({
+                  variables: {
+                    id,
+                    input: { groupRole: event?.target?.value },
+                  },
                 })
               }}
             />
-          </Form>
+          </FormProvider>
         )}
       </div>
     </li>
   )
 }
 
-export default DashboardListMembership
+export default DashboardGroupMembership

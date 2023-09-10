@@ -9,7 +9,6 @@ import { LIST_TYPE_OPTIONS, LIST_VISIBILITY_OPTIONS } from 'src/lib/lists'
 import CopyListCafeLink from '../CopyListCafeLink/CopyListCafeLink'
 import FormItem from '../FormItem/FormItem'
 import { ListCellChild } from '../ListCell'
-import SectionTitle from '../SectionTitle/SectionTitle'
 
 const ListSettings: ListCellChild = ({
   list: { id, name, identifier },
@@ -40,7 +39,7 @@ const ListSettings: ListCellChild = ({
             onSubmit={onSubmit}
             disabled={loading}
             name="name"
-            label={<SectionTitle>Name</SectionTitle>}
+            label={'Name'}
             validation={{
               required: {
                 value: true,
@@ -52,13 +51,7 @@ const ListSettings: ListCellChild = ({
             onSubmit={onSubmit}
             disabled={loading}
             name="identifier.id"
-            label={<SectionTitle>ID</SectionTitle>}
-            validation={{
-              required: {
-                value: true,
-                message: 'An ID is required',
-              },
-            }}
+            label={'ID'}
           >
             <Controller
               name="identifier.id"
@@ -78,14 +71,14 @@ const ListSettings: ListCellChild = ({
             type="textarea"
             disabled={loading}
             name="description"
-            label={<SectionTitle>Description</SectionTitle>}
+            label={'Description'}
           />
           <FormItem
             onSubmit={onSubmit}
             disabled={loading}
             type="select"
             name="visibility"
-            label={<SectionTitle>Visibility</SectionTitle>}
+            label={'Visibility'}
             options={LIST_VISIBILITY_OPTIONS}
           />
           <FormItem
@@ -93,7 +86,7 @@ const ListSettings: ListCellChild = ({
             disabled={loading}
             type="select"
             name="type"
-            label={<SectionTitle>Type</SectionTitle>}
+            label={'Type'}
             options={LIST_TYPE_OPTIONS}
           />
         </div>

@@ -4,6 +4,7 @@ export const schema = gql`
     createdAt: DateTime!
     updatedAt: DateTime!
     name: String!
+    description: String
     # listGroupMemberships: [ListGroupMembership]!
     # groupMemberships: [GroupMembership]!
     type: GroupType!
@@ -33,6 +34,7 @@ export const schema = gql`
 
   input CreateGroupInput {
     name: String!
+    description: String
     type: GroupType!
     visibility: GroupVisibility!
     identifier: CreateIdentifierInput
@@ -40,6 +42,7 @@ export const schema = gql`
 
   input UpdateGroupInput {
     name: String
+    description: String
     type: GroupType
     visibility: GroupVisibility
     identifier: CreateIdentifierInput

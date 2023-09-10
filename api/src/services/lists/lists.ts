@@ -95,9 +95,16 @@ export const publicLists: QueryResolvers['publicLists'] = ({
   })
 }
 
-export const lists: QueryResolvers['lists'] = () => {
+export const lists: QueryResolvers['lists'] = ({ groupId }) => {
   return db.list.findMany({
     where: {
+      listGroupMemberships: groupId
+        ? {
+            some: {
+              groupId,
+            },
+          }
+        : undefined,
       OR: [...listMembershipsWhereClauses()],
     },
     orderBy: {

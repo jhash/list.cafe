@@ -6,7 +6,7 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import Spinner from 'src/components/Loading'
 
 import { Badge } from '../Badge/Badge'
-import { matchGroupTypeOption } from '../DashboardGroup/DashboardGroup'
+import { matchGroupTypeOption } from '../DashboardGroupSettings/DashboardGroupSettings'
 
 export const QUERY = gql`
   query GroupsQuery {

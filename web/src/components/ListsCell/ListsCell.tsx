@@ -7,8 +7,8 @@ import Spinner from 'src/components/Loading'
 import Lists from '../Lists/Lists'
 
 export const QUERY = gql`
-  query ListsQuery {
-    lists {
+  query ListsQuery($groupId: Int) {
+    lists(groupId: $groupId) {
       id
       createdAt
       updatedAt

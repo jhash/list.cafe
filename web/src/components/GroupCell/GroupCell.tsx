@@ -5,12 +5,14 @@ import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 import Spinner from 'src/components/Loading'
 
 import DashboardGroup from '../DashboardGroup/DashboardGroup'
+import { DashboardGroupChild } from '../DashboardGroupSettings/DashboardGroupSettings'
 
 export const QUERY = gql`
   query FindGroupQuery($id: Int!) {
     group: group(id: $id) {
       id
       name
+      description
       visibility
       identifier {
         id
@@ -31,8 +33,12 @@ export const Failure = ({
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({
-  group,
-}: CellSuccessProps<FindGroupQuery, FindGroupQueryVariables>) => {
-  return <DashboardGroup group={group} />
+export type ListCellProps = FindGroupQuery & {
+  dashboard?: boolean
+  Child?: DashboardGroupChild
+}
+export const Success = (
+  props: CellSuccessProps<ListCellProps, FindGroupQueryVariables>
+) => {
+  return <DashboardGroup {...props} />
 }

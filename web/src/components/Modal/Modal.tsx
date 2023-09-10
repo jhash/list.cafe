@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 
 import { X } from 'lucide-react'
+import { createPortal } from 'react-dom'
 
 import SectionTitle from '../SectionTitle/SectionTitle'
 
@@ -22,7 +23,7 @@ const Modal = ({ open, title, onClose, children, ...props }: ModalProps) => {
     }
   }, [open, id])
 
-  return (
+  const content = (
     <dialog
       id={id}
       {...props}
@@ -45,6 +46,8 @@ const Modal = ({ open, title, onClose, children, ...props }: ModalProps) => {
       </div>
     </dialog>
   )
+
+  return createPortal(content, document.body)
 }
 
 export default Modal

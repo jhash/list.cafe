@@ -118,6 +118,7 @@ model Group {
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @default(now())
   name                 String
+  description          String?
   listGroupMemberships ListGroupMembership[]
   groupMemberships     GroupMembership[]
   type                 GroupType             @default(GENERIC)

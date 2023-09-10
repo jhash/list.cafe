@@ -6,6 +6,8 @@ import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import DashboardLayout, { DashboardLoading } from './layouts/DashboardLayout/DashboardLayout'
 import HomeLayout from './layouts/HomeLayout/HomeLayout'
 import AdminPage from './pages/AdminPage/AdminPage'
+import DashboardGroupMembersPage from './pages/DashboardGroupMembersPage/DashboardGroupMembersPage'
+import DashboardGroupPage from './pages/DashboardGroupPage/DashboardGroupPage'
 import DashboardListPage from './pages/DashboardListPage/DashboardListPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage/ForgotPasswordPage'
 import HomePage from './pages/HomePage/HomePage'
@@ -17,7 +19,6 @@ import SignupPage from './pages/SignupPage/SignupPage'
 const Routes = ({ useAuth }) => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/person" page={PersonPage} name="person" />
       <Set private unauthenticated="home" roles={['ADMIN', 'SUPPORT']} wrap={AdminLayout}>
         <Set wrap={ScaffoldLayout} title="ListGroupMemberships" titleTo="adminListGroupMemberships" buttonLabel="New ListGroupMembership" buttonTo="adminNewListGroupMembership">
           <Route path="/admin/list-group-memberships/new" page={AdminListGroupMembershipNewListGroupMembershipPage} name="adminNewListGroupMembership" />
@@ -78,7 +79,9 @@ const Routes = ({ useAuth }) => {
       <Set wrap={DashboardLayout} private whileLoadingAuth={DashboardLoading} unauthenticated="home">
         <Route path="/dashboard/groups" page={GroupsPage} name="groups" />
         <Route path="/dashboard/groups/new" page={DashboardGroupPage} name="newGroup" />
-        <Route path="/dashboard/groups/{id:Int}" page={DashboardGroupPage} name="group" />
+        <Route path="/dashboard/groups/{id:Int}" page={DashboardGroupListsPage} name="group" />
+        <Route path="/dashboard/groups/{id:Int}/members" page={DashboardGroupMembersPage} name="groupMembers" />
+        <Route path="/dashboard/groups/{id:Int}/settings" page={DashboardGroupPage} name="groupSettings" />
         <Route path="/dashboard/lists" page={ListsPage} name="lists" />
         <Route path="/dashboard/lists/new" page={DashboardListPage} name="newList" />
         <Route path="/dashboard/lists/{id:Int}/settings" page={ListSettingsPage} name="listSettings" />
@@ -99,7 +102,6 @@ const Routes = ({ useAuth }) => {
         <Route path="/draft" page={ListDraftPage} name="listDraft" />
         <Route path="/explore" page={ExplorePage} name="explore" />
         <Route path="/404" page={NotFoundPage} prerender name="404" />
-        {/* TODO: prerender? */}
         <Route path="/{identifier}" page={IdentifierPage} name="identifier" />
         <Route path="/" page={HomePage} name="home" />
         <Route notfound page={NotFoundPage} />

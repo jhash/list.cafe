@@ -6,7 +6,7 @@ import { toast } from '@redwoodjs/web/toast'
 
 import GroupMembershipForm from 'src/components/Admin/GroupMembership/GroupMembershipForm'
 
-const CREATE_GROUP_MEMBERSHIP_MUTATION = gql`
+export const CREATE_GROUP_MEMBERSHIP_MUTATION = gql`
   mutation CreateGroupMembershipMutation($input: CreateGroupMembershipInput!) {
     createGroupMembership(input: $input) {
       id

@@ -283,9 +283,8 @@ const DashboardListLayout: ListCellType = ({
     window?.localStorage.removeItem('listDraft')
   }, [draftList, listItems])
 
-  // TODO: remove admin?
   const canDelete = useMemo(
-    () => listRolesIntersect(listRoles, ['OWNER', 'ADMIN']),
+    () => listRolesIntersect(listRoles, ['OWNER']),
     [listRoles]
   )
 

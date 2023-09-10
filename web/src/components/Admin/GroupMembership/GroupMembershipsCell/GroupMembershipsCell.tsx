@@ -8,7 +8,7 @@ import Spinner from 'src/components/Loading'
 
 export const QUERY = gql`
   query FindGroupMemberships {
-    groupMemberships {
+    groupMemberships: adminGroupMemberships {
       id
       createdAt
       updatedAt

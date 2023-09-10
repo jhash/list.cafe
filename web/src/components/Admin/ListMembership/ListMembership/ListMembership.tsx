@@ -9,7 +9,7 @@ import { toast } from '@redwoodjs/web/toast'
 
 import { formatEnum, timeTag } from 'src/lib/formatters'
 
-const DELETE_LIST_MEMBERSHIP_MUTATION = gql`
+export const DELETE_LIST_MEMBERSHIP_MUTATION = gql`
   mutation DeleteListMembershipMutation($id: Int!) {
     deleteListMembership(id: $id) {
       id

@@ -20,6 +20,7 @@ export const listMembershipsByListId: QueryResolvers['listMembershipsByListId'] 
         listId,
         list: {
           OR: [
+            // TODO: remove edit?
             ...listMembershipsWhereClauses(
               ['ADMIN', 'OWNER', 'EDIT'],
               ['OWNER', 'ADMIN', 'EDIT']

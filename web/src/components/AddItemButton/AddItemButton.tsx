@@ -6,8 +6,9 @@ type AddItemButtonProps = Omit<React.HTMLProps<HTMLButtonElement>, 'type'> & {
 export const AddItemButton: React.FC<AddItemButtonProps> = ({ ...props }) => (
   <button
     {...props}
-    className="btn btn-secondary flex h-10 min-h-0 w-10 items-center justify-center rounded-full p-0"
+    type="button"
+    className="btn btn-secondary flex h-8 min-h-0 w-8 items-center justify-center rounded-full p-0"
   >
-    <PlusCircle />
+    <PlusCircle size="1.25rem" />
   </button>
 )

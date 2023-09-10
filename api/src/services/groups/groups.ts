@@ -7,6 +7,15 @@ import type {
 
 import { db } from 'src/lib/db'
 
+export const validateUserCanEditGroup: QueryResolvers['group'] = ({ id }) => {
+  return db.group.findUniqueOrThrow({
+    where: {
+      id,
+      OR: [...groupMembershipsWhereClauses(['ADMIN', 'OWNER', 'EDIT'])],
+    },
+  })
+}
+
 export const groupMembershipsWhereClauses = (groupRoles?: GroupRole[]) => {
   return [
     {

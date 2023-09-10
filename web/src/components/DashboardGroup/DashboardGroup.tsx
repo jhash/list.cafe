@@ -1,11 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import intersection from 'lodash/intersection'
-import kebabCase from 'lodash/kebabCase'
-import { Eye, Pencil, Save, Trash2 } from 'lucide-react'
-import { FindGroupQuery, GroupRole, GroupType } from 'types/graphql'
+import { Cog, Eye, List, Save, Trash2 } from 'lucide-react'
+import { FindGroupQuery, GroupRole } from 'types/graphql'
 
-import { Controller, Form } from '@redwoodjs/forms'
+import { Form } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -13,67 +12,32 @@ import { toast } from '@redwoodjs/web/toast'
 import { UPDATE_GROUP_MUTATION } from '../Admin/Group/EditGroupCell'
 import { DELETE_GROUP_MUTATION } from '../Admin/Group/Group'
 import { CREATE_GROUP_MUTATION } from '../Admin/Group/NewGroup'
-import CopyListCafeLink from '../CopyListCafeLink/CopyListCafeLink'
-import FormItem from '../FormItem/FormItem'
+import { DashboardGroupChild } from '../DashboardGroupSettings/DashboardGroupSettings'
 import { QUERY as GROUP_CELL_QUERY } from '../GroupCell'
 import ListFadeOut from '../ListFadeOut/ListFadeOut'
 import PageTitle from '../PageTitle/PageTitle'
-import SectionTitle from '../SectionTitle/SectionTitle'
+import Tabs from '../Tabs/Tabs'
 
-interface GroupTypeOption {
-  value: string
-  name: string
-  description?: string
-  disabled?: boolean
-  badgeColor?: string
+const DEFAULT_GROUP: Partial<FindGroupQuery['group']> = {
+  type: 'GENERIC',
+  visibility: 'PRIVATE',
 }
-const GROUP_TYPE_OPTIONS: GroupTypeOption[] = [
-  { value: 'GENERIC', name: 'General' },
-  { value: 'FRIENDS', name: 'Friends' },
-  { value: 'FAMILY', name: 'Family' },
-  { value: 'COMPANY', name: 'Company' },
-  { value: 'NON_PROFIT', name: 'Non-Profit' },
-]
-
-export const matchGroupTypeOption = (value?: GroupType) =>
-  value
-    ? GROUP_TYPE_OPTIONS.find((option) => option.value === value)
-    : undefined
-
-const GROUP_VISIBILITY_OPTIONS = [
-  {
-    value: 'PRIVATE',
-    name: 'Private',
-    description: 'Only you and people you invite can access this group',
-  },
-  {
-    value: 'LINK',
-    name: 'Link',
-    description:
-      'Anyone with the link can view this group. This group will not appear in public search results',
-  },
-  {
-    value: 'PUBLIC',
-    name: 'Public',
-    description:
-      'This group is accessible by the public and will show in search results',
-  },
-]
 
 export const groupRolesIntersect = (
   roles: GroupRole[] | undefined,
   authRoles: GroupRole[]
 ) => !!roles?.length && !!intersection(roles, authRoles).length
 
-const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
-  group,
-}) => {
-  const { id, name, identifier, type, visibility, groupRoles } = group || {
-    type: 'GENERIC',
-    visibility: 'PRIVATE',
-  }
+type DashboardGroupProps = {
+  Child: DashboardGroupChild
+} & (FindGroupQuery | { group: undefined })
 
-  // TODO: remove admin?
+const DashboardGroup: React.FC<DashboardGroupProps> = ({
+  group = { ...DEFAULT_GROUP },
+  Child,
+}) => {
+  const { id, name, identifier, groupRoles } = group
+
   const canDelete = useMemo(
     () => groupRolesIntersect(groupRoles, ['OWNER', 'ADMIN']),
     [groupRoles]
@@ -86,15 +50,16 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
 
   const canSave = id ? canEdit : true
 
-  // TODO: default to if user has edit access
-  const [editing, setEditing] = useState<boolean>(!id)
+  const canAddMembers = useMemo(
+    () => groupRolesIntersect(groupRoles, ['OWNER', 'ADMIN']),
+    [groupRoles]
+  )
 
   const [deleteGroupMutation, { loading: deleteLoading }] = useMutation(
     DELETE_GROUP_MUTATION,
     {
       onCompleted: () => {
         toast.success('Group deleted')
-        setEditing(false)
         navigate(routes.groups())
       },
       onError: (error) => {
@@ -110,7 +75,6 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
     {
       onCompleted: () => {
         toast.success('Group updated')
-        setEditing(false)
         // navigate(routes.groups())
       },
       onError: (error) => {
@@ -126,7 +90,6 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
     {
       onCompleted: (data) => {
         toast.success('Group created')
-        setEditing(false)
         if (data?.createGroup) {
           navigate(routes.group({ id: data?.createGroup.id }))
         }
@@ -145,7 +108,7 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
     event?.stopPropagation?.()
     event?.preventDefault?.()
 
-    if (!editing || loading) {
+    if (loading) {
       return
     }
 
@@ -153,23 +116,13 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
       updateGroupMutation({
         variables: {
           id,
-          input: {
-            ...input,
-            identifier: {
-              id: kebabCase(input.identifier),
-            },
-          },
+          input,
         },
       })
     } else {
       createGroupMutation({
         variables: {
-          input: {
-            ...input,
-            identifier: {
-              id: kebabCase(input.identifier),
-            },
-          },
+          input,
         },
       })
     }
@@ -220,79 +173,49 @@ const DashboardGroup: React.FC<FindGroupQuery | { group: undefined }> = ({
             {!!canSave && (
               <button
                 className="btn btn-secondary flex h-10 min-h-0 w-10 flex-grow-0 items-center justify-center rounded-full p-0"
-                type={editing ? 'submit' : 'button'}
-                onClick={
-                  editing
-                    ? undefined
-                    : () => setImmediate(() => setEditing(!editing))
-                }
+                type={'submit'}
                 disabled={loading}
               >
-                {editing ? <Save /> : <Pencil />}
+                <Save />
               </button>
             )}
           </PageTitle>
-          <div className="flex flex-wrap gap-x-5 gap-y-3">
-            <FormItem
-              disabled={loading}
-              name="name"
-              defaultValue={name}
-              editing={editing}
-              label={<SectionTitle>Name</SectionTitle>}
-              validation={{
-                required: {
-                  value: true,
-                  message: 'Name is required',
+          {!!id && (
+            <Tabs
+              links={[
+                {
+                  name: 'Lists',
+                  path: routes.group({ id }),
+                  Icon: List,
                 },
-              }}
+                ...(canEdit
+                  ? [
+                      {
+                        name: 'Settings',
+                        path: routes.groupSettings({ id }),
+                        Icon: Cog,
+                      },
+                    ]
+                  : []),
+                ...(canAddMembers
+                  ? [
+                      {
+                        name: 'Members',
+                        path: routes.groupMembers({ id }),
+                        Icon: Cog,
+                      },
+                    ]
+                  : []),
+              ]}
             />
-            <FormItem
-              disabled={loading}
-              name="identifier.id"
-              defaultValue={identifier?.id}
-              editing={editing}
-              label={<SectionTitle>ID</SectionTitle>}
-              validation={{
-                required: {
-                  value: true,
-                  message: 'An ID is required',
-                },
-              }}
-            >
-              <Controller
-                name="identifier.id"
-                render={({ field: { value } }) => (
-                  <div className="flex items-center p-1 text-sm text-gray-500">
-                    <CopyListCafeLink
-                      path={
-                        (editing ? kebabCase(value) : undefined) ||
-                        identifier?.id ||
-                        'your-group-name'
-                      }
-                    />
-                  </div>
-                )}
-              />
-            </FormItem>
-            <FormItem
-              disabled={loading}
-              type="select"
-              name="visibility"
-              defaultValue={visibility}
-              editing={editing}
-              label={<SectionTitle>Visibility</SectionTitle>}
-              options={GROUP_VISIBILITY_OPTIONS}
-            />
-            <FormItem
-              type="select"
-              name="type"
-              defaultValue={type}
-              editing={editing}
-              label={<SectionTitle>Type</SectionTitle>}
-              disabled={loading}
-              options={GROUP_TYPE_OPTIONS}
-            />
-          </div>
+          )}
+          <Child
+            group={group}
+            loading={loading}
+            editing
+            canEdit={canEdit}
+            canAddMembers={canAddMembers}
+          />
         </Form>
 
         <ListFadeOut />

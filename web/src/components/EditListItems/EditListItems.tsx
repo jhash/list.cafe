@@ -75,6 +75,7 @@ const EditListItems: ListCellChild = ({
             title=""
             listId={id}
             reservations={undefined}
+            images={undefined}
             {...listItem}
             addItem={onAddItem}
             deleteItem={undefined}
