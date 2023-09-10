@@ -12,10 +12,7 @@ import { sendEmail } from 'src/lib/email'
 import { LIST_CAFE_URL } from 'src/lib/url'
 import { createUser } from 'src/services/users/users'
 
-export const handler = async (
-  event: APIGatewayProxyEvent,
-  context: Context
-) => {
+const authHandler = async (event: APIGatewayProxyEvent, context: Context) => {
   const forgotPasswordOptions: DbAuthHandlerOptions['forgotPassword'] = {
     // handler() is invoked after verifying that a user was found with the given
     // username. This is where you can send the user an email with a link to
@@ -239,4 +236,12 @@ export const handler = async (
   })
 
   return await authHandler.invoke()
+}
+
+export const handler = (req, context) => {
+  req.body = req.isBase64Encoded
+    ? Buffer.from(req.body, 'base64').toString('utf-8')
+    : req.body
+
+  return authHandler(req, context)
 }
