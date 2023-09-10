@@ -9,6 +9,7 @@ import {
 
 import { db } from 'src/lib/db'
 import { sendEmail } from 'src/lib/email'
+import { logger } from 'src/lib/logger'
 import { LIST_CAFE_URL } from 'src/lib/url'
 import { createUser } from 'src/services/users/users'
 
@@ -239,9 +240,18 @@ const authHandler = async (event: APIGatewayProxyEvent, context: Context) => {
 }
 
 export const handler = (req, context) => {
+  logger.warn(
+    '${event.httpMethod} ${event.path} req.body before: ',
+    JSON.stringify(req.body)
+  )
   req.body = req.isBase64Encoded
     ? Buffer.from(req.body, 'base64').toString('utf-8')
     : req.body
+
+  logger.warn(
+    '${event.httpMethod} ${event.path} req.body after: ',
+    JSON.stringify(req.body)
+  )
 
   return authHandler(req, context)
 }
