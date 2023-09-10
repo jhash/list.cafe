@@ -28,6 +28,7 @@ export const schema = gql`
   }
 
   type Query {
+    publicGroups(take: Int, skip: Int, personId: Int): [Group!]! @skipAuth
     groups: [Group!]! @skipAuth
     group(id: Int!): Group @skipAuth
   }

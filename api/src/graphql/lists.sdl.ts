@@ -49,7 +49,8 @@ export const schema = gql`
   }
 
   type Query {
-    publicLists(take: Int, skip: Int, personId: Int): [List!]! @skipAuth
+    publicLists(take: Int, skip: Int, personId: Int, groupId: Int): [List!]!
+      @skipAuth
     adminLists: [List!]! @requireAuth(roles: ["ADMIN", "SUPPORT"])
     lists(groupId: Int): [List!]! @requireAuth
     list(id: Int!): List @skipAuth

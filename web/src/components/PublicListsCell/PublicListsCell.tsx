@@ -7,8 +7,18 @@ import Spinner from 'src/components/Loading'
 import Lists from '../Lists/Lists'
 
 export const QUERY = gql`
-  query PublicListsQuery($take: Int = 100, $skip: Int, $personId: Int) {
-    lists: publicLists(take: $take, skip: $skip, personId: $personId) {
+  query PublicListsQuery(
+    $take: Int = 100
+    $skip: Int
+    $personId: Int
+    $groupId: Int
+  ) {
+    lists: publicLists(
+      take: $take
+      skip: $skip
+      personId: $personId
+      groupId: $groupId
+    ) {
       id
       createdAt
       updatedAt
@@ -40,7 +50,7 @@ export const Success = ({ lists }: CellSuccessProps<PublicListsQuery>) => {
   return <Lists lists={lists} />
 }
 
-export const beforeQuery = ({ page, personId }) => {
+export const beforeQuery = ({ page, personId, groupId }) => {
   page = page ? parseInt(page, PAGE_SIZE) : 1
 
   return {
@@ -48,6 +58,7 @@ export const beforeQuery = ({ page, personId }) => {
       take: PAGE_SIZE,
       skip: (page - 1) * PAGE_SIZE,
       personId: personId ? +personId : undefined,
+      groupId: groupId ? +groupId : undefined,
     },
   }
 }

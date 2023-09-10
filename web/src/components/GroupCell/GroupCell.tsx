@@ -6,6 +6,7 @@ import Spinner from 'src/components/Loading'
 
 import DashboardGroup from '../DashboardGroup/DashboardGroup'
 import { DashboardGroupChild } from '../DashboardGroupSettings/DashboardGroupSettings'
+import GroupProfile from '../GroupProfile/GroupProfile'
 
 export const QUERY = gql`
   query FindGroupQuery($id: Int!) {
@@ -34,11 +35,14 @@ export const Failure = ({
 )
 
 export type ListCellProps = FindGroupQuery & {
-  dashboard?: boolean
+  dashboard: boolean
   Child?: DashboardGroupChild
 }
 export const Success = (
   props: CellSuccessProps<ListCellProps, FindGroupQueryVariables>
 ) => {
+  if (!props.dashboard) {
+    return <GroupProfile group={props.group} />
+  }
   return <DashboardGroup {...props} />
 }

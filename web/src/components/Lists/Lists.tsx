@@ -21,7 +21,7 @@ type ListsProps = {
 }
 const Lists: React.FC<ListsProps> = ({ lists }) => {
   return (
-    <ul className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2">
       {lists.map(({ id, name, type, identifier, groupOwners }, index) => {
         return (
           <Link
@@ -47,7 +47,7 @@ const Lists: React.FC<ListsProps> = ({ lists }) => {
           </Link>
         )
       })}
-    </ul>
+    </div>
   )
 }
 

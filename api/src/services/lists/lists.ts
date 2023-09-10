@@ -68,6 +68,7 @@ export const publicLists: QueryResolvers['publicLists'] = ({
   take,
   skip,
   personId,
+  groupId,
 }) => {
   return db.list.findMany({
     where: {
@@ -85,7 +86,19 @@ export const publicLists: QueryResolvers['publicLists'] = ({
               },
             },
           }
-        : {},
+        : undefined,
+      listGroupMemberships: groupId
+        ? {
+            some: {
+              group: {
+                id: personId,
+              },
+              listRole: {
+                in: ['OWNER', 'ADMIN', 'CONTRIBUTE', 'EDIT'],
+              },
+            },
+          }
+        : undefined,
     },
     take,
     skip,

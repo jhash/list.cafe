@@ -39,6 +39,32 @@ export const adminGroups: QueryResolvers['groups'] = () => {
   return db.group.findMany()
 }
 
+export const publicGroups: QueryResolvers['publicGroups'] = ({
+  take,
+  skip,
+  personId,
+}) => {
+  return db.group.findMany({
+    where: {
+      visibility: 'PUBLIC',
+      groupMemberships: personId
+        ? {
+            some: {
+              groupRole: 'OWNER',
+              user: {
+                person: {
+                  id: personId,
+                },
+              },
+            },
+          }
+        : undefined,
+    },
+    take,
+    skip,
+  })
+}
+
 export const groups: QueryResolvers['groups'] = () => {
   if (!context.currentUser) {
     return db.group.findMany({

@@ -8,6 +8,7 @@ import type { CellSuccessProps } from '@redwoodjs/web'
 
 import Spinner from 'src/components/Loading'
 
+import GroupPage from '../../pages/GroupPage/GroupPage'
 import ListPage from '../../pages/ListPage/ListPage'
 import PersonPage from '../../pages/PersonPage/PersonPage'
 
@@ -47,6 +48,6 @@ export const Success = ({
   ) : identifier.personId ? (
     <PersonPage id={identifier.personId} identifier={identifier.id} />
   ) : (
-    <div>Group Page not created yet</div>
+    <GroupPage id={identifier.groupId} identifier={identifier.id} />
   )
 }

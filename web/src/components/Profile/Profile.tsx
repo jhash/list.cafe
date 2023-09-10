@@ -19,9 +19,9 @@ export const Profile = ({ person }: ProfileProps) => {
   }
 
   return (
-    <div className="flex flex-nowrap items-start gap-8">
+    <div className="flex flex-grow flex-nowrap items-start gap-8">
       <PersonAvatar person={person} />
-      <div className="flex flex-grow flex-col gap-1">
+      <div className="flex flex-grow flex-col gap-1.5">
         <div className="flex items-center gap-3">
           <span className="text-xl font-semibold">{person.name}</span>
           <span className="text-base text-gray-500">{person.pronouns}</span>

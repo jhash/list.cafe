@@ -6,13 +6,22 @@ import type {
 
 import { db } from 'src/lib/db'
 
-export const people: QueryResolvers['people'] = () => {
+export const people: QueryResolvers['people'] = ({ groupId }) => {
   // TODO: groups, connections
   return db.person.findMany({
     where: {
       visibility: {
         in: ['PUBLIC'],
       },
+      user: groupId
+        ? {
+            groupMemberships: {
+              some: {
+                groupId,
+              },
+            },
+          }
+        : undefined,
     },
   })
 }
@@ -34,8 +43,12 @@ export const person: QueryResolvers['person'] = ({ id }) => {
 }
 
 export const createPerson: MutationResolvers['createPerson'] = ({ input }) => {
+  const { name, email } = input
   return db.person.create({
-    data: input,
+    data: {
+      name,
+      email,
+    },
   })
 }
 
@@ -43,8 +56,10 @@ export const updatePerson: MutationResolvers['updatePerson'] = ({
   id,
   input,
 }) => {
+  const { name, email } = input
+
   return db.person.update({
-    data: input,
+    data: { name, email },
     where: { id },
   })
 }
