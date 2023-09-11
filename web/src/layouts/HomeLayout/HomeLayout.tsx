@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react'
 
-import { Globe2 } from 'lucide-react'
+import { Coffee, Globe2, MailQuestion } from 'lucide-react'
 
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 import { NavLink, routes } from '@redwoodjs/router'
@@ -40,7 +40,25 @@ const HomeLayout = ({ children }) => {
       <div className="flex w-full max-w-full flex-grow flex-col px-4 py-8">
         {children}
       </div>
-      <footer className="flex h-16 flex-shrink-0 flex-grow-0 flex-row-reverse items-center px-4">
+      <footer className="flex h-16 flex-shrink-0 flex-grow-0 items-center px-4">
+        <div className="flex flex-grow items-center gap-3">
+          <NavLink
+            to={routes.contact()}
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
+            activeClassName="font-bold"
+            title="Contact us"
+          >
+            <MailQuestion size="1.25rem" />
+          </NavLink>
+          <NavLink
+            to={routes.about()}
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
+            activeClassName="font-bold"
+            title="About list.cafe"
+          >
+            <Coffee size="1.25rem" />
+          </NavLink>
+        </div>
         <DarkModeToggle />
       </footer>
     </MainLayout>

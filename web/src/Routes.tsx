@@ -98,7 +98,8 @@ const Routes = ({ useAuth }) => {
       </Set>
 
       <Set wrap={HomeLayout} prerender>
-        {/* */}
+        <Route path="/about" page={AboutPage} name="about" />
+        <Route path="/contact" page={ContactPage} name="contact" />
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />

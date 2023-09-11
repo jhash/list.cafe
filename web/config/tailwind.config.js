@@ -30,6 +30,7 @@ module.exports = {
         whiteSmoke: '#f5f5f5',
         snow: '#fffafa',
         cream: '#f9f5eb',
+        pianoBlack: '#191919',
       },
       fontFamily: {
         dmSans: 'DM Sans',
