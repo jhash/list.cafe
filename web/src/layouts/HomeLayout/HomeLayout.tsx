@@ -1,10 +1,11 @@
 import { Suspense, lazy } from 'react'
 
-import { Coffee, Globe2, MailQuestion } from 'lucide-react'
+import { Coffee, Github, Globe2, MailQuestion } from 'lucide-react'
 
 import { BrowserOnly } from '@redwoodjs/prerender/browserUtils'
 import { NavLink, routes } from '@redwoodjs/router'
 
+import ExternalLink from 'src/components/ExternalLink/ExternalLink'
 import HomeLink from 'src/components/HomeLink/HomeLink'
 import Loading from 'src/components/Loading'
 import { DarkModeToggle } from 'src/components/ThemeProvider'
@@ -43,20 +44,27 @@ const HomeLayout = ({ children }) => {
       <footer className="flex h-16 flex-shrink-0 flex-grow-0 items-center px-4">
         <div className="flex flex-grow items-center gap-3">
           <NavLink
-            to={routes.contact()}
-            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
-            activeClassName="font-bold"
-            title="Contact us"
-          >
-            <MailQuestion size="1.25rem" />
-          </NavLink>
-          <NavLink
             to={routes.about()}
             className="link flex items-center rounded-md font-semibold no-underline hover:underline"
             activeClassName="font-bold"
             title="About list.cafe"
           >
             <Coffee size="1.25rem" />
+          </NavLink>
+          <ExternalLink
+            href="https://github.com/jhash/list.cafe"
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
+            title="list.cafe on GitHub"
+          >
+            <Github size="1.25rem" />
+          </ExternalLink>
+          <NavLink
+            to={routes.contact()}
+            className="link flex items-center rounded-md font-semibold no-underline hover:underline"
+            activeClassName="font-bold"
+            title="Contact us"
+          >
+            <MailQuestion size="1.25rem" />
           </NavLink>
         </div>
         <DarkModeToggle />

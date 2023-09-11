@@ -36,29 +36,25 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
-export const Success = ({ people }: CellSuccessProps<PublicPeopleQuery>) => {
-  return (
-    <div className="flex flex-col gap-2">
-      {people.map((person) => {
-        const { id, name, identifier } = person
+type PublicPersonProps = PublicPeopleQuery['people'][number]
+export const PublicPerson = (person: PublicPersonProps) => {
+  const { id, name, identifier } = person
 
-        return (
-          <Link
-            key={id}
-            to={routes.identifier({
-              identifier: identifier?.id,
-            })}
-            className={
-              'link min-h-12 flex flex-grow items-center gap-4 rounded-md border px-4 py-1 no-underline shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20'
-            }
-          >
-            <PersonAvatar person={person} className="h-8 w-8 text-[0.375rem]" />
-            {!!name && (
-              <div className="flex-shrink whitespace-normal">{name}</div>
-            )}
-          </Link>
-        )
+  return (
+    <Link
+      key={id}
+      to={routes.identifier({
+        identifier: identifier?.id,
       })}
-    </div>
+      className={
+        'link min-h-12 flex flex-grow items-center gap-4 rounded-md border px-4 py-1 no-underline shadow-sm hover:bg-gray-300 hover:bg-opacity-30 dark:hover:bg-gray-600 dark:hover:bg-opacity-20'
+      }
+    >
+      <PersonAvatar person={person} className="h-8 w-8 text-[0.375rem]" />
+      {!!name && <div className="flex-shrink whitespace-normal">{name}</div>}
+    </Link>
   )
+}
+export const Success = ({ people }: CellSuccessProps<PublicPeopleQuery>) => {
+  return <div className="flex flex-col gap-2">{people.map(PublicPerson)}</div>
 }
