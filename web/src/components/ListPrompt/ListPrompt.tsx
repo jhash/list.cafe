@@ -52,6 +52,7 @@ export const ListPrompt = ({
     event?.stopPropagation()
 
     const prompt = [firstListItemRef.current.value, text].join(' ').trim()
+    ;(event.target as HTMLInputElement).value = prompt
 
     setDigestingLink(true)
     onStart?.()
@@ -105,8 +106,6 @@ export const ListPrompt = ({
 
   const onPaste: ClipboardEventHandler<HTMLInputElement> = (event) => {
     onSubmit(undefined, event.clipboardData.getData('text'))
-    ;(event.target as HTMLInputElement).value =
-      event.clipboardData.getData('text')
   }
 
   useEffect(() => {

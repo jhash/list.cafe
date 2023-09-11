@@ -3,6 +3,8 @@ import type { PublicGroupsQuery } from 'types/graphql'
 import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
+import Spinner from 'src/components/Loading'
+
 import { GroupTypeBadge } from '../GroupsCell'
 
 export const QUERY = gql`
@@ -20,7 +22,7 @@ export const QUERY = gql`
 
 const PAGE_SIZE = 20
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => <Spinner />
 
 export const Empty = () => <div>No groups yet</div>
 

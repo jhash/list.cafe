@@ -85,6 +85,11 @@ const AboutPage = () => {
                 url: 'https://github.com/saadeghi/daisyui',
               },
               {
+                name: 'Lucide',
+                icon: 'https://lucide.dev/logo.dark.svg',
+                url: 'https://lucide.dev/',
+              },
+              {
                 name: 'Prisma',
                 icon: 'https://avatars.githubusercontent.com/u/17219288',
                 url: 'https://github.com/prisma/prisma',

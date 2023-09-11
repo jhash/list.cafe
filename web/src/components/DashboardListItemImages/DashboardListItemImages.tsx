@@ -23,7 +23,7 @@ const DashboardListItemImages = ({
 }: DashboardListItemImagesProps) => {
   const [deleteImageMutation, { loading }] = useMutation(
     DELETE_IMAGE_MUTATION,
-    { refetchQueries: [LIST_ITEM_IMAGES_QUERY] }
+    { refetchQueries: [LIST_ITEM_IMAGES_QUERY], awaitRefetchQueries: true }
   )
 
   return (

@@ -36,11 +36,11 @@ export type DigestedList = CreateListInput & {
 }
 export type DigestHandler = (link: string) => Promise<DigestedList>
 const digest: DigestHandler = async (link: string) => {
-  if (link.match(AMAZON_PRODUCT_REGEX)) {
-    return await fetchAmazonProductLink(link)
-  }
   if (link.match(AMAZON_WISHLIST_REGEX)) {
     return await fetchAmazonWishlistLink(link)
+  }
+  if (link.match(AMAZON_PRODUCT_REGEX)) {
+    return await fetchAmazonProductLink(link)
   }
 
   return await convertLinkToList(link)
