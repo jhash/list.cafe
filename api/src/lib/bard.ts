@@ -1,23 +1,17 @@
 import { ListType } from '@prisma/client'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { gotScraping } from 'got-scraping'
 import { JSDOM, VirtualConsole } from 'jsdom'
 import { jsonrepair } from 'jsonrepair'
 
 import { DigestedList } from 'src/functions/digestLink/digestLink'
 
-const { TextServiceClient } = require('@google-ai/generativelanguage').v1beta2
-const { GoogleAuth } = require('google-auth-library')
-
-const MODEL_NAME = 'models/text-bison-001'
+const MODEL_NAME = 'gemini-1.5-flash'
 
 const virtualConsole = new VirtualConsole()
 virtualConsole.on('error', () => {
   // No-op to skip console errors.
 })
-
-interface GoogleTextMatchCandidate {
-  output?: string
-}
 
 interface UnfilteredList {
   name?: string
@@ -51,34 +45,18 @@ interface UnfilteredList {
 //   // ],
 // }
 
-const client = new TextServiceClient({
-  authClient: new GoogleAuth().fromAPIKey(
-    process.env.GOOGLE_MAKERSUITE_API_KEY
-  ),
-})
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_MAKERSUITE_API_KEY)
+const model = genAI.getGenerativeModel({ model: MODEL_NAME })
 
-export const generateText = (text: string) =>
-  client.generateText({
-    model: MODEL_NAME,
-    prompt: {
-      text,
-    },
-    // temperature: 0.8,
-    // candidates: 2,
-    // safetySettings: [],
-  })
+export const generateText = async (text: string) => {
+  const result = await model.generateContent(text)
+  return result.response.text()
+}
 
 const getListFromPrompt = async (text: string) => {
-  const result = ((await generateText(text)) || [{ candidates: [] }]) as [
-    { candidates: GoogleTextMatchCandidate[] }
-  ]
-  console.log(JSON.stringify(result, null, 2))
-
-  const [first] = result
-
-  const { candidates } = first
-
-  return candidates.map((candidate) => candidate.output).join('\n')
+  const output = await generateText(text)
+  console.log(output)
+  return output
 }
 
 const GOOGLE_BYTE_LIMIT = 48000
