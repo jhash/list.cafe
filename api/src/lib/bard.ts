@@ -6,7 +6,7 @@ import { jsonrepair } from 'jsonrepair'
 
 import { DigestedList } from 'src/functions/digestLink/digestLink'
 
-const MODEL_NAME = 'gemini-3-flash-preview'
+const MODEL_NAME = 'gemini-3.1-flash-lite'
 
 const virtualConsole = new VirtualConsole()
 virtualConsole.on('error', () => {
