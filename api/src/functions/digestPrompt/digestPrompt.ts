@@ -31,16 +31,26 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
   const { prompt } = event.queryStringParameters
 
   if (!prompt) {
-    throw new Error('Prompt is required')
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Prompt is required' }),
+    }
   }
 
-  const data = await digest(decodeURIComponent(prompt))
-
-  return {
-    statusCode: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
+  try {
+    const data = await digest(decodeURIComponent(prompt))
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }
+  } catch (error) {
+    logger.error({ error }, 'digestPrompt failed')
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: error.message }),
+    }
   }
 }

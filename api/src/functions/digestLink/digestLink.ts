@@ -50,16 +50,26 @@ export const handler = async (event: APIGatewayEvent, _context: Context) => {
   const { link } = event.queryStringParameters
 
   if (!link) {
-    throw new Error('Link is required')
+    return {
+      statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Link is required' }),
+    }
   }
 
-  const data = await digest(decodeURIComponent(link))
-
-  return {
-    statusCode: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
+  try {
+    const data = await digest(decodeURIComponent(link))
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }
+  } catch (error) {
+    logger.error({ error }, 'digestLink failed')
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: error.message }),
+    }
   }
 }
