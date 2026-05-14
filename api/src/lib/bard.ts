@@ -186,7 +186,7 @@ const validateUrl = async (url: string) => {
   return true
 }
 
-const convertPotentialJSONToList = async (original: string) => {
+const convertPotentialJSONToList = async (original: string, fallbackName?: string) => {
   console.log('\ntext before filtering: ', original)
 
   let text = original // .replace('\\n', '').replace('\n', ' ')
@@ -249,7 +249,7 @@ const convertPotentialJSONToList = async (original: string) => {
   )
 
   const list: DigestedList = {
-    name: unfiltered.name || type,
+    name: unfiltered.name || fallbackName || type,
     type,
     headerImage: unfiltered.headerImage,
     description: unfiltered.description,
@@ -286,7 +286,9 @@ const fetchPageBody = async (url: URL): Promise<string> => {
 
   try {
     const page = await browser.newPage()
-    await page.goto(url.toString(), { waitUntil: 'networkidle2', timeout: 30000 })
+    await page.goto(url.toString(), { waitUntil: 'load', timeout: 30000 })
+    // Give JS-rendered content a moment to settle after load
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     return await page.content()
   } finally {
     await browser.close()
@@ -392,5 +394,5 @@ export const convertLinkToList = async (link: string) => {
 export const convertPromptToList = async (prompt: string) => {
   const text = await getListFromPrompt(`${PROMPT}${prompt}`)
 
-  return convertPotentialJSONToList(text)
+  return convertPotentialJSONToList(text, prompt)
 }
