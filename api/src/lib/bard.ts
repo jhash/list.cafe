@@ -137,6 +137,25 @@ const popCharactersUntilValid = (original: string) => {
 
 const PROMPT_MAX_SIZE = 500
 
+const BLOCKED_HOSTNAME_PATTERNS = [
+  /^localhost$/i,
+  /^127\./,
+  /^10\./,
+  /^172\.(1[6-9]|2\d|3[01])\./,
+  /^192\.168\./,
+  /^169\.254\./, // cloud metadata (AWS, GCP, Azure)
+  /^::1$/,       // IPv6 loopback
+  /^fc00:/i,     // IPv6 private
+  /^fd[0-9a-f]{2}:/i, // IPv6 ULA
+]
+
+const assertPublicUrl = (url: URL) => {
+  const { hostname } = url
+  if (BLOCKED_HOSTNAME_PATTERNS.some((pattern) => pattern.test(hostname))) {
+    throw new Error(`Blocked request to private/internal address: ${hostname}`)
+  }
+}
+
 const httpsEverywhere = (text?: string) => {
   const url = (text || '').trim()
 
@@ -153,6 +172,7 @@ const httpsEverywhere = (text?: string) => {
 
 const validateUrl = async (url: string) => {
   const httpsUrl = new URL(httpsEverywhere(url))
+  assertPublicUrl(httpsUrl)
   const result = await gotScraping.get(httpsUrl)
   console.log(url, JSON.stringify(result, null, 2))
   if (!result.body) {
@@ -251,7 +271,9 @@ const convertPotentialJSONToList = async (original: string) => {
 }
 
 export const convertLinkToList = async (link: string) => {
-  const { body } = await gotScraping.get(link)
+  const parsedLink = new URL(link)
+  assertPublicUrl(parsedLink)
+  const { body } = await gotScraping.get(parsedLink)
   const dom = new JSDOM(body, { virtualConsole })
 
   dom.window.document
