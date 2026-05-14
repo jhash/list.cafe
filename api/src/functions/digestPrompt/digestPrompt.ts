@@ -1,3 +1,5 @@
+export const config = { maxDuration: 60 }
+
 import type { APIGatewayEvent, Context } from 'aws-lambda'
 
 import { convertPromptToList } from 'src/lib/bard'

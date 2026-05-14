@@ -1,10 +1,1 @@
-{
-  "functions": {
-    "api/dist/functions/digestLink.js": {
-      "maxDuration": 60
-    },
-    "api/dist/functions/digestPrompt.js": {
-      "maxDuration": 60
-    }
-  }
-}
+{}
