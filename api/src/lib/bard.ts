@@ -270,20 +270,25 @@ const convertPotentialJSONToList = async (original: string, fallbackName?: strin
   return list
 }
 
-const LISTABILITY_PROMPT = `You are a content evaluator for list.cafe — an app that helps people create, share, and discover lists of things: products, songs, books, links, places, tasks, recipes, people, and more.
+const buildListabilityPrompt = () => {
+  const types = Object.keys(CATEGORY_PROMPT_KEY_MAP).join(', ')
+  return `You are a content evaluator for list.cafe — an app that helps people create, share, and discover lists of things.
 
-Given the following text scraped from a webpage, determine whether it contains enough enumerable, structured content to generate a meaningful list.
+list.cafe supports these list types: ${types}.
 
-Good candidates: charts, rankings, product listings, article roundups, recipe indexes, link directories, wishlists, job boards, event lineups.
+Given the following text scraped from a webpage, determine whether it contains enough enumerable, structured content to generate a meaningful list of one of those types.
+
+Good candidates: charts, rankings, product listings, article roundups, recipe indexes, link directories, wishlists, job boards, event lineups, to-do lists, idea collections, classifieds, bookmarks, inventories, registries, and similar.
 Bad candidates: empty pages, login walls, cookie banners, generic homepages with no items, mostly navigation or ads, JS-rendered pages that returned no real content.
 
 Respond with ONLY valid JSON, no markdown, no explanation outside the JSON:
 {"hasContent": true, "reason": "one sentence"}
 or
 {"hasContent": false, "reason": "one sentence"}`
+}
 
 const checkForListableContent = async (text: string): Promise<{ hasContent: boolean; reason: string }> => {
-  const result = await generateText(`${LISTABILITY_PROMPT}\n\nText:\n${text.slice(0, 5000)}`)
+  const result = await generateText(`${buildListabilityPrompt()}\n\nText:\n${text.slice(0, 5000)}`)
   try {
     return JSON.parse(result.replace(/```json\n?|\n?```/g, '').trim())
   } catch {
