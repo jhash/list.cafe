@@ -1,8 +1,10 @@
 import { ListType } from '@prisma/client'
+import chromium from '@sparticuz/chromium'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { gotScraping } from 'got-scraping'
 import { JSDOM, VirtualConsole } from 'jsdom'
 import { jsonrepair } from 'jsonrepair'
+import puppeteer from 'puppeteer-core'
 
 import { DigestedList } from 'src/functions/digestLink/digestLink'
 
@@ -270,10 +272,31 @@ const convertPotentialJSONToList = async (original: string) => {
   return list
 }
 
+const fetchPageBody = async (url: URL): Promise<string> => {
+  const executablePath =
+    process.env.CHROMIUM_EXECUTABLE_PATH ||
+    (await chromium.executablePath())
+
+  const browser = await puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath,
+    headless: true,
+  })
+
+  try {
+    const page = await browser.newPage()
+    await page.goto(url.toString(), { waitUntil: 'networkidle2', timeout: 30000 })
+    return await page.content()
+  } finally {
+    await browser.close()
+  }
+}
+
 export const convertLinkToList = async (link: string) => {
   const parsedLink = new URL(link)
   assertPublicUrl(parsedLink)
-  const { body } = await gotScraping.get(parsedLink)
+  const body = await fetchPageBody(parsedLink)
   const dom = new JSDOM(body, { virtualConsole })
 
   dom.window.document
