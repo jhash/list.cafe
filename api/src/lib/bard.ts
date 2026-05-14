@@ -59,7 +59,7 @@ const getListFromPrompt = async (text: string) => {
   return output
 }
 
-const GOOGLE_BYTE_LIMIT = 48000
+const GOOGLE_BYTE_LIMIT = 500000
 
 // const splitAndGetListFromHTML = async (size: number, html: string) => {
 //   const parts = Math.floor(size / GOOGLE_BYTE_LIMIT)
@@ -113,7 +113,7 @@ const PROMPT = `Can you create a list with a name, description, and a type from 
   CATEGORY_PROMPT_KEY_MAP
 ).join(', ')}], formatted like this example: \`\`\`json${JSON.stringify(
   {}
-)}\`\`\`, with a list of listItems that each include a title, description, price, and quantity, all in a consistent JSON data structure, from the following text? `
+)}\`\`\`, with a list of up to 100 listItems that each include a title, description, price, and quantity, all in a consistent JSON data structure, from the following text? `
 // TODO: put url back? Find a better way?
 
 const NUMBER_OF_CHARACTERS = 100
@@ -135,7 +135,7 @@ const popCharactersUntilValid = (original: string) => {
   throw new Error(`Failed to parse after popping off ${NUMBER_OF_CHARACTERS}`)
 }
 
-const PROMPT_MAX_SIZE = 500
+const PROMPT_MAX_SIZE = 10000
 
 const BLOCKED_HOSTNAME_PATTERNS = [
   /^localhost$/i,
