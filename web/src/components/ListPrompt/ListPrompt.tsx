@@ -57,33 +57,39 @@ export const ListPrompt = ({
     setDigestingLink(true)
     onStart?.()
 
+    let isUrl = false
+    let link: URL | undefined
+
     try {
       const url = httpsEverywhere(prompt)
+      link = new URL(url)
+      isUrl = true
+    } catch {
+      // Not a URL — will fall through to digestPrompt
+    }
 
-      // This should fail if not valid
-      const link = new URL(url)
+    if (isUrl) {
+      try {
+        const { data } = await api.get('/digestLink', {
+          params: { link },
+        })
 
-      const { data } = await api.get('/digestLink', {
-        params: {
-          link,
-        },
-      })
-
-      if (data) {
-        if (onSuccess) {
-          onSuccess(data)
+        if (data) {
+          if (onSuccess) {
+            onSuccess(data)
+            return
+          }
+          window?.localStorage?.setItem('listDraft', JSON.stringify(data))
+          navigate(routes.listDraft())
           return
         }
-        window?.localStorage?.setItem('listDraft', JSON.stringify(data))
-        navigate(routes.listDraft())
-        return
+      } catch (error) {
+        toast.error('Failed to digest link')
       }
-    } catch (error) {
+    } else {
       try {
         const { data } = await api.get('/digestPrompt', {
-          params: {
-            prompt,
-          },
+          params: { prompt },
         })
 
         if (data) {
