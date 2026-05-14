@@ -1,10 +1,8 @@
 import { ListType } from '@prisma/client'
-import chromium from '@sparticuz/chromium'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { gotScraping } from 'got-scraping'
 import { JSDOM, VirtualConsole } from 'jsdom'
 import { jsonrepair } from 'jsonrepair'
-import puppeteer from 'puppeteer-core'
 
 import { DigestedList } from 'src/functions/digestLink/digestLink'
 
@@ -272,33 +270,32 @@ const convertPotentialJSONToList = async (original: string, fallbackName?: strin
   return list
 }
 
-const fetchPageBody = async (url: URL): Promise<string> => {
-  const executablePath =
-    process.env.CHROMIUM_EXECUTABLE_PATH ||
-    (await chromium.executablePath())
+const LISTABILITY_PROMPT = `You are a content evaluator for list.cafe — an app that helps people create, share, and discover lists of things: products, songs, books, links, places, tasks, recipes, people, and more.
 
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath,
-    headless: true,
-  })
+Given the following text scraped from a webpage, determine whether it contains enough enumerable, structured content to generate a meaningful list.
 
+Good candidates: charts, rankings, product listings, article roundups, recipe indexes, link directories, wishlists, job boards, event lineups.
+Bad candidates: empty pages, login walls, cookie banners, generic homepages with no items, mostly navigation or ads, JS-rendered pages that returned no real content.
+
+Respond with ONLY valid JSON, no markdown, no explanation outside the JSON:
+{"hasContent": true, "reason": "one sentence"}
+or
+{"hasContent": false, "reason": "one sentence"}`
+
+const checkForListableContent = async (text: string): Promise<{ hasContent: boolean; reason: string }> => {
+  const result = await generateText(`${LISTABILITY_PROMPT}\n\nText:\n${text.slice(0, 5000)}`)
   try {
-    const page = await browser.newPage()
-    await page.goto(url.toString(), { waitUntil: 'load', timeout: 30000 })
-    // Give JS-rendered content a moment to settle after load
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    return await page.content()
-  } finally {
-    await browser.close()
+    return JSON.parse(result.replace(/```json\n?|\n?```/g, '').trim())
+  } catch {
+    // If the LLM returns something unparseable, assume there's content and proceed
+    return { hasContent: true, reason: 'Could not parse check result' }
   }
 }
 
 export const convertLinkToList = async (link: string) => {
   const parsedLink = new URL(link)
   assertPublicUrl(parsedLink)
-  const body = await fetchPageBody(parsedLink)
+  const { body } = await gotScraping.get(parsedLink)
   const dom = new JSDOM(body, { virtualConsole })
 
   dom.window.document
@@ -366,6 +363,11 @@ export const convertLinkToList = async (link: string) => {
     .replace(/\s\s+/g, ' ')
     .replace(/\s+/g, ' ')
   // .slice(0, PROMPT_MAX_SIZE)
+
+  const { hasContent, reason } = await checkForListableContent(html)
+  if (!hasContent) {
+    throw new Error(`This page doesn't have enough content to generate a list: ${reason}`)
+  }
 
   let text = `${PROMPT}${html}`
   console.log('Prompt:', text)
