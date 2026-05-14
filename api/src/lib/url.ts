@@ -1,7 +1,7 @@
 export const LIST_CAFE_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:8912'
-    : 'https://www.list.cafe'
+    : process.env.APP_URL || 'https://list-cafe.vercel.app'
 
 export const mapUrlsToRegex = (urls: string[]) =>
   new RegExp(

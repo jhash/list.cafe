@@ -40,7 +40,7 @@ export const TRUSTED_REGEX = mapUrlsToRegex(TRUSTED_URLS)
 export const LIST_CAFE_URL =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:8912'
-    : 'https://www.list.cafe'
+    : process.env.APP_URL || 'https://list-cafe.vercel.app'
 
 export const LIST_CAFE_DOMAIN = LIST_CAFE_URL.replace('https://', '')
   .replace('http://', '')

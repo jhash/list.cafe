@@ -217,13 +217,20 @@ const authHandler = async (event: APIGatewayProxyEvent, context: Context) => {
       // *must* re-enter username and password to authenticate (WebAuthn will
       // then be re-enabled for this amount of time).
       expires: 60 * 60 * 24 * 365 * 10,
-      name: 'list.cafe',
+      name:
+        process.env.NODE_ENV === 'development'
+          ? 'localhost'
+          : new URL(process.env.APP_URL || 'https://list-cafe.vercel.app')
+              .hostname,
       domain:
-        process.env.NODE_ENV === 'development' ? 'localhost' : 'list.cafe',
+        process.env.NODE_ENV === 'development'
+          ? 'localhost'
+          : new URL(process.env.APP_URL || 'https://list-cafe.vercel.app')
+              .hostname,
       origin:
         process.env.NODE_ENV === 'development'
           ? 'http://localhost:8912'
-          : 'https://www.list.cafe',
+          : process.env.APP_URL || 'https://list-cafe.vercel.app',
       type: 'platform',
       timeout: 60000,
       credentialFields: {

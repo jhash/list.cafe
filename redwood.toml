@@ -10,6 +10,7 @@
   port = 8912
   apiUrl = "/api" # You can customize graphql and dbauth urls individually too: see https://redwoodjs.com/docs/app-configuration-redwood-toml#api-paths
   includeEnvironmentVariables = [
+    "APP_URL",
     "DEVELOPER_EMAIL",
     "RESEND_API_KEY",
     "AMAZON_ASSOCIATE_ID",
