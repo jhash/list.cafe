@@ -1,3 +1,5 @@
+export const config = { maxDuration: 60 }
+
 // import { GraphQLError } from 'graphql'
 // import { GraphQLUpload as Upload } from 'graphql-upload-ts'
 
