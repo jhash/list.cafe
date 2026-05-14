@@ -2552,6 +2552,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/bricolage-grotesque@npm:^5.2.10":
+  version: 5.2.10
+  resolution: "@fontsource-variable/bricolage-grotesque@npm:5.2.10"
+  checksum: 5963126874a66170093b2639f534b502cba78315fe50bfbdceb0ce124beb922071a69fdb6d66a7ab0983a67435ca3b466fe0722e5bd4bbcd525e352d9a03c499
+  languageName: node
+  linkType: hard
+
+"@fontsource-variable/dm-sans@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@fontsource-variable/dm-sans@npm:5.2.8"
+  checksum: 99971f181c343a81f72ab6d8d1354ca38bc138054e352e922a12c2be52083598446436a584b67e6e505a3e2ffdc65933c3faa290fbdb425b4768a5f4e90e12db
+  languageName: node
+  linkType: hard
+
+"@fontsource/libre-baskerville@npm:^5.2.10":
+  version: 5.2.10
+  resolution: "@fontsource/libre-baskerville@npm:5.2.10"
+  checksum: e03c9abf9dc16bec0709eb27a02c32fb9e4966cec921df6442fbedb17b1db776360b7dc316430688e87909fd3ef296ce52c592f1389a9b84dc5e0bfe83c2dbb8
+  languageName: node
+  linkType: hard
+
 "@google-ai/generativelanguage@npm:^1.0.1":
   version: 1.0.1
   resolution: "@google-ai/generativelanguage@npm:1.0.1"
@@ -6048,13 +6069,6 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 5802a0a28f7473744dd6a118479440d8c5c801c973d34fb6f31b5ee645a41fee936193978a8e905d55deefda9b675d19924167bf11a31339874c3161a3fc2922
-  languageName: node
-  linkType: hard
-
-"@types/fontfaceobserver@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@types/fontfaceobserver@npm:2.1.0"
-  checksum: edb9a10844dad991feb27d6c36f374955160ec15216919deacc017d4314ff4625a70d507af82ba1ff8be1f9f07f19396ae96468541c4ae3194e0ac34f605c6dd
   languageName: node
   linkType: hard
 
@@ -12604,13 +12618,6 @@ __metadata:
     debug:
       optional: true
   checksum: da5932b70e63944d38eecaa16954bac4347036f08303c913d166eda74809d8797d38386e3a0eb1d2fe37d2aaff2764cce8e9dbd99459d860cf2cdfa237923b5f
-  languageName: node
-  linkType: hard
-
-"fontfaceobserver@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "fontfaceobserver@npm:2.3.0"
-  checksum: 9b539d5021757d3ed73c355bdb839296d6654de473a992aa98993ef46d951f0361545323de68f6d70c5334d7e3e9f409c1ae7a03c168b00cb0f6c5dea6c77bfa
   languageName: node
   linkType: hard
 
@@ -23091,13 +23098,15 @@ __metadata:
   resolution: "web@workspace:web"
   dependencies:
     "@apollo/client": ^3.8.1
+    "@fontsource-variable/bricolage-grotesque": ^5.2.10
+    "@fontsource-variable/dm-sans": ^5.2.8
+    "@fontsource/libre-baskerville": ^5.2.10
     "@redwoodjs/auth-dbauth-web": 6.2.0
     "@redwoodjs/forms": 6.2.0
     "@redwoodjs/router": 6.2.0
     "@redwoodjs/vite": 6.2.0
     "@redwoodjs/web": 6.2.0
     "@simplewebauthn/browser": ^7.4.0
-    "@types/fontfaceobserver": ^2.1.0
     "@types/setimmediate": ^1.0.2
     "@types/tailwindcss": ^3.1.0
     autoprefixer: ^10.4.15
@@ -23106,7 +23115,6 @@ __metadata:
     copy-text-to-clipboard: ^3.2.0
     daisyui: ^3.7.3
     eslint-plugin-prettier: ^4.2.1
-    fontfaceobserver: ^2.3.0
     humanize-string: 2.1.0
     lodash: ^4.17.21
     lucide-react: ^0.274.0

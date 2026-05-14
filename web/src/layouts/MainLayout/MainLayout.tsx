@@ -1,23 +1,11 @@
-import classNames from 'classnames'
 import { X } from 'lucide-react'
 
 import { ToastBar, Toaster, toast } from '@redwoodjs/web/dist/toast'
 
-import { useFontFacesLoaded } from 'src/hooks/useFontFacesLoaded'
-
-type MainLayoutProps = React.HTMLProps<HTMLDivElement> & {
-  skeleton?: boolean
-}
-const MainLayout: React.FC<MainLayoutProps> = ({ children, skeleton }) => {
-  const fontsLoaded = useFontFacesLoaded() || skeleton
-
+type MainLayoutProps = React.HTMLProps<HTMLDivElement>
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
-    <main
-      className={classNames(
-        'flex min-h-full w-full max-w-full flex-grow flex-col overflow-x-hidden transition-opacity duration-500 ease-in',
-        fontsLoaded ? 'opacity-100' : 'opacity-0'
-      )}
-    >
+    <main className="flex min-h-full w-full max-w-full flex-grow flex-col overflow-x-hidden">
       {children}
       <Toaster
         containerClassName="min-w-screen max-w-screen sm:min-w-auto sm:max-w-auto z-50"
